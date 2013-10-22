@@ -1,0 +1,643 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="Cc3d 3 6 quarry,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>Cc3d 3 6 quarry - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="Cc3d%203%206%20quarry_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="Cc3d%203%206%20quarry_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="Cc3d%203%206%20quarry_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Cc3d 3 6 quarry</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<pre>Update from Aug 2012:
+
+heiland@Quarry: ~/dev/cc3d-3.6.2-build&gt; source setup-bash2.src 
+
+heiland@Quarry: ~/dev/cc3d-3.6.2-build&gt; runScript.sh -i Demos/cellsort_2D/cellsort_2D/cellsort_2D.cc3d
+
+--&gt;  .vtk files into ~/CC3DWorkspace
+</pre>
+<pre>Update from July 2012:  building for Abbas w/ Release version.
+To summarize... ARRRRRRRRRRRRRRRRRRRRRRGH!!!
+
+Rebuilt new Python, VTK, etc; went thru pain of "undoing" OpenMP since it causes segfault (rf. no_gomp2.py)...
+
+In CMakeCache.txt:
+CMAKE_BUILD_TYPE:STRING=Release
+
+
+Also had to tweak the pythonSetupScripts/CompuCellSetup.py   to make it work!!
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build2&gt; cp pythonSetupScripts/CompuCellSetup.py ../CompuCellSetup-build2-save.py
+
+
+
+heiland@Quarry: ~&gt; cd dev/cc3d-3.6.0-fakeOMP-build2/
+
+Setup env properly:
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build2&gt; source setup-bash2.src
+
+Ensure you're using:
+heiland@Quarry: ~&gt; g++ --version
+g++ (GCC) 4.4.5
+
+Presumably this is obtained from having '@Quarry' at end of ~/.soft 
+Otherwise, execute this to see choices: 'softenv|grep gcc'
+
+
+
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build2&gt; runScript.sh -i Demos/cellsort_2D/cellsort_2D.xml
+-bash: runScript.sh: command not found
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build2&gt; ls
+CMakeCache.txt  Twedit++/            compucell3d.sh*           include/              player/              setup-bash.src
+CMakeFiles/     all_files.txt        core/                     install_manifest.txt  post_install_tasks/  setup-bash2.src
+Demos/          bin/                 examples_PythonTutorial/  lib/                  pythonSetupScripts/  twedit++.sh*
+Makefile        cmake_install.cmake  icons/                    no_gomp2.py           runScript.sh*
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build2&gt; source setup-bash2.src 
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build2&gt;&nbsp;!run
+runScript.sh -i Demos/cellsort_2D/cellsort_2D.xml
+CompuCell3D - version 3.6.0
+opts= [('-i', 'Demos/cellsort_2D/cellsort_2D.xml'), ('--currentDir', '/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2')]
+args= []
+o= -i
+a= Demos/cellsort_2D/cellsort_2D.xml
+o= --currentDir
+a= /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2
+currentDirectory= /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2
+Platform: linux2
+Did not find dl module, will try manual dl initialization...
+steppablePath=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/CompuCell3DSteppables
+pluginPath=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/CompuCell3DPlugins
+THIS IS JUST BEFORE LOADING LIBRARIES
+ AFTER LOAD LIBRARIES
+...
+
+(runs and dumps .vtk files into ~/CC3DWorkspace)
+
+Crucial env vars are:
+
+export LD_LIBRARY_PATH=::/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/CompuCell3DSteppables:/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/CompuCell3DPlugins:/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/python:/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/:.:/N/u/heiland/Quarry/dev/VTK-5.10.0-build/bin:/N/u/heiland/Quarry/dev/Python-2.7.2-gcc-4.4.5-build/lib:/N/soft/linux-rhel4_AS-x86_64/Qt-4.3.2/lib:/N/u/heiland/Quarry/dev/sip-4.12.3-dest:.:/N/u/heiland/Quarry/dev/VTK-5.10.0-build/bin:/N/u/heiland/Quarry/dev/Python-2.7.2-gcc-4.4.5-build/lib:/N/soft/linux-rhel4_AS-x86_64/Qt-4.3.2/lib:/N/u/heiland/Quarry/dev/sip-4.12.3-dest:.:/N/u/heiland/Quarry/dev/Python-2.7.2:/N/soft/linux-rhel4-x86_64/VTK-5.0.3/bin:/N/soft/linux-rhel4-x86_64/Qt-4.7.0/lib:/N/soft/linux-rhel4-x86_64/gcc-4.4.5/lib:/N/soft/linux-rhel4-x86_64/gcc-4.4.5/lib64:/N/soft/linux-rhel4-x86_64/Mesa-7.2-64/lib64:/N/soft/linux-rhel4-x86_64/python/2.7.1/lib:/N/soft/linux-rhel4-x86_64/Matlab-2009a/sys/os/glnxa64:/N/soft/linux-rhel4-x86_64/Matlab-2009a/bin/glnxa64:/N/soft/linux-rhel4-x86_64/Matlab-2009a/sys/java/jre/glnxa64/jre1.5.0/lib/amd64:/N/soft/linux-rhel4-x86_64/Matlab-2009a/sys/java/jre/glnxa64/jre1.5.0/lib/amd64/native_threads:/N/soft/linux-rhel4-x86_64/Matlab-2009a/sys/java/jre/glnxa64/jre1.5.0/lib/amd64/server:/N/soft/linux-rhel4-x86_64/svn/1.5.0/lib:/N/soft/linux-rhel4-x86_64/gcc-4.2.2/lib:/N/soft/linux-rhel4-x86_64/gcc-4.2.2/lib64:/N/soft/linux-rhel4-x86_64/VTK-5.4.2/lib:/N/soft/linux-rhel4-x86_64/intel/cce/10.1.025/lib:/N/soft/linux-rhel4-x86_64/intel/fce/10.1.025/lib
+
+export PATH=.:/N/u/heiland/Quarry/dev/Python-2.7.2-gcc-4.4.5-build/bin:/N/u/heiland/Quarry/dev/swig-2.0.4-build/bin:/N/u/heiland/Quarry/dev/Python-2.7.2-gcc-4.4.5-build/bin:/N/u/heiland/Quarry/dev/swig-2.0.4-build/bin:/N/u/heiland/Quarry/dev/Python-2.7.2:/N/soft/linux-rhel4-x86_64/cmake-2.8.7/bin:/N/soft/linux-rhel4-x86_64/Qt-4.7.0/bin:/N/soft/linux-rhel4-x86_64/gcc-4.4.5/bin:/N/soft/linux-rhel4-x86_64/statmath/Wolfram/Mathematica/8.0.4/bin:/N/soft/linux-rhel4-x86_64/python/2.7.1/bin:/N/soft/linux-rhel4-x86_64/Matlab-2009a/bin:/N/soft/linux-rhel4-x86_64/svn/1.5.0/bin:/N/soft/linux-rhel4-x86_64/gcc-4.2.2/bin:/N/soft/linux-rhel4-x86_64/VTK-5.4.2/bin:/N/u/heiland/Quarry/bin:/usr/local/bin:/usr/bin:/usr/X11R6/bin:/bin:/usr/kerberos/bin:/usr/kerberos/sbin:/N/soft/linux-rhel4-x86_64/softenv-1.6.2/bin:/N/soft/linux-rhel4-x86_64/intel/cce/10.1.025/bin:/N/soft/linux-rhel4-x86_64/intel/fce/10.1.025/bin:/N/soft/linux-rhel4-x86_64/intel/idbe/10.1.025/bin:/N/soft/linux-rhel4-x86_64/local-utils/bin:/N/soft/linux-rhel4-x86_64/nano-1.2.5/bin:/N/u/heiland/Quarry/bin
+
+export PYTHONPATH=.:/N/u/heiland/Quarry/dev/PyQt-py2.7.2/PyQt-x11-gpl-4.8.4-dest-python:/N/u/heiland/Quarry/dev/sip-4.12.3-py2.7-dest:/N/u/heiland/Quarry/dev/VTK-5.10.0-build/Wrapping/Python:/N/u/heiland/Quarry/dev/VTK-5.10.0-build/bin
+
+</pre>
+<pre>More from July 2012...
+
+The first few attempts at doing a fresh build for a Release version resulted in a segfault when we ran runScript.  How did you track down the
+cause of the segfault you might ask - SO GLAD you did!
+-------------------------
+
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build2&gt; gdb --args python player/CompuCellPythonSimulationCML.py -i Demos/cellsort_2D/cellsort_2D.xml
+GNU gdb Red Hat Linux (6.3.0.0-1.162.el4rh)
+Copyright 2004 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you are
+welcome to change it and/or distribute copies of it under certain conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB.  Type "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu"...Using host libthread_db library "/lib64/tls/libthread_db.so.1".
+
+(gdb) run
+Starting program: /N/hd00/heiland/Quarry/dev/Python-2.7.2-gcc-4.4.5-build/bin/python player/CompuCellPythonSimulationCML.py -i Demos/cellsort_2D/cellsort_2D.xml
+[Thread debugging using libthread_db enabled]
+[New Thread 182905379584 (LWP 20232)]
+opts= [('-i', 'Demos/cellsort_2D/cellsort_2D.xml')]
+args= []
+o= -i
+a= Demos/cellsort_2D/cellsort_2D.xml
+Platform: linux2
+Did not find dl module, will try manual dl initialization...
+steppablePath=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/CompuCell3DSteppables
+pluginPath=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/CompuCell3DPlugins
+THIS IS JUST BEFORE LOADING LIBRARIES
+ AFTER LOAD LIBRARIES
+
+...
+
+, extraInit for: Volume
+Simulator::start():  Plugins: VolumeTracker, CellType, Contact, Volume
+********************BLOB INIT***********************
+itDim=(20,20,1)
+Step 0 Energy 0 Cells 193
+FAST numberOfAttempts=10000
+[New Thread 1084229984 (LWP 20235)]
+[New Thread 1094719840 (LWP 20236)]
+[New Thread 1105209696 (LWP 20237)]
+[New Thread 1115699552 (LWP 20238)]
+[New Thread 1126189408 (LWP 20239)]
+[New Thread 1136679264 (LWP 20240)]
+[New Thread 1147169120 (LWP 20241)]
+
+Program received signal SIGSEGV, Segmentation fault.
+[Switching to Thread 1126189408 (LWP 20239)]
+0x0000002aa54478b0 in BasicRandomNumberGeneratorNonStatic::getRatio () from /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/libCC3DBasicUtils.so.3.6
+
+
+(gdb) bt
+#0  0x0000002aa54478b0 in BasicRandomNumberGeneratorNonStatic::getRatio ()
+   from /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/libCC3DBasicUtils.so.3.6
+#1  0x0000002aa5447930 in BasicRandomNumberGeneratorNonStatic::getInteger ()
+   from /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/libCC3DBasicUtils.so.3.6
+#2  0x0000002aa703ed18 in CompuCell3D::Potts3D::metropolisFast () from /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build2/lib/libCC3DPotts3D.so.3.6
+#3  0x0000002aa7268062 in gomp_thread_start (xdata=Variable "xdata" is not available.
+) at ../../../gcc-4.4.5/libgomp/team.c:115
+#4  0x0000002a95952317 in start_thread () from /lib64/tls/libpthread.so.0
+#5  0x0000002a95eb8d83 in clone () from /lib64/tls/libc.so.6
+(gdb)
+
+This let us know that it was still attempting to use OpenMP - which was causing the segfault, so we go thru the "getting rid of OpenMP"
+exercise.
+</pre>
+<p><br>
+</p>
+<pre>An update from Julio's experience - May 2012.  One thing that changed is that quarry now uses Python 2.7 by default, whereas before we used 2.5.
+
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; env|grep pythonp
+PYTHONPATH=/N/u/heiland/Quarry/dev/sip-4.12.3-py2.5-dest:/N/u/heiland/Quarry/dev/PyQt-x11-gpl-4.8.4-dest-python:/N/soft/linux-rhel4-x86_64/VTK-5.0.3/lib/python2.5/site-packages
+ 
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; env|grep ld_l
+LD_LIBRARY_PATH=.:/N/u/heiland/Quarry/dev/Python-2.7.2:/N/ptl01/VTK-5.8.0-build/bin:/N/soft/linux-rhel4-x86_64/Qt-4.7.0/lib:/N/soft/linux-rhel4-x86_64/gcc/infrastructure/mpfr/2.3.1/lib:/N/soft/linux-rhel4-x86_64/gcc/infrastructure/gmp/4.2.2/lib:/N/soft/linux-rhel4-x86_64/gcc-4.4.5/lib:/N/soft/linux-rhel4-x86_64/gcc-4.4.5/lib64:/N/soft/linux-rhel4-x86_64/Mesa-7.2-64/lib64:/N/soft/linux-rhel4-x86_64/Matlab-2009a/sys/os/glnxa64:/N/soft/linux-rhel4-x86_64/Matlab-2009a/bin/glnxa64:/N/soft/linux-rhel4-x86_64/Matlab-2009a/sys/java/jre/glnxa64/jre1.5.0/lib/amd64:/N/soft/linux-rhel4-x86_64/Matlab-2009a/sys/java/jre/glnxa64/jre1.5.0/lib/amd64/native_threads:/N/soft/linux-rhel4-x86_64/Matlab-2009a/sys/java/jre/glnxa64/jre1.5.0/lib/amd64/server:/N/soft/linux-rhel4-x86_64/svn/1.5.0/lib:/N/soft/linux-rhel4-x86_64/mpfr-2.3.0/lib:/N/soft/linux-rhel4-x86_64/gcc-4.2.2/lib:/N/soft/linux-rhel4-x86_64/gcc-4.2.2/lib64:/N/soft/linux-rhel4-x86_64/VTK-5.0.3/lib:/N/soft/linux-rhel4-x86_64/Python-2.5.1/lib:/N/soft/linux-rhel4-x86_64/intel/cce/10.1.025/lib:/N/soft/linux-rhel4-x86_64/intel/fce/10.1.025/lib:/N/soft/linux-rhel4-x86_64/intel/cce/10.0.025/lib:/N/soft/linux-rhel4-x86_64/intel/fce/10.0.025/lib:/N/soft/linux-rhel4-x86_64/openmpi-1.2.3/lib:/N/soft/linux-rhel4-x86_64/openmpi-1.2.3/lib/openmpi
+ 
+Edit the runScript to use python2.5 now:
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; tail runScript.sh 
+echo "CompuCell3D - version $COMPUCELL3D_MAJOR_VERSION.$COMPUCELL3D_MINOR_VERSION.$COMPUCELL3D_BUILD_VERSION"
+
+python2.5 ${PREFIX_CC3D}/player/CompuCellPythonSimulationCML.py $* --currentDir=${current_directory}
+
+</pre>
+<pre>Imagine trying every permutation of the following:
+
+compiler:  intel, gcc: 4.2.2, 4.4.5, 3.4.6
+Python: 2.3, 2.5, 2.7
+cmake:
+SWIG:
+VTK:
+...
+
+Trying to figure out if the lgomp (OpenMP lib) was working properly.
+</pre>
+<pre>
+heiland@Quarry: ~&gt; more .soft
+#
+# This is your SoftEnv configuration run control file.
+#
+#   It is used to tell SoftEnv how to customize your environment by
+#   setting up variables such as PATH and MANPATH.  To learn more
+#   about this file, do a "man softenv".
+#
++Matlab
++svn
++gcc-4.2.2
++VTK-5.0.3-64
++swig-1.3.31
+@quarry
+@openmpi
+
+
+make sure Python can find all modules:
+--------------------------------------
+PYTHONPATH=/N/u/heiland/Quarry/dev/sip-4.12.3-py2.5-dest:/N/u/heiland/Quarry/dev/PyQt-x11-gpl-4.8.4-dest-python:/N/soft/linux-rhel4-x86_64/VTK-5.0.3/lib/python2.5/site-packages
+
+verify can do:
+--------------
+heiland@Quarry: ~&gt; python
+Python 2.5.1 (r251:54863, Aug 24 2007, 11:13:56) 
+[GCC 3.4.6 20060404 (Red Hat 3.4.6-8)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; import vtk
+&gt;&gt;&gt; from PyQt4.QtGui import *
+&gt;&gt;&gt; 
+
+
+
+dir of interest:
+----------------
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; ls
+CMakeCache.txt  Twedit++/            compucell3d.sh*           include/              player/              twedit++.sh*
+CMakeFiles/     all_files.txt        core/                     install_manifest.txt  post_install_tasks/
+Demos/          bin/                 examples_PythonTutorial/  lib/                  pythonSetupScripts/
+Makefile        cmake_install.cmake  icons/                    no_gomp.py            runScript.sh*
+
+
+test:
+-----
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; ./runScript.sh -i Demos/cellsort_2D/cellsort_2D.xml
+CompuCell3D - version 3.6.0
+opts= [('-i', 'Demos/cellsort_2D/cellsort_2D.xml'), ('--currentDir', '/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build')]
+args= []
+o= -i
+a= Demos/cellsort_2D/cellsort_2D.xml
+o= --currentDir
+a= /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build
+currentDirectory= /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build
+Platform: linux2
+Did not find dl module, will try manual dl initialization...
+steppablePath=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build/lib/CompuCell3DSteppables
+pluginPath=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build/lib/CompuCell3DPlugins
+THIS IS JUST BEFORE LOADING LIBRARIES
+ AFTER LOAD LIBRARIES
+------- CompuCellSetup.py:   -------- createCMLFileHandler called, sim= None
+baseFileName= cellsort_2D_xml
+simulationResultsDirectoryName , baseFileNameForDirectory= ('/N/u/heiland/Quarry/CC3DWorkspace/cellsort_2D_xml_06_24_2011_20_35_39', 'cellsort_2D_xml')
+GOT FILE  Demos/cellsort_2D/cellsort_2D.xml
+Platform: linux2
+Did not find dl module, will try manual dl initialization...
+steppablePath=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build/lib/CompuCell3DSteppables
+pluginPath=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build/lib/CompuCell3DPlugins
+THIS IS JUST BEFORE LOADING LIBRARIES
+ AFTER LOAD LIBRARIES
+&gt; &gt; &gt; simulationPythonScriptName=   simulationFileName= /N/hd00/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build/Demos/cellsort_2D/cellsort_2D.xml
+------- CompuCellSetup.py:   -------- createCMLFileHandler called, sim= &lt;CompuCell.Simulator; proxy of &lt;Swig Object of type 'CompuCell3D::Simulator *' at 0x95a2f0&gt; &gt;
+Element Plugin
+Element Plugin
+Element Plugin
+Element Steppable
+Element Potts
+BEFORE initializePotts
+INSIDE initializePottsCC3D=
+Dealing with _steerableObject-&gt;steerableName()=Potts
+after find
+&gt; &gt; &gt; ppdCC3DPtr=0x963a50ppdCC3DPtr-&gt;dim=(0,0,0)
+_xmlData-&gt;getFirstElement(Dimensions)-&gt;getAttributeAsUInt(x)=100
+_xmlData-&gt;getFirstElement(Dimensions)-&gt;getAttributeAsUInt(y)=100
+_xmlData-&gt;getFirstElement(Dimensions)-&gt;getAttributeAsUInt(z)=1
+_ppdCC3DPtr-&gt;algorithmName = 
+ ppdCC3DPtr-&gt;seed = 0
+ppdCC3DPtr-&gt;boundary_x = 
+_ppdCC3DPtr-&gt;boundary_y = 
+ppdCC3DPtr-&gt;boundary_z = 
+ppdCC3DPtr-&gt;latticeType = square
+BoundaryStrategy singleton is ALIVE!
+initialized square lattice
+potts.getLatticeType()=1
+					 setNeighborOrder  maxNeighborIndex=7
+ppdCC3DPtr-&gt;depthFlag = 0
+ppdCC3DPtr-&gt;debugOutputFrequency = 1
+					 setNeighborOrder  maxNeighborIndex=7
+_numberOfProcessors =1 numArrayElements=33
+SINGLE PROCESSOR RUN minDim=(0,0,0) maxDim=(100,100,1)
+AFTER initializePotts
+INITIALIZING Volume
+GOT HERE BEFORE CALLING INIT
+Dealing with _steerableObject-&gt;steerableName()=Volume
+after find
+INITIALIZING CellType
+Dealing with _steerableObject-&gt;steerableName()=CellType
+after find
+INITIALIZING Contact
+Dealing with _steerableObject-&gt;steerableName()=Contact
+after find
+INITIALIZING BlobInitializer
+Got FE This Radius: 40
+Got FE This Width: 5
+Got FE This Gap: 0
+SET CELLSORT INIT
+GOT HERE BEFORE EXIT
+SIMTHREAD= None
+ extraInit for: VolumeTracker
+, extraInit for: CellType
+size=3
+contact[0][0]=0
+contact[0][1]=16
+contact[0][2]=16
+contact[1][0]=16
+contact[1][1]=2
+contact[1][2]=11
+contact[2][0]=16
+contact[2][1]=11
+contact[2][2]=16
+Contact maxNeighborIndex=7
+, extraInit for: Contact
+automaton=0x977ba8
+, extraInit for: Volume
+Simulator::start():  Plugins: VolumeTracker, CellType, Contact, Volume
+********************BLOB INIT***********************
+itDim=(20,20,1)
+Step 0 Energy 0 Cells 193
+------- CompuCellSetup.py:  createCMLFieldHandler():  created cmlFieldHandler= &lt;CMLFieldHandler.CMLFieldHandler instance at 0x2aa52c6b48&gt;
+------- CompuCellSetup.py:  initCMLFieldHandler():
+
+
+------- CMLFieldHandler.py:  prepareSimulationStorageDir: simulationData directory Name = /tmp
+------- CMLFieldHandler.py:   yes, os.path.exists  /tmp
+------- CMLFieldHandler.py:  getInfoAboutFields():  self.fieldTypes=  {}
+------- CMLFieldHandler.py:  getInfoAboutFields():  self.FIELD_TYPES=  ('CellField', 'ConField', 'ScalarField', 'ScalarFieldCellLevel', 'VectorField', 'VectorFieldCellLevel')
+
+
+------- CMLFieldHandler.py:  prepareSimulationStorageDir: simulationData directory Name = /N/u/heiland/Quarry/CC3DWorkspace/cellsort_2D_xml_06_24_2011_20_35_39/LatticeData
+typeIdTypeNameDict {0: 'Medium', 1: 'Condensing', 2: 'NonCondensing'}
+simulationPaths XML= /N/hd00/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build/Demos/cellsort_2D/cellsort_2D.xml
+simulationPaths PYTHON= 
+FAST numberOfAttempts=10000
+Number of Attempted Energy Calculations=1501
+Step 0 Flips 440/10000 Energy 1028 Cells 193 Inventory=193
+FAST numberOfAttempts=10000
+Number of Attempted Energy Calculations=1622
+Step 1 Flips 589/10000 Energy 787 Cells 193 Inventory=193
+FAST numberOfAttempts=10000
+Number of Attempted Energy Calculations=1634
+Step 2 Flips 583/10000 Energy 251 Cells 193 Inventory=193
+...
+
+
+
+
+
+--&gt; check for output
+--------------------
+heiland@Quarry: ~/CC3DWorkspace/cellsort_2D_xml_06_24_2011_20_16_54&gt; ll
+total 12
+drwxr-xr-x  2 heiland hpc 12288 Jun 24 20:22 LatticeData/
+heiland@Quarry: ~/CC3DWorkspace/cellsort_2D_xml_06_24_2011_20_16_54&gt; ll LatticeData/
+total 1604
+-rw-r--r--  1 heiland hpc   513 Jun 24 20:16 StepLDF.dml
+-rw-r--r--  1 heiland hpc 77459 Jun 24 20:16 Step_00000.vtk
+-rw-r--r--  1 heiland hpc 77409 Jun 24 20:16 Step_00001.vtk
+-rw-r--r--  1 heiland hpc 77389 Jun 24 20:16 Step_00002.vtk
+...
+
+
+Can then scp this dir of LatticeData back to your local machine to visualize in cc3D player.
+</pre>
+<pre>Building from scratch 
+(after copying over new core/CompuCell3D/steppables/PDESolvers/SteadyStateDiffusionSolver2D.cpp)
+
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; rm -rf *
+
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; cmake -DCMAKE_INSTALL_PREFIX:PATH=/N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP-build /N/u/heiland/Quarry/dev/cc3d-3.6.0-fakeOMP
+...
+
+edit CMakeCache.txt:
+-------------------
+PYTHON_INCLUDE_DIR:PATH=/N/soft/linux-rhel4-x86_64/Python-2.5.1/include/python2.5
+PYTHON_LIBRARY:FILEPATH=/N/soft/linux-rhel4-x86_64/Python-2.5.1/lib/libpython2.5.so
+
+OpenMP_CXX_FLAGS:STRING=
+OpenMP_C_FLAGS:STRING=
+
+
+
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; cmake .
+-- Could NOT find OpenMP (missing:  OpenMP_C_FLAGS OpenMP_CXX_FLAGS) 
+ PUBLIC UTILS OPEN MP FLAG
+-- Could NOT find OpenMP (missing:  OpenMP_C_FLAGS OpenMP_CXX_FLAGS) 
+ OPEN MP FOUND $OPENMP_FOUND
+OPENMP FLAGS 
+VTK_LIB_DIRS /N/soft/linux-rhel4-x86_64/VTK-5.0.3/lib
+-- Configuring done
+...
+
+
+Note that we still have -lgomp linked in LOTS of places, e.g.:
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt;  grep lgomp */*/*/*/*/link.txt
+core/CompuCell3D/Potts3D/CMakeFiles/Potts3DShared.dir/link.txt:/N/soft/linux-rhel4-x86_64/gcc-4.2.2/bin/c++ 
+...
+
+
+So, run a script (see below) to remove them:
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt;  find . -name link.txt &gt;all_files.txt
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt;  cp ../no_gomp.py .
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt;  python no_gomp.py
+
+
+Try to grep again to check not def'd:
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt;  grep lgomp */*/*/*/*/link.txt
+
+make
+make install
+
+./runScript.sh  ....
+</pre>
+<pre>---------- email to quarry sysadmins (no reply yet...) ------------------
+
+I'm not sure it's meaningful, but I thought this link sounded like it might be related to my problem:
+
+http://gcc.gnu.org/ml/gcc-help/2007-09/msg00050.html
+
+-Randy
+
+On Jun 22, 2011, at 6:06 PM, Primary RT Queue for HPS via RT wrote:
+
+Hello,
+
+Your message regarding "gcc 4.4.5 on quarry"
+has been received and assigned an ID of [RAC RT #57113].
+
+You will hear back from us within one business day.  Our hours of operation are 8am - 5pm, Monday through Friday.
+
+Please include the string:
+
+   [RAC RT #57113]
+
+in the subject line of all future correspondence about this issue. To do so, 
+you may reply to this message.
+
+Cheers and thanks for using our service,
+
+Research Technologies - High Performance Systems
+University Information Technology Services 
+Indiana University
+
+-------------------------------------------------------------------------
+
+Hi gang,
+
+Just curious about the status of gcc 4.4.5 on quarry.  I see it's there (/N/soft/linux-rhel4-x86_64/gcc-4.4.5) and seems to work for a simple test pgm, but I don't see it show up in 'softenv|grep gcc'.  So I'm just wondering if it's OK to use?
+
+My basic problem has to do with an error I get when I try to run an app (with OpenMP) that I compiled with gcc 4.2.2:
+libgomp.so.1: shared object cannot be dlopen()ed
+
+A bit of googling around sort of convinced me it might have to do with gcc 4.2.2, so I thought I'd give 4.4.5 a shot and, simultaneously, ask you guys.
+
+thanks, Randy
+</pre>
+<pre>And then this is always fun...
+
+heiland@129-79-58-155:~$ ping quarry.uits.indiana.edu
+ping: cannot resolve quarry.uits.indiana.edu: Unknown host
+
+
+And had to make some last minute edits to this script and copy it over:
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; cp ../CompuCellSetup.py pythonSetupScripts 
+
+
+</pre>
+<pre>heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build/core&gt; grep lgomp */*/*/link.txt
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build/core&gt; grep lgomp */*/*/*/link.txt
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build/core&gt; grep lgomp */*/*/*/*/link.txt
+</pre>
+<pre>heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; ll ~/CC3DWorkspace/
+total 12
+drwxr-xr-x  3 heiland hpc 4096 Jun 24 20:29 cellsort_2D_xml_06_24_2011_20_16_54/
+drwxr-xr-x  3 heiland hpc 4096 Jun 24 20:35 cellsort_2D_xml_06_24_2011_20_35_39/
+drwxr-xr-x  3 heiland hpc 4096 Jun 24 22:54 cellsort_2D_xml_06_24_2011_22_54_58/
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; ll ~/CC3DWorkspace/cellsort_2D_xml_06_24_2011_22_54_58/
+total 12
+drwxr-xr-x  2 heiland hpc 12288 Jun 24 22:55 LatticeData/
+heiland@Quarry: ~/dev/cc3d-3.6.0-fakeOMP-build&gt; ll ~/CC3DWorkspace/cellsort_2D_xml_06_24_2011_22_54_58/LatticeData/
+total 10964
+-rw-r--r--  1 heiland hpc   513 Jun 24 22:54 StepLDF.dml
+-rw-r--r--  1 heiland hpc 77439 Jun 24 22:54 Step_00000.vtk
+-rw-r--r--  1 heiland hpc 77383 Jun 24 22:54 Step_00001.vtk
+-rw-r--r--  1 heiland hpc 77341 Jun 24 22:54 Step_00002.vtk
+-rw-r--r--  1 heiland hpc 77359 Jun 24 22:54 Step_00003.vtk
+-rw-r--r--  1 heiland hpc 77321 Jun 24 22:54 Step_00004.vtk
+...
+</pre>
+<pre>#--------------------------------------
+# no_gomp.py - remove refs to '-lgomp' in all 'link.txt' cmake-generated files
+
+import string
+
+# change following prefix as necessary 
+prefix = '/Users/heiland/dev/Glazier/cc3d-3.6.0-6-24-11'
+
+# find . -name link.txt &gt;all_files.txt
+
+fp = open('all_files.txt','r') 
+count = 0
+while (1):
+  try:
+    fname = fp.readline()
+#    if fname&nbsp;!= null: break
+  except:
+    break
+
+  fullname = prefix + fname[1:-1]
+#  print count,' --&gt;   ',fullname
+  count += 1
+  if count &gt; 72: break
+
+#  line = open(fullname, "r").read()
+#  if string.find(line, "gomp") &gt; -1:
+#    print count,' --&gt;   ',fullname
+
+  line = open(fullname, "r").read()
+  line = line.replace("-lgomp", "")
+  open(fullname, "w").write(line)
+</pre>
+<pre>To "remove" the OpenMP code, I edited the following file, e.g.:
+
+heiland@dhcp-cs-244-118:~/Documents/workspace2/cc3d-3.6.0-fakeOMP/core/PublicUtilities$ grep omp.h *.h
+ParallelUtilsOpenMP.h://#include &lt;omp.h&gt;
+
+heiland@dhcp-cs-244-118:~/Documents/workspace2/cc3d-3.6.0-fakeOMP/core/PublicUtilities$ grep rwh *
+ParallelUtilsOpenMP.cpp:	threadsPerWorkNode(1)   //rwh
+ParallelUtilsOpenMP.cpp:	threadsPerWorkNode=1;   // rwh  =2;
+ParallelUtilsOpenMP.cpp:	return; //rwh omp_init_lock(_lock);
+ParallelUtilsOpenMP.cpp:	return; //rwh omp_destroy_lock(_lock);
+ParallelUtilsOpenMP.cpp:	return; //rwh omp_set_lock(_lock);
+ParallelUtilsOpenMP.cpp:	return; //rwh omp_unset_lock(_lock);
+ParallelUtilsOpenMP.cpp:	return; //rwh omp_set_nested(_flag);
+ParallelUtilsOpenMP.cpp:	return 1;  //rwh  omp_get_num_procs();
+ParallelUtilsOpenMP.cpp:	return;  //rwh omp_set_dynamic(0);
+ParallelUtilsOpenMP.cpp:	return 0;  //rwh  omp_get_thread_num();
+ParallelUtilsOpenMP.cpp:	return;  //rwh  omp_set_dynamic(0);
+</pre>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:282-0!1!0!0!!en!2 and timestamp 20130212210420 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Cc3d_3_6_quarry">http://old.compucell3d.org/mediawiki1.7/index.php/Cc3d_3_6_quarry</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Cc3d_3_6_quarry">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Cc3d_3_6_quarry&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cc3d_3_6_quarry&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cc3d_3_6_quarry&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Cc3d_3_6_quarry">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(http://www.compucell3d.net/images/logo_trans.png);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Cc3d_3_6_quarry">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Cc3d_3_6_quarry">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cc3d_3_6_quarry&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cc3d_3_6_quarry&amp;oldid=27819">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Cc3d%203%206%20quarry_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 10:16, 1 August 2012.</li>
+				<li id="viewcount">This page has been accessed 227 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.420 secs. -->
+
+</body></html>

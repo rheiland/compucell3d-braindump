@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="Suresh CNV,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>Suresh CNV - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="Suresh_CNV_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="Suresh_CNV_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="Suresh_CNV_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Suresh CNV</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<pre>Commenting out certain plugins do not make a difference, and certain others cause Segmentation 
+fault or throw a BasicException and crashes.  In no case, would the simulation happen, in 
+some way.  What is the suggested course of action?
+
+Thanks,
+Suresh
+
+-----Original Message-----
+From: Maciej Swat 
+Sent: Tuesday, June 07, 2011 7:13 AM
+To: Thiagarajan, Suresh
+Cc: mswat...; Sablauer, Andras
+Subject: Re: running CNV simulation on the cluster
+
+It is hard to see what the problem is without having access to the
+machine. What I would do is to try commenting out steppables/plugins in
+the xml until you find the one that causes problems. When you locate it
+let me know which one it is then I might be able to help more. So the
+neighbor tracker example works on a cluster I assume?
+
+
+On 6/6/2011 3:13 PM, Thiagarajan, Suresh wrote:
+Hi Maciej,
+We are using 3.4.2 because that's what Abbas wanted us to run it on.  He said he's to make changes 
+to make it run on later versions.
+Yes, I can run the examples_pythonTutorial/cellsort_2D_NeighborTracker simulations.  I've 
+attached the the pythonsetupscripts folder (rename to .rar after download.  I's afraid our firewall 
+might block it) from the build here.
+Please, let me know if you need further details.
+Thanks,
+Suresh
+
+-----Original Message-----
+From: Maciej Swat
+Sent: Monday, June 06, 2011 2:01 PM
+To: Thiagarajan, Suresh
+Cc: mswat...; Sablauer, Andras
+Subject: Re: running CNV simulation on the cluster
+
+Hi Suresh
+
+Can you run examples_pythonTutorial/cellsort_2D_NeighborTracker? I think
+the problem might be with how python wrappers have been generated. Can
+you send me the content of pythonSetupScripts directory (zip would be
+ok)? Also are you using 3.4.2? Why not 3.6.0?
+
+
+On 6/6/2011 1:56 PM, Thiagarajan, Suresh wrote:
+Hi Maciej,
+I have problems running the CNV simulation on the cluster.  The compilation goes on fine and I can even 
+execute the Demo simulation.  I get the following error while trying to run the CNV simulation:
+Unexpected Error: Traceback (most recent call last):
+    File "pythonSetupScripts/CompuCellPythonSimulationNewPlayer.py", line 16, in&lt;module&gt;
+      execfile(CompuCellSetup.simulationPaths.simulationPythonScriptName)
+    File "/nfs_exports/linux-file1/home/asablgrp/sthiagar/CC3D/CC3D3.4.2_CNV/
+Source/angio_growth_14032011_04_33_56.py", line 65, in&lt;module&gt;
+      CompuCellSetup.mainLoop(sim,simthread,steppableRegistry)
+    File "/home/sthiagar/BuildFolder/CC3D3.4.2_CNV_BUILD/pythonSetupScripts/CompuCellSetup.py", 
+line 1083, in mainLoop
+      return mainLoopNewPlayer(sim, simthread, steppableRegistry, _screenUpdateFrequency )
+    File "/home/sthiagar/BuildFolder/CC3D3.4.2_CNV_BUILD/pythonSetupScripts/CompuCellSetup.py", 
+line 881, in mainLoopNewPlayer
+      steppableRegistry.step(i)
+    File "/home/sthiagar/BuildFolder/CC3D3.4.2_CNV_BUILD/pythonSetupScripts/PySteppables.py", 
+line 58, in step
+      steppable.step(_mcs)
+    File "/nfs_exports/linux-file1/home/asablgrp/sthiagar/CC3D/CC3D3.4.2_CNV/Source
+/angio_growth_steppables_14032011_04_33_56.py", line 221, in step
+      for neighborSurfaceData in cellNeighborList:
+    File "/home/sthiagar/BuildFolder/CC3D3.4.2_CNV_BUILD/pythonSetupScripts/PySteppables.py", 
+line 229, in next
+      self.neighborCell = self.nsdItr.getCurrentRef().neighborAddress
+AttributeError: 'SwigPyObject' object has no attribute 'neighborAddress
+
+I can execute the same simulation fine on my Ubuntu machine.  What do you think is the problem?
+Thanks,
+Suresh
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Cellsort_2D_nbr_tracker.png" class="image" title="Image:cellsort_2D_nbr_tracker.png"><img src="Suresh_CNV_files/Cellsort_2D_nbr_tracker.png" alt="Image:cellsort_2D_nbr_tracker.png" longdesc="/mediawiki1.7/index.php/Image:Cellsort_2D_nbr_tracker.png" height="562" width="654"></a>
+</p><p>Works fine for this 2D sim in examples_pythonTutorial.
+</p>
+<hr><p>
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Cnv_3.4.2.png" class="image" title="Image:cnv_3.4.2.png"><img src="Suresh_CNV_files/Cnv_3.png" alt="Image:cnv_3.4.2.png" longdesc="/mediawiki1.7/index.php/Image:Cnv_3.4.2.png" height="579" width="883"></a>
+</p><p>After building cc3D 3.4.2, can run their sim on OSX... HOWEVER, 
+only up to the 1st 'Step' (0th MCS) - clicking 'Step' a 2nd time results
+ in the very same error that Suresh reported.
+</p>
+<hr>
+<p>Some debugging...
+</p>
+<pre>So from where does the 'neighborAddress' method originate anyway?  In this case, it turns out to be down
+in the C++ code, in core/CompuCell3D/plugins/NeighborTracker/NeighborTracker.h, which we list here:
+
+#include &lt;set&gt;
+#include "NeighborTrackerDLLSpecifier.h"
+
+namespace CompuCell3D {
+
+   class CellG;
+   
+   //common surface area is expressed in unitsa of elementary surfaces not actual physical units. If necessary it may 
+   //need to be transformed to physical units by multiplying it by surface latticemultiplicative factor 
+   class NEIGHBORTRACKER_EXPORT NeighborSurfaceData{
+      public:
+         
+         NeighborSurfaceData(CellG * _neighborAddress=0,int _commonSurfaceArea=0)
+        &nbsp;:neighborAddress(_neighborAddress),
+          commonSurfaceArea(_commonSurfaceArea)
+          {}
+         
+         ///have to define &lt; operator if using a class in the set and no &lt; operator is defined for this class
+         bool operator&lt;(const NeighborSurfaceData &amp; _rhs) const{
+            return neighborAddress &lt; _rhs.neighborAddress;
+         }
+         
+         ///had to do this dirty trick to work around a problem that iterators of a set give access in read-only mode
+         ///Note&nbsp;: You should NEVER change this way class members that are used in &lt;operator this will corrupt set container
+         ///CAUTION: DO NOT TRY TO MODIFY pixelIndex - you will corrupt set container
+         void incrementCommonSurfaceArea(const NeighborSurfaceData &amp; _neighborSurfaceData )const
+         {
+            ++( (const_cast&lt;NeighborSurfaceData&amp;&gt;(_neighborSurfaceData)).commonSurfaceArea);
+         }
+
+         ///Note&nbsp;: You should NEVER change this way class members that are used in &lt;operator this will corrupt set container
+         void decrementCommonSurfaceArea(const NeighborSurfaceData &amp; _neighborSurfaceData )const
+         {
+            --( (const_cast&lt;NeighborSurfaceData&amp;&gt;(_neighborSurfaceData)).commonSurfaceArea);
+         }
+         
+         bool OKToRemove()const{return commonSurfaceArea==0;}
+         bool operator==(const NeighborSurfaceData &amp; _rhs)const{
+            return (neighborAddress==_rhs.neighborAddress) &amp;&amp; (commonSurfaceArea==_rhs.commonSurfaceArea);
+         }
+         
+         ///members
+		 int getCommonSurfaceArea(){return commonSurfaceArea;}
+         CellG * neighborAddress;
+         int commonSurfaceArea;           
+   };
+
+   class NEIGHBORTRACKER_EXPORT NeighborTracker{
+      public:
+         NeighborTracker(){};
+         int trackerNumber(){return 1234321;}
+         ~NeighborTracker(){};
+         std::set&lt;NeighborSurfaceData &gt; cellNeighbors; //stores ptrs to cell neighbors i.e. each cell keeps track of its neighbors
+         
+   };
+};
+</pre>
+<p>This class gets wrapped into Python-callable code (via SWIG), during a cc3D build, and ends up in
+the build dir under core/pyinterface/CompuCellPython/CompuCell.py  (the associated SWIG file is in
+the source file:  core/pyinterface/CompuCellPython/CompuCell.i).
+</p><p><br>
+Here are all the occurrences of 'neighborAddress' in CompuCell.py.  We see that, in addition to
+NeighborSurfaceData, other classes have it too.
+</p>
+<pre>
+heiland@dhcp-cs-244-118:~/dev/Glazier/cc3d-3.4.2/core/pyinterface$ grep neighboraddress */*.py
+CompuCellPython/CompuCell.py:    def __init__(self, _neighborAddress = None, _commonSurfaceArea = 0): 
+CompuCellPython/CompuCell.py:        this = _CompuCell.new_NeighborSurfaceData(_neighborAddress, _commonSurfaceArea)
+CompuCellPython/CompuCell.py:    __swig_setmethods__["neighborAddress"] = _CompuCell.NeighborSurfaceData_neighborAddress_set
+CompuCellPython/CompuCell.py:    __swig_getmethods__["neighborAddress"] = _CompuCell.NeighborSurfaceData_neighborAddress_get
+CompuCellPython/CompuCell.py:    if _newclass:neighborAddress = _swig_property(_CompuCell.NeighborSurfaceData_neighborAddress_get, _CompuCell.NeighborSurfaceData_neighborAddress_set)
+CompuCellPython/CompuCell.py:    __swig_setmethods__["neighborAddress"] = _CompuCell.ContactLocalFlexData_neighborAddress_set
+CompuCellPython/CompuCell.py:    __swig_getmethods__["neighborAddress"] = _CompuCell.ContactLocalFlexData_neighborAddress_get
+CompuCellPython/CompuCell.py:    if _newclass:neighborAddress = _swig_property(_CompuCell.ContactLocalFlexData_neighborAddress_get, _CompuCell.ContactLocalFlexData_neighborAddress_set)
+CompuCellPython/CompuCell.py:    __swig_setmethods__["neighborAddress"] = _CompuCell.ElasticityTrackerData_neighborAddress_set
+CompuCellPython/CompuCell.py:    __swig_getmethods__["neighborAddress"] = _CompuCell.ElasticityTrackerData_neighborAddress_get
+CompuCellPython/CompuCell.py:    if _newclass:neighborAddress = _swig_property(_CompuCell.ElasticityTrackerData_neighborAddress_get, _CompuCell.ElasticityTrackerData_neighborAddress_set)
+CompuCellPython/CompuCell.py:    def __init__(self, _neighborAddress = None, _lambdaLength = 0.0, _targetLength = 0.0): 
+CompuCellPython/CompuCell.py:        this = _CompuCell.new_PlasticityTrackerData(_neighborAddress, _lambdaLength, _targetLength)
+CompuCellPython/CompuCell.py:    __swig_setmethods__["neighborAddress"] = _CompuCell.PlasticityTrackerData_neighborAddress_set
+CompuCellPython/CompuCell.py:    __swig_getmethods__["neighborAddress"] = _CompuCell.PlasticityTrackerData_neighborAddress_get
+CompuCellPython/CompuCell.py:    if _newclass:neighborAddress = _swig_property(_CompuCell.PlasticityTrackerData_neighborAddress_get, _CompuCell.PlasticityTrackerData_neighborAddress_set)
+CompuCellPython/CompuCell.py:    __swig_setmethods__["neighborAddress"] = _CompuCell.FocalPointPlasticityTrackerData_neighborAddress_set
+CompuCellPython/CompuCell.py:    __swig_getmethods__["neighborAddress"] = _CompuCell.FocalPointPlasticityTrackerData_neighborAddress_get
+CompuCellPython/CompuCell.py:    if _newclass:neighborAddress = _swig_property(_CompuCell.FocalPointPlasticityTrackerData_neighborAddress_get, _CompuCell.FocalPointPlasticityTrackerData_neighborAddress_set)
+</pre>
+<p>And here's the code where the basic error is thrown (in pythonSetupScripts/PySteppables.py):
+</p>
+<pre>208 class CellNeighborListAuto:
+209     def __init__(self,_neighborPlugin,_cell):
+210         print '----- PySteppables.py:CellNeighborListAuto:__init__:  _neighborPlugin=',_neighborPlugin
+211         self.neighborPlugin=_neighborPlugin
+212         self.neighborTrackerAccessor=self.neighborPlugin.getNeighborTrackerAccessorPtr()
+213         self.cell=_cell
+214     def __iter__(self):
+215         return CellNeighborIteratorAuto(self)
+216 
+217 
+218 
+219 class CellNeighborIteratorAuto:
+220     def __init__(self, _cellNeighborList):
+221         import CompuCell
+222         self.neighborTrackerAccessor = _cellNeighborList.neighborTrackerAccessor
+223         self.cell=_cellNeighborList.cell
+224         self.nsdItr=CompuCell.nsdSetPyItr()
+225         self.nTracker=self.neighborTrackerAccessor.get(self.cell.extraAttribPtr)
+226         self.nsdItr.initialize(self.nTracker.cellNeighbors)
+227         self.nsdItr.setToBegin()
+228 
+229 
+230     def next(self):
+231         import pdb; pdb.set_trace()   #rwh - I inserted this to do some debugging
+232         if not self.nsdItr.isEnd():
+234             self.neighborCell = self.nsdItr.getCurrentRef().neighborAddress
+</pre>
+<pre>note that in cc3D 3.6.0 but NOT 3.4.2, we have the following method in PySteppables:
+
+class SteppableBasePy(SteppablePy):
+
+    def getCellNeighbors(self,_cell):
+        if self.neighborTrackerPlugin:
+            return CellNeighborListAuto(self.neighborTrackerPlugin,_cell)
+</pre>
+<pre>Fwiw...
+
+heiland@129-79-58-155:~/dev/Glazier/cc3d-3.4.2$ sh test.sh
+CompuCell3D - version 3.4.2
+Python 2.7.1 (r271:86882M, Nov 30 2010, 10:35:34)
+[GCC 4.2.1 (Apple Inc. build 5664)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; import PySteppables
+&gt;&gt;&gt; dir(PySteppables)
+['CellBoundaryPixelIterator', 'CellBoundaryPixelList', 'CellList', 'CellListIterator', 
+'CellNeighborIterator', 'CellNeighborIteratorAuto', 'CellNeighborList', 'CellNeighborListAuto', 
+'CellPixelIterator', 'CellPixelList', 'ClusterList', 'ClusterListIterator', 
+'CompartmentList', 'CompartmentListIterator', 'ElasticityDataIterator', 'ElasticityDataList', 
+'FocalPointPlasticityDataIterator', 'FocalPointPlasticityDataList', 
+'InternalFocalPointPlasticityDataIterator', 'InternalFocalPointPlasticityDataList', 
+'PlasticityDataIterator', 'PlasticityDataList', 'SimObjectPy', 'SteppableBasePy', 
+'SteppablePy', 'SteppableRegistry', '__builtins__', '__doc__', '__file__', '__name__', 
+'__package__', 'forEachCellInInventory']
+</pre>
+<pre>graphicsFrameWidget= &lt;Graphics.GraphicsFrameWidget.GraphicsFrameWidget object at 0x121332b90&gt;
+parent= &lt;Plugins.ViewManagerPlugins.SimpleTabView.SimpleTabView object at 0x11f9f4830&gt;
+THIS IS ROOT ITEM= CompuCell3D
+ROOT ITEM DOMNode= CompuCell3D
+FIELD TYPES= {'Cell_Field': 'CellField', 'VEGF1': 'ConField', 'MMP': 'ConField', 'Oxygen': 'ConField', 'VEGF2': 'ConField'}
+DrawingFunctionName= drawCellField3D
+MVCDrawModel3D.py  INSIDE DRAW 3D
+    usedCellTypesList (1, 3, 5, 7, 8, 9, 10)
+MVCDrawModel3D.py   initCellFieldActors
+FAST numberOfAttempts=56000
+Number of Attempted Energy Calculations=15419
+Step 0 Flips 3269/56000 Energy -4.94855e+07 Cells 4978 Inventory=4978
+----- PySteppables.py:SteppableRegistry:step:  self.steppableList= [&lt;angio_growth_steppables_14032011_04_33_56.VolumeParamSteppable instance at 0x12144e128&gt;]
+----- PySteppables.py:SteppableRegistry:step:  steppable.frequency= 1
+----- PySteppables.py:CellNeighborListAuto:__init__:  _neighborPlugin= &lt;CompuCell.NeighborTrackerPlugin; proxy of &lt;Swig Object of type 'CompuCell3D::NeighborTrackerPlugin *' at 0x121451a50&gt; &gt;
+&gt; /Users/heiland/dev/Glazier/cc3d-3.4.2/pythonSetupScripts/PySteppables.py(232)next()
+-&gt; if not self.nsdItr.isEnd():
+
+(Pdb) bt
+  /Users/heiland/dev/Glazier/cc3d-3.4.2/player/Simulation/SimulationThread.py(259)run()
+-&gt; self.runUserPythonScript(self.pythonFileName,globalDict,localDict)
+  /Users/heiland/dev/Glazier/cc3d-3.4.2/player/Simulation/SimulationThread.py(250)runUserPythonScript()
+-&gt; execfile("pythonSetupScripts/CompuCellPythonSimulationNewPlayer.py")
+  /Users/heiland/dev/Glazier/cc3d-3.4.2/pythonSetupScripts/CompuCellPythonSimulationNewPlayer.py(16)&lt;module&gt;()
+-&gt; execfile(CompuCellSetup.simulationPaths.simulationPythonScriptName)
+  /Users/heiland/dev/Glazier/cc3d-3.4.2/Demos/StJude/angio_growth_14032011_04_33_56.py(65)&lt;module&gt;()
+-&gt; CompuCellSetup.mainLoop(sim,simthread,steppableRegistry)
+  /Users/heiland/dev/Glazier/cc3d-3.4.2/pythonSetupScripts/CompuCellSetup.py(1083)mainLoop()
+-&gt; return mainLoopNewPlayer(sim, simthread, steppableRegistry, _screenUpdateFrequency )
+  /Users/heiland/dev/Glazier/cc3d-3.4.2/pythonSetupScripts/CompuCellSetup.py(881)mainLoopNewPlayer()
+-&gt; steppableRegistry.step(i)
+  /Users/heiland/dev/Glazier/cc3d-3.4.2/pythonSetupScripts/PySteppables.py(60)step()
+-&gt; steppable.step(_mcs)
+  /Users/heiland/dev/Glazier/cc3d-3.4.2/Demos/StJude/angio_growth_steppables_14032011_04_33_56.py(226)step()
+-&gt; for neighborSurfaceData in cellNeighborList:
+&gt; /Users/heiland/dev/Glazier/cc3d-3.4.2/pythonSetupScripts/PySteppables.py(232)next()
+-&gt; if not self.nsdItr.isEnd():
+(Pdb) 
+</pre>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a><p></p>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:278-0!1!0!0!!en!2 and timestamp 20120521200933 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Suresh_CNV">http://old.compucell3d.org/mediawiki1.7/index.php/Suresh_CNV</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Suresh_CNV">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Suresh_CNV&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Suresh_CNV&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Suresh_CNV&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Suresh_CNV">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(&quot;http://www.compucell3d.net/images/logo_trans.png&quot;);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Suresh_CNV">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Suresh_CNV">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Suresh_CNV&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Suresh_CNV&amp;oldid=27299">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Suresh_CNV_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 13:19, 13 June 2011.</li>
+				<li id="viewcount">This page has been accessed 49 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.327 secs. -->
+
+</body></html>

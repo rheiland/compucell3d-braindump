@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="Pif2vti,Heiland" />
+<link rel="shortcut icon" href="/favicon.ico" />
+		<title>Pif2vti - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="/mediawiki1.7/skins/common/commonPrint.css" />
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="/mediawiki1.7/skins/common/wikibits.js?1"><!-- wikibits js --></script>
+		<script type="text/javascript" src="/mediawiki1.7/index.php?title=-&amp;action=raw&amp;gen=js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body  class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Pif2vti</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<div class="editsection" style="float:right;margin-left:5px;">[<a href="/mediawiki1.7/index.php?title=Pif2vti&amp;action=edit&amp;section=1" title="Edit section: pif2vti: converting PIF (.pif) format to VTK (.vti) format">edit</a>]</div><a name="pif2vti:_converting_PIF_.28.pif.29_format_to_VTK_.28.vti.29_format"></a><h1> pif2vti: converting PIF (.pif) format to VTK (.vti) format </h1>
+<p>This page is intended to, generally, explain how CompuCell3D deals with the geometry of results and, more specifically, discuss how we might (some day) consider switching to a different format.
+</p><p>Currently, CompuCell3D specifies cell positions using a PIF (Potts Initial File) format (rf. <a href="http://compucell3d.org/docs/CompuCellManual.pdf" class="external free" title="http://compucell3d.org/docs/CompuCellManual.pdf" rel="nofollow">http://compucell3d.org/docs/CompuCellManual.pdf</a>), an ascii formatted file where each line has:
+</p>
+<pre>
+cell# celltype x1 x2 y1 y2 z1 z2
+
+Where cell# is the unique integer index of a cell, celltype is a string 
+representing the cell's initial type, and x1 and x2 specify a range of 
+xcoordinates contained in the cell (similarly y1 and y2 specify a range 
+of ycoordinates and z1 and z2 specify a range of zcoordinates).
+Thus each line assigns a rectangular volume to a cell. If a cell is not
+perfectly rectangular, multiple lines can be used to build up the cell 
+out of rectangular subvolumes (just by reusing the cell# and celltype).
+</pre>
+<p>For example, for one of the foam simulations, a PIF input file might be:
+</p>
+<pre>
+0 Medium 0 101 0 101 0 0
+1 Foam 13 25 0 5 0 0
+2 Foam 25 39 0 5 0 0
+3 Foam 39 46 0 5 0 0
+4 Foam 46 57 0 5 0 0
+5 Foam 57 65 0 5 0 0
+6 Foam 65 76 0 5 0 0
+7 Foam 76 89 0 5 0 0
+
+These lines define a background of Medium which fills the whole lattice and is then
+overwritten by seven rectangular cells of type Foam numbered 1 through 7. Notice that
+these cells lie in the xy plane (z1=0 z2=0 implies that cells have thickness =1) so this
+example is a two-dimensional initialization.
+</pre>
+<p>There are a couple of concerns one might have about this format - 1) it's a custom format, rather than adhering to a more standard format, and 2) PIF file sizes can become quite large.
+When looking at some of Abbas's early tumor simulation PIF output data files (for a 100x100x160
+lattice and ~6 cell types), we see file sizes like the following:
+</p>
+<pre>
+    486258 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15000000.pif
+    545815 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15000025.pif
+...
+   2073897 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15000550.pif
+...
+  10043523 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15002475.pif
+...
+  13191192 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15002875.pif
+...
+  16378143 Sep 18 07:31 TumorVasc3D_100x100x160_11092008_09_18_15003250.pif
+</pre>
+<p>Obviously, the PIF sizes will depend on the lattice size and the "complexity" of cells' shapes.  But having a 16M data file to represent ~6 different (byte-length) cell types on a unit lattice having 1600000 (1.6M) cells seems excessive, especially when we consider that the user may be
+dumping many timesteps of data.  And if CompuCell becomes a serious modeling tool,  doing larger 3-D sims will become more commonplace.
+</p><p>One possible alternative to a PIF format is one of the VTK formats, .vti, for "image" data. 
+</p><p>Running this conversion on the very last pif file above, we get an ascii .vti file ~3.2M in size:
+</p>
+<pre>
+&lt;VTKFile type='ImageData' version='0.1' byte_order='LittleEndian'&gt;
+  &lt;ImageData WholeExtent='0 99 0 99 0 159' 
+    Origin='0 0 0' Spacing='1 1 1'&gt;
+  &lt;Piece Extent='0 99 0 99 0 159'&gt;
+   &lt;PointData Scalars='field1'&gt;
+    &lt;DataArray type='Int32' Name='field1' format='ascii'&gt;
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+...
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 3 2 3 3 3 3 3 3 3 2 
+...
+  &lt;/DataArray&gt;
+  &lt;/PointData&gt;
+  &lt;/Piece&gt;
+  &lt;/ImageData&gt;
+  &lt;/VTKFile&gt;
+</pre>
+<p>Where we lose, obviously, is converting a relatively empty, simple .pif file to .vti.
+</p><p>Fwiw, here's a program that can convert Abbas's particular PIF files to .vti:
+</p>
+<pre>
+/*
+    pif2vti TumorVasc3D_100x100x160_11092008_09_18_15003250.pif'
+
+Valid cell types (field names):
+1) FroVasc
+2) Malignant
+3) Necrotic        
+4) Vascular
+
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+/*  &lt;DataArray type='unsigned char' Name='field1' format='ascii'&gt;\n &quot;  */
+#define HEAD \
+&quot;&lt;VTKFile type='ImageData' version='0.1' byte_order='LittleEndian'&gt;\n  \
+&lt;ImageData WholeExtent='0 99 0 99 0 159' \n \
+   Origin='0 0 0' Spacing='1 1 1'&gt;\n  \
+&lt;Piece Extent='0 99 0 99 0 159'&gt;\n  \
+ &lt;PointData Scalars='field1'&gt;\n  \
+  &lt;DataArray type='Int32' Name='field1' format='ascii'&gt;\n &quot; 
+
+#define TAIL \
+&quot;  &lt;/DataArray&gt;\n \ 
+ &lt;/PointData&gt;\n  \
+&lt;/Piece&gt;\n  \
+&lt;/ImageData&gt;\n  \
+&lt;/VTKFile&gt;\n&quot; 
+
+
+int main(int argc, char **argv)
+{
+  FILE *fp;
+  int cnum,x0,x1,y0,y1,z0,z1, count, ix,iy,iz;
+  unsigned char f[160][100][100];
+  char field[20];
+
+/*  printf(&quot;argc = %d\n&quot;, argc);
+  printf(&quot;argv[1] = %s\n&quot;, argv[1]); */
+
+  for (iz=0; iz&lt;160; iz++)
+  for (iy=0; iy&lt;100; iy++)
+  for (ix=0; ix&lt;100; ix++)
+    f[iz][iy][ix] = 0;
+/*  printf(&quot;done w/ zeroing array\n&quot;); */
+
+
+  fp = fopen(argv[1],&quot;r&quot;);
+  if (!fp) printf(&quot;error opening file\n&quot;);
+  count = 0;
+  while (fscanf(fp,&quot;%d %s %d %d %d %d %d %d&quot;, &amp;cnum,field,&amp;x0,&amp;x1,&amp;y0,&amp;y1,&amp;z0,&amp;z1)&nbsp;!= EOF) {
+/*    printf(&quot;%d %d %d\n&quot;,x0,y0,z0); */
+    if ((x0&nbsp;!= x1) || (y0&nbsp;!= y1) || (z0&nbsp;!= z1)) {
+      printf(&quot;%d more than a pixel\n&quot;,count);
+    }
+    else {
+      if (!strcmp(field,&quot;FroVasc&quot;)) {
+/*        printf(&quot;FroVasc... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 1;
+      }
+      else if (!strcmp(field,&quot;Malignant&quot;)) {
+/*        printf(&quot;Malignant... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 2;
+      }
+      else if (!strcmp(field,&quot;Necrotic&quot;)) {
+/*        printf(&quot;Necrotic... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 3;
+      }
+      else if (!strcmp(field,&quot;Vascular&quot;)) {
+/*        printf(&quot;Necrotic... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 4;
+      }
+      else if (!strcmp(field,&quot;NeoVascular&quot;)) {
+/*        printf(&quot;Neovascular... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 5;
+      }
+      else if (!strcmp(field,&quot;Quiescent&quot;)) {
+/*        printf(&quot;Neovascular... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 6;
+      }
+      else {
+        printf(&quot;unknown field: %s \n&quot;,field);
+      }
+    }
+    count++;
+/*    if (count &gt; 20) exit(-1); */
+/*    if (!(count % 10000)) printf(&quot;%d\n&quot;,count); */
+  }
+/*  printf(&quot;count = %d\n&quot;, count); */
+
+  printf(&quot;%s&quot;,HEAD);
+  count = 0;
+  for (iz=0; iz&lt;160; iz++)
+  for (iy=0; iy&lt;100; iy++)
+  for (ix=0; ix&lt;100; ix++) {
+    count++;
+    printf(&quot;%d &quot;, f[iz][iy][ix]);
+    if (!(count % 80)) printf(&quot;\n&quot;); 
+  }
+  printf(&quot;\n&quot;);
+  printf(&quot;%s&quot;,TAIL);
+
+}
+</pre>
+<p>And what about FieldML (<a href="http://www.physiomeproject.org/xml_languages/fieldml" class="external free" title="http://www.physiomeproject.org/xml_languages/fieldml" rel="nofollow">http://www.physiomeproject.org/xml_languages/fieldml</a>) and other formats for specifying geometry?
+</p>
+<li>Back to <a href="/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:72-0!1!0!0!!en!2 and timestamp 20120522020523 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Pif2vti">http://old.compucell3d.org/mediawiki1.7/index.php/Pif2vti</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a href="/mediawiki1.7/index.php/Pif2vti">Article</a></li>
+				 <li id="ca-talk" class="new"><a href="/mediawiki1.7/index.php?title=Talk:Pif2vti&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a href="/mediawiki1.7/index.php?title=Pif2vti&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a href="/mediawiki1.7/index.php?title=Pif2vti&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Pif2vti">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(http://www.compucell3d.net/images/logo_trans.png);" href="/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class='portlet' id='p-navigation'>
+		<h5>Navigation</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage"><a href="/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li id="n-portal"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li id="n-currentevents"><a href="/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a href="/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a href="/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li id="n-help"><a href="/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li id="n-sitesupport"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" type="text" accesskey="f" value="" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="Go" />&nbsp;
+				<input type='submit' name="fulltext" class="searchButton" value="Search" />
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Pif2vti">What links here</a></li>
+				<li id="t-recentchangeslinked"><a href="/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Pif2vti">Related changes</a></li>
+<li id="t-upload"><a href="/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a href="/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="/mediawiki1.7/index.php?title=Pif2vti&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="/mediawiki1.7/index.php?title=Pif2vti&amp;oldid=232">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="/mediawiki1.7/skins/common/images/poweredby_mediawiki_88x31.png" alt="MediaWiki" /></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 18:48, 9 March 2009.</li>
+				<li id="viewcount">This page has been accessed 190 times.</li>
+				<li id="privacy"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.229 secs. -->
+</body></html>

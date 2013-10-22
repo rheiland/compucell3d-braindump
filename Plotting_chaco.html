@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="Plotting chaco,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>Plotting chaco - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="Plotting%20chaco%20-%20CompuCell3D%20Wiki_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="Plotting%20chaco%20-%20CompuCell3D%20Wiki_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="Plotting%20chaco%20-%20CompuCell3D%20Wiki_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Plotting chaco</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>Rf. _PythonTutorial/scientificPlotsSimple/
+</p>
+<hr>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Plotting_chaco&amp;action=edit&amp;section=1" title="Edit section: Chaco, PyQt/PySide API 1 vs API 2">edit</a>]</div><a name="Chaco.2C_PyQt.2FPySide_API_1_vs_API_2"></a><h3>Chaco, PyQt/PySide API 1 vs API 2</h3>
+<p>The seemingly simple evaluation of Chaco, as a plotting package for 
+CC3D, turned more complex once I learned about the differences in the 
+so-called API 1 vs. 2.  Some relevant links follow:
+</p>
+<li><a href="https://mail.enthought.com/pipermail/chaco-users/2012-October/thread.html" class="external free" title="https://mail.enthought.com/pipermail/chaco-users/2012-October/thread.html" rel="nofollow">https://mail.enthought.com/pipermail/chaco-users/2012-October/thread.html</a>  (my email exchanges on the Chaco-users list)
+</li><li><a href="http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt" class="external free" title="http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt" rel="nofollow">http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt</a>
+</li><li><a href="http://spyder-ide.blogspot.com/2011/06/pyqt-api-1-pyqt-api-2-and-pyside.html" class="external free" title="http://spyder-ide.blogspot.com/2011/06/pyqt-api-1-pyqt-api-2-and-pyside.html" rel="nofollow">http://spyder-ide.blogspot.com/2011/06/pyqt-api-1-pyqt-api-2-and-pyside.html</a>
+</li><li><a href="http://stackoverflow.com/questions/6238193/pyqt-new-api-with-python-2" class="external free" title="http://stackoverflow.com/questions/6238193/pyqt-new-api-with-python-2" rel="nofollow">http://stackoverflow.com/questions/6238193/pyqt-new-api-with-python-2</a>
+
+<p>
+Currently, we use PyQt API 1 in CC3D.  Chaco uses/requires API 2.  API 2
+ does not support QString/QStringList and QVariant, something we use a 
+lot in CC3D (esp. Twedit).  Python 3 will only use API 2.  In addition, 
+we use QVariants in our Preferences file:
+</p><pre>~/.config/Biocomplexity$ grep variant cc3d_default.ini
+FieldParams=@Variant(\0\0\0\b\0\0\0\x1\0\0\0\0\0\0\0\b\0\0\0\r\0\0\0\x1a\0S\0\x63\0\x61\0l\0\x65\0\x41\0r\0r\0o\0w\0s\0O\0n\0\0\0\x1\0\0\0\0\x1e\0S\0\x63\0\x61\0l\0\x61\0r\0I\0s\0o\0V\0\x61\0l\0u\0\x65\0s\0\0\0\n\0\0\0\x2\0\x32\0\0\0&amp;\0N\0u\0m\0\x62\0\x65\0r\0O\0\x66\0L\0\x65\0g\0\x65\0n\0\x64\0\x42\0o\0x\0\x65\0s\0\0\0\x2\0\0\0\x6\0\0\0(\0N\0u\0m\0\x62\0\x65\0r\0O\0\x66\0\x43\0o\0n\0t\0o\0u\0r\0L\0i\0n\0\x65\0s\0\0\0\x2\0\0\0\0\0\0\0\x1c\0N\0u\0m\0\x62\0\x65\0r\0\x41\0\x63\0\x63\0u\0r\0\x61\0\x63\0y\0\0\0\x2\0\0\0\x2\0\0\0\x1a\0M\0i\0n\0R\0\x61\0n\0g\0\x65\0\x46\0i\0x\0\x65\0\x64\0\0\0\x1\0\0\0\0\x10\0M\0i\0n\0R\0\x61\0n\0g\0\x65\0\0\0\x6\0\0\0\0\0\0\0\0\0\0\0\x1a\0M\0\x61\0x\0R\0\x61\0n\0g\0\x65\0\x46\0i\0x\0\x65\0\x64\0\0\0\x1\0\0\0\0\x10\0M\0\x61\0x\0R\0\x61\0n\0g\0\x65\0\0\0\x6@Y\0\0\0\0\0\0\0\0\0\x18\0L\0\x65\0g\0\x65\0n\0\x64\0\x45\0n\0\x61\0\x62\0l\0\x65\0\0\0\x1\x1\0\0\0\"\0\x46\0i\0x\0\x65\0\x64\0\x41\0r\0r\0o\0w\0\x43\0o\0l\0o\0r\0O\0n\0\0\0\x1\0\0\0\0\x16\0\x41\0r\0r\0o\0w\0L\0\x65\0n\0g\0t\0h\0\0\0\x2\0\0\0\x1\0\0\0\x14\0\x41\0r\0r\0o\0w\0\x43\0o\0l\0o\0r\0\0\0\n\0\0\0\xe\0#\0\x30\0\x30\0\x30\0\x30\0\x30\0\x30)
+ClusterBorderColor=@Variant(\0\0\0\x43\x1\xff\xff\x19\x19\x19\x19\x19\x19\0\0)
+ArrowColor=@Variant(\0\0\0\x43)\0\0\0\0\0\0\0\0\0\0)
+BorderColor=@Variant(\0\0\0\x43\x1\xff\xff\x66\x66\xff\xff\xcc\xcc\0\0)
+ContourColor=@Variant(\0\0\0\x43\x1\xff\xff\xcc\xcc\xcc\xcc\xcc\xcc\0\0)
+WindowColor=@Variant(\0\0\0\x43)\0\0\0\0\0\0\0\0\0\0)
+PenColor=@Variant(\0\0\0\x43)\0\0\0\0\0\0\0\0\0\0)
+BrushColor=@Variant(\0\0\0\x43)\0\0\0\0\0\0\0\0\0\0)
+BoundingBoxColor=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
+</pre>
+<p>What do we make of the fact that saving our preferences relies on?!:
+</p>
+<pre>void QSettings::setValue ( const QString &amp; key, const QVariant &amp; value )
+</pre>
+<hr>
+</li><li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a><p></p>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:537-0!1!0!0!!en!2 and timestamp 20130212211524 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Plotting_chaco">http://old.compucell3d.org/mediawiki1.7/index.php/Plotting_chaco</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Plotting_chaco">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Plotting_chaco&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Plotting_chaco&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Plotting_chaco&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Plotting_chaco">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(http://www.compucell3d.net/images/logo_trans.png);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Plotting_chaco">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Plotting_chaco">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Plotting_chaco&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Plotting_chaco&amp;oldid=28030">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Plotting%20chaco%20-%20CompuCell3D%20Wiki_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 16:02, 19 November 2012.</li>
+				<li id="viewcount">This page has been accessed 73 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.241 secs. -->
+
+</body></html>

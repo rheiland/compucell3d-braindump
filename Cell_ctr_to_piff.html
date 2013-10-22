@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="Cell ctr to piff,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>Cell ctr to piff - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="Cell_ctr_to_piff_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="Cell_ctr_to_piff_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="Cell_ctr_to_piff_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Cell ctr to piff</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>Do a simple plot of the cell-centered data first, for a sanity check (requires having matplotlib installed):
+</p>
+<pre>import sys
+from pylab import *
+
+argc = len(sys.argv)
+#print 'argc=',argc
+if argc &lt; 2:
+  print 'Usage: ',sys.argv[0],' &lt;filename&gt;'
+  raise ValueError, 'Too few input args'
+
+idx=1
+fname = sys.argv[idx]
+
+fp = open(fname, 'r')
+count=0
+
+xpts = []
+ypts = []
+for line in fp:
+  tmp = line.split()
+  x = float(tmp[0])
+  y = float(tmp[1])
+  z = float(tmp[2])
+  rad = float(tmp[4])
+  xpts.append(x)
+  ypts.append(y)
+  if count &lt; 20: print x,y,z,rad
+  count += 1
+
+plot(xpts,ypts,'o')
+show()
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Hannan_pts.png" class="image" title=""><img src="Cell_ctr_to_piff_files/423px-Hannan_pts.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Hannan_pts.png" height="294" width="423"></a>
+</p>
+<hr>
+<p><br>
+Here's a Python script (call it 'topiff.py') that is used to convert a user's cell-centered data to a .piff format:
+'python topiff.py stage2.SMC.dat 200 200 1'
+</p>
+<pre>import sys
+import string
+from pylab import *
+
+argc = len(sys.argv)
+#print 'argc=',argc
+if argc &lt; 4:
+  print 'Usage: ',sys.argv[0],' filename lattice_xmax lattice_ymax cellRad'
+  raise ValueError, 'Too few input args'
+
+idx=1
+fname = sys.argv[idx]
+idx += 1
+lxmax = string.atoi(sys.argv[idx])
+idx += 1
+lymax = string.atoi(sys.argv[idx])
+idx += 1
+cellRad = string.atoi(sys.argv[idx])
+
+
+fp = open(fname, 'r')
+
+# cc3D lattice domain
+#xmax = 100
+#ymax = 100
+lzmax = 1  # assume 2D
+
+xmin = 0.0
+xmax = 1.6
+xrange = xmax - xmin
+ymin = -0.8
+ymax = 0.8
+yrange = ymax - ymin
+
+cellDiam = 2*cellRad 
+
+fpout = open('sample.piff', 'w')
+line='0 Medium 0 %d 0 %d 0 %d\n' % (xmax-1,ymax-1,lzmax-1)
+fpout.write(line)
+
+xpts = []
+ypts = []
+count=0
+for line in fp:
+  tmp = line.split()
+  x = float(tmp[0])
+  y = float(tmp[1])
+  z = float(tmp[2])
+  rad = float(tmp[4])
+  xpts.append(x)
+  ypts.append(y)
+  count += 1
+#  if count &lt; 20: 
+  if count &gt; 0: 
+    print x,y,z,rad
+    x1 = (x-xmin)/xrange * lxmax
+    x2 = x1 + cellDiam
+    y1 = (y-ymin)/yrange * lymax
+    y2 = y1 + cellDiam
+    line = '%d Type1 %d %d %d %d 0 0\n' % (count,x1,x2,y1,y2)
+    fpout.write(line)
+
+#plot(xpts,ypts,'o')
+#show()
+
+fpout.close()
+</pre>
+<p>And if we copy/tweak the FoamCoarsening demo, we can view this in CC3D:
+</p>
+<pre>~/dev/Glazier/cc3d-3.6.1-3-13-12/Demos/Hannan$ more hannan.xml 
+&lt;CompuCell3D&gt;
+    &lt;!-- The Potts section defines paramters that are used in the Metropolis algorithm--&gt;
+    &lt;!-- It also defines lattice parameters, flip neighbors and boundary conditions--&gt;
+   &lt;Potts&gt;
+      &lt;Dimensions x="200" y="200" z="1"/&gt;
+      &lt;Anneal&gt;0&lt;/Anneal&gt;
+      &lt;Steps&gt;1000&lt;/Steps&gt;
+      &lt;Temperature&gt;5&lt;/Temperature&gt;
+      &lt;Flip2DimRatio&gt;1.0&lt;/Flip2DimRatio&gt;
+      &lt;Boundary_y&gt;Periodic&lt;/Boundary_y&gt;
+      &lt;Boundary_x&gt;Periodic&lt;/Boundary_x&gt;
+      &lt;NeighborOrder&gt;2&lt;/NeighborOrder&gt;
+   &lt;/Potts&gt;
+
+   &lt;!--In Every CompuCell simulation you need to list all the cell types that you will be using--&gt;  
+   &lt;!--This is done in the CellType Plugin - as shown below--&gt;  
+   &lt;Plugin Name="CellType"&gt;
+      &lt;CellType TypeName="Medium" TypeId="0"/&gt;
+      &lt;CellType TypeName="Type1" TypeId="1"/&gt;   
+   &lt;/Plugin&gt;
+   
+   &lt;!--Contact Plugin calculates change in contact energy due to spin flip attempt --&gt;  
+   &lt;!--You specify contact energies between cell types and how many levels of neighbors (Depth parameter) should be included in energy calculations  --&gt;  
+   &lt;!--Depth tells CompuCell the maximum distance - measured in pixels - up to which it should search for neighbors to be included in contact energy calculations--&gt;
+   
+   &lt;Plugin Name="Contact"&gt;
+      &lt;Energy Type1="Type1" Type2="Type1"&gt;3&lt;/Energy&gt;
+      &lt;Energy Type1="Medium" Type2="Medium"&gt;0&lt;/Energy&gt;
+      &lt;Energy Type1="Medium" Type2="Type1"&gt;0&lt;/Energy&gt;      
+      &lt;NeighborOrder&gt;3&lt;/NeighborOrder&gt;
+   &lt;/Plugin&gt;
+
+   &lt;!--Volume plugin puts constraint on cell volume. You also need to include it when you want CompuCell to update volume of cells--&gt;
+   &lt;!--The stronget LambdaVolume therestrictive constraint --&gt;
+   &lt;!--Below LambdaVolume=0 which means ther is no constraint. However we use this plugin to get up-to-date volume information for every cell--&gt;
+   &lt;Plugin Name="Volume"&gt;
+      &lt;TargetVolume&gt;25&lt;/TargetVolume&gt;
+      &lt;LambdaVolume&gt;0&lt;/LambdaVolume&gt;
+   &lt;/Plugin&gt;
+   
+   &lt;!-- Analogous to volume plugin--&gt;
+   &lt;Plugin Name="Surface"&gt;
+      &lt;TargetSurface&gt;17&lt;/TargetSurface&gt;
+      &lt;LambdaSurface&gt;0&lt;/LambdaSurface&gt;
+   &lt;/Plugin&gt;
+   
+  &lt;!--This steppable initializes cells on the lattice. It reads text file - here it is foaminit2D- and based on this runs initialization--&gt; 
+  &lt;!-- As an initializer it is called only once per simulation --&gt;
+  &lt;Steppable Type="PIFInitializer"&gt;
+      &lt;PIFName&gt;Demos/Hannan/sample.piff&lt;/PIFName&gt;
+ &lt;/Steppable&gt;
+
+
+&lt;/CompuCell3D&gt;
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Hannan_cc3d.png" class="image" title="Image:hannan_cc3d.png"><img src="Cell_ctr_to_piff_files/Hannan_cc3d.png" alt="Image:hannan_cc3d.png" longdesc="/mediawiki1.7/index.php/Image:Hannan_cc3d.png" height="648" width="852"></a>
+</p>
+<hr>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:412-0!1!0!0!!en!2 and timestamp 20120521200259 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Cell_ctr_to_piff">http://old.compucell3d.org/mediawiki1.7/index.php/Cell_ctr_to_piff</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Cell_ctr_to_piff">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Cell_ctr_to_piff&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cell_ctr_to_piff&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cell_ctr_to_piff&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Cell_ctr_to_piff">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(&quot;http://www.compucell3d.net/images/logo_trans.png&quot;);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Cell_ctr_to_piff">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Cell_ctr_to_piff">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cell_ctr_to_piff&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cell_ctr_to_piff&amp;oldid=27701">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Cell_ctr_to_piff_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 12:32, 21 March 2012.</li>
+				<li id="viewcount">This page has been accessed 37 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.563 secs. -->
+
+</body></html>

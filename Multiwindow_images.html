@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="Multiwindow images,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>Multiwindow images - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="Multiwindow_images_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="Multiwindow_images_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="Multiwindow_images_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Multiwindow images</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>Michael reported a bug with trying to save images (on OSX) from multiple fields and getting distorted (striated) images.
+</p>
+<pre>From: Randy Heiland 
+Subject: Re: Image Output From CC3D
+Date: September 28, 2011 3:24:44 PM EDT
+To: Rountree.Michael
+Cc: Maciej Swat, Benjamin Zaitlen
+</pre>
+<p>In player/Graphics/MVCDrawView2D.py (or 3D), I believe you can change
+ the magnification amount from 1 to something larger in takeSimShot(), 
+e.g.:
+</p>
+<pre>        renderLarge = vtk.vtkRenderLargeImage()
+        renderLarge.SetInput(self.graphicsFrameWidget.ren)
+        renderLarge.SetMagnification(2)
+</pre>
+<p>and it should capture magnified .png images (but not with degraded 
+image quality).  I just tested on my Mac and it seemed to work.  
+Unfortunately, this is not yet a parameter accessible from the GUI, nor 
+can you provide non-integer magnification factors (at least that was my 
+experience), nor can you specify different aspect ratios for the window 
+size.  Although, as we discussed via email back in April, I believe you 
+could also experiment with the basic window size (and hence, aspect 
+ratio) via  player/Utilities/QVTKRenderWindowInteractor{_mac}.py:  
+sizeHint()
+</p><p>-Randy
+</p><p><br>
+Hey Randy, 
+</p><p>I've got most of it working now, but I have one error left that 
+it pretty problematic. When I run the simulation and click the take 
+snapshot button, everytime it tries to output a new image of the field, 
+it screws up the screen while outputting the image, gives an error of 
+unable to draw, and outputs the image in the original format that the 
+player opens in instead of the larger format. I can live with the 
+problem of the screen screwup. Though annoying it doesn't mess up the 
+screenshot, however, I need to be able to resize the windows for a 
+larger output format to be able to see higher resolution images. 
+</p><p><br>
+</p>
+<hr>
+<pre>July 2011:
+When outputting images using our mac server, if I run multiple simulations (I'll usually run 10), and 
+if I am outputting images from several different gradients (FGF, BMP, etc), by using the "Take 
+Screenshot" Button and allowing it to output at the defined intervals, then it will output very 
+distorted images.They simply look like striations of color and are completely unrecognizable as 
+anything. If I do the same thing on a windows system (for CPU limits I only run up to 4), I don't get 
+any distortion. This is not model specific, it is entirely within the player, so any use case model 
+can work
+</pre>
+<p>Note that our technique for saving images of Aux windows (i.e. when 
+user clicks the camera icon in the graphics window) is less than ideal -
+ creating an additional ("phantom") window - on Linux and OSX.
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Multiwin_images.png" class="image" title="Image:multiwin_images.png"><img src="Multiwindow_images_files/Multiwin_images.png" alt="Image:multiwin_images.png" longdesc="/mediawiki1.7/index.php/Image:Multiwin_images.png" height="609" width="1164"></a>
+</p>
+<hr>
+<p>The saved images (.png's):
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Chemotaxis_by_cell_id_xml_00039.png" class="image" title="Image:chemotaxis_by_cell_id_xml_00039.png"><img src="Multiwindow_images_files/Chemotaxis_by_cell_id_xml_00039.png" alt="Image:chemotaxis_by_cell_id_xml_00039.png" longdesc="/mediawiki1.7/index.php/Image:Chemotaxis_by_cell_id_xml_00039.png" height="300" width="343"></a>
+<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:ATTR_ConField_2D_XY_0_00039.png" class="image" title="Image:ATTR_ConField_2D_XY_0_00039.png"><img src="Multiwindow_images_files/ATTR_ConField_2D_XY_0_00039.png" alt="Image:ATTR_ConField_2D_XY_0_00039.png" longdesc="/mediawiki1.7/index.php/Image:ATTR_ConField_2D_XY_0_00039.png" height="300" width="343"></a>
+</p>
+<hr>
+<pre>NOTE:  for 3D sims, when a 2D slice in being displayed in an Aux window, the user MUST re-click
+the camera icon if the slice # has been changed.  This will result in an appropriately named
+output directory for the saved images, e.g.:
+heiland@Macintosh-91:~/CC3DWorkspace/diffusion_fast_box_3D_xml_07_28_2011_10_00_45$ ls
+FGF_ConField_2D_XY_24/        diffusion_fast_box_3D_xml_00014.png  diffusion_fast_box_3D_xml_00031.png
+FGF_ConField_2D_XY_27/        diffusion_fast_box_3D_xml_00015.png  diffusion_fast_box_3D_xml_00032.png
+...
+</pre>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:284-0!1!0!0!!en!2 and timestamp 20120521200852 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Multiwindow_images">http://old.compucell3d.org/mediawiki1.7/index.php/Multiwindow_images</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Multiwindow_images">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Multiwindow_images&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Multiwindow_images&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Multiwindow_images&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Multiwindow_images">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(&quot;http://www.compucell3d.net/images/logo_trans.png&quot;);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Multiwindow_images">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Multiwindow_images">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Multiwindow_images&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Multiwindow_images&amp;oldid=27409">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Multiwindow_images_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 19:25, 28 September 2011.</li>
+				<li id="viewcount">This page has been accessed 41 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.431 secs. -->
+
+</body></html>

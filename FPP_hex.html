@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="FPP hex,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>FPP hex - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="FPP_hex_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="FPP_hex_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="FPP_hex_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">FPP hex</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>FIXED!! Problem resolved after I showed Maciek the calculation 
+coming back from Center of Mass plugin for single pixel hex cell and he 
+figured out the scaling factor (sqrt(2/sqrt(3))=1.075) that needed to be
+ applied for (x,y,z) of glyphs/FPP links:
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Cellsort_2D_hex_correct.png" class="image" title="Image:cellsort_2D_hex_correct.png"><img src="FPP_hex_files/Cellsort_2D_hex_correct.png" alt="Image:cellsort_2D_hex_correct.png" longdesc="/mediawiki1.7/index.php/Image:Cellsort_2D_hex_correct.png" height="575" width="707"></a>
+</p>
+<hr>
+<p>Returning to Julio's HexWing sim (I had to remove all plots or got segfault for some reason)...
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Scale_fix_fpp_links.png" class="image" title="Image:scale_fix_fpp_links.png"><img src="FPP_hex_files/Scale_fix_fpp_links.png" alt="Image:scale_fix_fpp_links.png" longdesc="/mediawiki1.7/index.php/Image:Scale_fix_fpp_links.png" height="559" width="1005"></a>
+No cell glyphs displayed, just normal cell display.
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Scale_fix_fpp_links_glyphs_zoom.png" class="image" title="Image:scale_fix_fpp_links_glyphs_zoom.png"><img src="FPP_hex_files/Scale_fix_fpp_links_glyphs_zoom.png" alt="Image:scale_fix_fpp_links_glyphs_zoom.png" longdesc="/mediawiki1.7/index.php/Image:Scale_fix_fpp_links_glyphs_zoom.png" height="560" width="1008"></a>
+Displaying (scaled) glyphs.  We need to provide an optional 'scale by cell volume' checkbox (like following image).
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Scale_fix_fpp_links_glyphs_mcs110.png" class="image" title="Image:scale_fix_fpp_links_glyphs_mcs110.png"><img src="FPP_hex_files/Scale_fix_fpp_links_glyphs_mcs110.png" alt="Image:scale_fix_fpp_links_glyphs_mcs110.png" longdesc="/mediawiki1.7/index.php/Image:Scale_fix_fpp_links_glyphs_mcs110.png" height="560" width="1008"></a>
+<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Scale_fix_fpp_links_cells_mcs110.png" class="image" title="Image:scale_fix_fpp_links_cells_mcs110.png"><img src="FPP_hex_files/Scale_fix_fpp_links_cells_mcs110.png" alt="Image:scale_fix_fpp_links_cells_mcs110.png" longdesc="/mediawiki1.7/index.php/Image:Scale_fix_fpp_links_cells_mcs110.png" height="560" width="1008"></a>
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Scale_fix_fpp_links_glyphs.png" class="image" title="Image:scale_fix_fpp_links_glyphs.png"><img src="FPP_hex_files/Scale_fix_fpp_links_glyphs.png" alt="Image:scale_fix_fpp_links_glyphs.png" longdesc="/mediawiki1.7/index.php/Image:Scale_fix_fpp_links_glyphs.png" height="560" width="1008"></a>
+</p>
+<br><br><hr><hr><br><br>
+<p>PRE-FIX brain-dumping...
+</p><p>Without doing any offsetting or hex-conversions in the cell glyph
+ drawing method (MVCDrawModel2D.py/initCellGlyphsActor2D), we get the 
+following results for an initial single-pixel cell on non-hex and hex 
+lattices, after the initial MCS:
+</p>
+<pre>both sims use:
+~/dev/Glazier$ ty pix1_xmax.piff
+1 Condensing 18 19 0 1 0 0
+</pre>
+<pre>----- MVCDrawModel2D.py:   initCellGlyphsActor2D: type,volume, x,y= 1 4 18.5 0.5
+----- MVCDrawModel2D.py:              xCM,yCM= 74.0 2.0
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Pix1_xmax.png" class="image" title="Image:pix1_xmax.png"><img src="FPP_hex_files/Pix1_xmax.png" alt="Image:pix1_xmax.png" longdesc="/mediawiki1.7/index.php/Image:Pix1_xmax.png" height="504" width="348"></a>
+</p>
+<pre>------------ FieldExtractor.cpp::fillCellFieldData2DHex -----------
+type=1, pt= 18,0, hexCoords= 18.5,0
+type=1, pt= 19,0, hexCoords= 19.5,0
+type=1, pt= 18,1, hexCoords= 18,0.866025
+type=1, pt= 19,1, hexCoords= 19,0.866025
+----- MVCDrawModel2D.py:   initBordersActors2DHex(): # (hex) pts =  28
+----- MVCDrawModel2D.py:   initCellGlyphsActor2D: type,volume, x,y= 1 4 20.1481862217 0.465302429551
+----- MVCDrawModel2D.py:              xCM,yCM= 80.5927448868 1.8612097182
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Pix1_xmax_hex.png" class="image" title="Image:pix1_xmax_hex.png"><img src="FPP_hex_files/Pix1_xmax_hex.png" alt="Image:pix1_xmax_hex.png" longdesc="/mediawiki1.7/index.php/Image:Pix1_xmax_hex.png" height="496" width="349"></a>
+</p>
+<hr>
+<p><br><br>
+See below for the lead-in to this issue.  After recent poking around, we
+ see the following strangeness - basically, when we have a hex lattice, 
+the coordinates for the the hex cells/borders are not aligned with the 
+center of mass coordinates for cells.  And the mismatch is more 
+pronounced the further we are from (0,0), it seems:
+</p>
+<pre>~/dev/Glazier$ ty FocalPointInit2.piff 
+1 Condensing 5 10 5 10 0 0
+2 Condensing 5 10 10 15 0 0
+3 Condensing 10 15 5 10 0 0
+4 NonCondensing 10 15 10 15 0 0
+ 
+~/dev/Glazier$ ty FocalPointInit3.piff 
+1 Condensing 85 90 85 90 0 0
+2 Condensing 85 90 90 95 0 0
+3 Condensing 90 95 85 90 0 0
+4 NonCondensing 90 95 90 95 0 0
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Fpp_no_hex_100_low_coords.png" class="image" title="Image:fpp_no_hex_100_low_coords.png"><img src="FPP_hex_files/Fpp_no_hex_100_low_coords.png" alt="Image:fpp_no_hex_100_low_coords.png" longdesc="/mediawiki1.7/index.php/Image:Fpp_no_hex_100_low_coords.png" height="550" width="743"></a>
+<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Fpp_hex_100_low_coords.png" class="image" title="Image:fpp_hex_100_low_coords.png"><img src="FPP_hex_files/Fpp_hex_100_low_coords.png" alt="Image:fpp_hex_100_low_coords.png" longdesc="/mediawiki1.7/index.php/Image:Fpp_hex_100_low_coords.png" height="550" width="743"></a>
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Fpp_no_hex_100_hi_coords.png" class="image" title="Image:fpp_no_hex_100_hi_coords.png"><img src="FPP_hex_files/Fpp_no_hex_100_hi_coords.png" alt="Image:fpp_no_hex_100_hi_coords.png" longdesc="/mediawiki1.7/index.php/Image:Fpp_no_hex_100_hi_coords.png" height="551" width="717"></a>
+<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Fpp_hex_100_hi_coords.png" class="image" title="Image:fpp_hex_100_hi_coords.png"><img src="FPP_hex_files/Fpp_hex_100_hi_coords.png" alt="Image:fpp_hex_100_hi_coords.png" longdesc="/mediawiki1.7/index.php/Image:Fpp_hex_100_hi_coords.png" height="551" width="717"></a>
+</p>
+<hr>
+<p>Julio made us aware of a problem drawing FocalPointPlasticity (FPP) 
+links for cells on a hex lattice.  To test, I simply edited the existing
+ Demos sim for FPP and made it a hex lattice:
+</p>
+<pre>/Demos/FocalPointPlasticity$ ty FocalPointPlasticity.xml 
+ &lt;CompuCell3D&gt;
+ &lt;Potts&gt;
+   &lt;Dimensions x="100" y="100" z="1"/&gt;
+   &lt;Steps&gt;10000&lt;/Steps&gt;
+   &lt;Temperature&gt;10&lt;/Temperature&gt;
+   &lt;Flip2DimRatio&gt;1&lt;/Flip2DimRatio&gt;
+   &lt;NeighborOrder&gt;2&lt;/NeighborOrder&gt;
+   &lt;LatticeType&gt;Hexagonal&lt;/LatticeType&gt;
+ &lt;/Potts&gt;
+
+
+ &lt;Plugin Name="Volume"&gt;
+   &lt;TargetVolume&gt;25&lt;/TargetVolume&gt;
+   &lt;LambdaVolume&gt;2.0&lt;/LambdaVolume&gt;
+ &lt;/Plugin&gt;
+
+&lt;Plugin Name="CellType"&gt;
+    &lt;CellType TypeName="Medium" TypeId="0"/&gt;
+    &lt;CellType TypeName="Condensing" TypeId="1"/&gt;
+    &lt;CellType TypeName="NonCondensing" TypeId="2"/&gt;
+ &lt;/Plugin&gt;
+
+  &lt;Plugin Name="Contact"&gt;
+   &lt;Energy Type1="Medium" Type2="Medium"&gt;0&lt;/Energy&gt;
+   &lt;Energy Type1="NonCondensing" Type2="NonCondensing"&gt;33&lt;/Energy&gt;
+   &lt;Energy Type1="Condensing"    Type2="Condensing"&gt;33&lt;/Energy&gt;
+   &lt;Energy Type1="NonCondensing" Type2="Condensing"&gt;33&lt;/Energy&gt;
+   &lt;Energy Type1="NonCondensing" Type2="Medium"&gt;16&lt;/Energy&gt;
+   &lt;Energy Type1="Condensing"    Type2="Medium"&gt;16&lt;/Energy&gt;
+   
+ &lt;/Plugin&gt;
+
+ 
+  &lt;Plugin Name="FocalPointPlasticity"&gt;
+  
+     &lt;Parameters Type1="Condensing" Type2="NonCondensing"&gt;
+       &lt;Lambda&gt;10.0&lt;/Lambda&gt;
+       &lt;ActivationEnergy&gt;-50.0&lt;/ActivationEnergy&gt;       
+       &lt;TargetDistance&gt;7&lt;/TargetDistance&gt;
+       &lt;MaxDistance&gt;20.0&lt;/MaxDistance&gt;
+       &lt;MaxNumberOfJunctions&gt;2&lt;/MaxNumberOfJunctions&gt;               
+    &lt;/Parameters&gt;  
+
+    &lt;Parameters Type1="Condensing" Type2="Condensing"&gt;
+       &lt;Lambda&gt;10.0&lt;/Lambda&gt;
+       &lt;ActivationEnergy&gt;-50.0&lt;/ActivationEnergy&gt;       
+       &lt;TargetDistance&gt;7&lt;/TargetDistance&gt;
+       &lt;MaxDistance&gt;20.0&lt;/MaxDistance&gt; 
+       &lt;MaxNumberOfJunctions&gt;2&lt;/MaxNumberOfJunctions&gt;        
+    &lt;/Parameters&gt;
+    
+ &lt;/Plugin&gt; 
+ 
+    &lt;Plugin Name="ExternalPotential"&gt;
+        &lt;ExternalPotentialParameters CellType="NonCondensing" x="-10" y="0" z="0"/&gt;
+    &lt;/Plugin&gt;
+
+ 
+&lt;!--  &lt;Plugin Name="Connectivity"&gt;
+   &lt;Penalty&gt;10000000&lt;/Penalty&gt;
+ &lt;/Plugin&gt; --&gt;
+ 
+ &lt;Steppable Type="PIFInitializer"&gt;
+   &lt;PIFName&gt;Demos/FocalPointPlasticity/FocalPointInit.piff&lt;/PIFName&gt;
+ &lt;/Steppable&gt;
+ 
+&lt;/CompuCell3D&gt;
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Fpp_demo_hex_no_offset.png" class="image" title="Image:fpp_demo_hex_no_offset.png"><img src="FPP_hex_files/Fpp_demo_hex_no_offset.png" alt="Image:fpp_demo_hex_no_offset.png" longdesc="/mediawiki1.7/index.php/Image:Fpp_demo_hex_no_offset.png" height="576" width="746"></a>
+</p><p>And this is the output from the function that draws the FPP links (player/Graphics/MVCDrawModel2D.py: initFPPLinksActor2D()
+</p>
+<pre>Step 1 Flips 10/10000 Energy -175.044 Cells 4 Inventory=4
+cell.id= 1
+cell.type= 1
+cell.id= 1   x,y (begin)= 50.7634795571 44.0486299975
+    x,yield  (end)= 50.6337351875 48.9498155888
+    x,yield  (end)= 56.4322531938 44.2187405631
+cell.id= 2
+cell.type= 1
+cell.id= 2   x,y (begin)= 50.6337351875 48.9498155888
+    x,yield  (end)= 50.7634795571 44.0486299975
+    x,yield  (end)= 56.4322531938 44.2187405631
+    x,yield  (end)= 56.335323648 49.2875906858
+cell.id= 3
+cell.type= 1
+cell.id= 3   x,y (begin)= 56.4322531938 44.2187405631
+    x,yield  (end)= 50.7634795571 44.0486299975
+    x,yield  (end)= 50.6337351875 48.9498155888
+    x,yield  (end)= 56.335323648 49.2875906858
+cell.id= 4
+cell.type= 2
+cell.id= 4   x,y (begin)= 56.335323648 49.2875906858
+    x,yield  (end)= 50.6337351875 48.9498155888
+    x,yield  (end)= 56.4322531938 44.2187405631
+</pre>
+<p>The drawing of the cells (pixels, not borders) on the hex lattice:
+</p>
+<pre>    def initCellFieldHexActors(self, _actors):
+        # cellField  = sim.getPotts().getCellFieldG()
+        # # # # print "INSIDE drawCellFieldHex"
+        # # # # print "drawing plane ",self.plane," planePos=",self.planePos
+        # fieldDim = cellField.getDim()
+        fieldDim = self.currentDrawingParameters.bsd.fieldDim
+        dimOrder    = self.dimOrder(self.currentDrawingParameters.plane)
+        self.dim = self.planeMapper(dimOrder, (fieldDim.x, fieldDim.y, fieldDim.z))# [fieldDim.x, fieldDim.y, fieldDim.z]         
+
+        self.cellType = vtk.vtkIntArray()
+        self.cellType.SetName("celltype")
+        self.cellTypeIntAddr=self.extractAddressIntFromVtkObject(self.cellType)
+        # a=21
+        self.hexCells=vtk.vtkCellArray()
+
+        self.hexCellsIntAddr=self.extractAddressIntFromVtkObject(self.hexCells)
+
+        self.hexCellsPolyData=vtk.vtkPolyData()
+        # **********************************************
+
+        self.hexPoints = vtk.vtkPoints()
+        # self.hexPoints.SetName("hexpoints")
+        self.hexPointsIntAddr=self.extractAddressIntFromVtkObject(self.hexPoints)
+
+        self.parentWidget.fieldExtractor.fillCellFieldData2DHex(self.cellTypeIntAddr,self.hexCellsIntAddr,self.hexPointsIntAddr,self.currentDrawingParameters.plane, self.currentDrawingParameters.planePos)
+        # self.parentWidget.fieldExtractor.fillCellFieldData2DHex(self.cellTypeIntAddr,self.hexPointsIntAddr,self.plane, self.planePos)
+
+        self.hexCellsPolyData.GetCellData().SetScalars(self.cellType)
+        self.hexCellsPolyData.SetPoints(self.hexPoints)
+        self.hexCellsPolyData.SetPolys(self.hexCells)
+
+        self.hexCellsMapper.SetInput(self.hexCellsPolyData)
+        self.hexCellsMapper.ScalarVisibilityOn()
+        self.hexCellsMapper.SetLookupTable(self.lut)
+        self.hexCellsMapper.SetScalarRange(0,self.lut.GetNumberOfColors())
+
+        _actors[0].SetMapper(self.hexCellsMapper)
+</pre>
+<p>Another thing to consider is how the cell borders for hex lattice are
+ being drawn... rf. core/pyinterface/PlayerPythonNew/FieldExtractor.cpp
+</p>
+<pre>void FieldExtractor::fillCellFieldData2DHex(long _cellTypeArrayAddr,long _hexCellsArrayAddr ,long _pointsArrayAddr, std::string _plane ,  int _pos){
+        vtkIntArray *_cellTypeArray=(vtkIntArray *)_cellTypeArrayAddr;
+        vtkPoints *_pointsArray=(vtkPoints *)_pointsArrayAddr;
+        vtkCellArray * _hexCellsArray=(vtkCellArray*)_hexCellsArrayAddr;
+
+        Field3D&lt;CellG*&gt; * cellFieldG=potts-&gt;getCellFieldG();
+        Dim3D fieldDim=cellFieldG-&gt;getDim();
+
+        vector&lt;int&gt; fieldDimVec(3,0);
+        fieldDimVec[0]=fieldDim.x;
+        fieldDimVec[1]=fieldDim.y;
+        fieldDimVec[2]=fieldDim.z;
+
+        vector&lt;int&gt; pointOrderVec=pointOrder(_plane);
+        vector&lt;int&gt; dimOrderVec=dimOrder(_plane);
+
+        vector&lt;int&gt; dim(3,0);
+        dim[0]=fieldDimVec[dimOrderVec[0]];
+        dim[1]=fieldDimVec[dimOrderVec[1]];
+        dim[2]=fieldDimVec[dimOrderVec[2]];
+
+        int offset=0;
+
+        ////For some reasons the points x=0 are eaten up (don't know why).
+        ////So we just populate empty cellIds.
+
+        //for (int i = 0&nbsp;; i&lt; dim[0]+1&nbsp;;++i){
+        //      _cellTypeArray-&gt;SetValue(offset, 0);
+        //      ++offset;
+        //}
+
+        Point3D pt;
+        vector&lt;int&gt; ptVec(3,0);
+        CellG* cell;
+        int type;
+        long pc=0;
+        //when accessing cell field it is OK to go outside cellfieldG limits. In this case null pointer is returned
+        for(int j =0&nbsp;; j&lt;dim[1]&nbsp;; ++j)
+                for(int i =0&nbsp;; i&lt;dim[0]&nbsp;; ++i){
+                        ptVec[0]=i;
+                        ptVec[1]=j;
+                        ptVec[2]=_pos;
+
+                        pt.x=ptVec[pointOrderVec[0]];
+                        pt.y=ptVec[pointOrderVec[1]];
+                        pt.z=ptVec[pointOrderVec[2]];
+
+                        cell=cellFieldG-&gt;get(pt);
+                        if (!cell){
+                                type=0;
+                                continue;
+                        }else{
+                                type=cell-&gt;type;
+                        }
+
+                        Coordinates3D&lt;double&gt; hexCoords=HexCoordXY(pt.x,pt.y,pt.z);
+                        for (int idx=0&nbsp;; idx&lt;6&nbsp;; ++idx){
+                         Coordinates3D&lt;double&gt; hexagonVertex=hexagonVertices[idx]+hexCoords;
+                         _pointsArray-&gt;InsertNextPoint(hexagonVertex.x,hexagonVertex.y,0.0);
+                        }
+                        pc+=6;
+                        vtkIdType cellId = _hexCellsArray-&gt;InsertNextCell(6);
+                        _hexCellsArray-&gt;InsertCellPoint(pc-6);
+                        _hexCellsArray-&gt;InsertCellPoint(pc-5);
+                        _hexCellsArray-&gt;InsertCellPoint(pc-4);
+                        _hexCellsArray-&gt;InsertCellPoint(pc-3);
+                        _hexCellsArray-&gt;InsertCellPoint(pc-2);
+                        _hexCellsArray-&gt;InsertCellPoint(pc-1);
+
+                        _cellTypeArray-&gt;InsertNextValue(type);
+
+                        ++offset;
+                }
+}
+</pre>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=FPP_hex&amp;action=edit&amp;section=1" title="Edit section: After doing proper scaling of hex-based cells (3-12-12)">edit</a>]</div><a name="After_doing_proper_scaling_of_hex-based_cells_.283-12-12.29"></a><h2> After doing proper scaling of hex-based cells (3-12-12) </h2>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Mcs75_glyphs_fpplinks_hexwing.png" class="image" title="Image:mcs75_glyphs_fpplinks_hexwing.png"><img src="FPP_hex_files/Mcs75_glyphs_fpplinks_hexwing.png" alt="Image:mcs75_glyphs_fpplinks_hexwing.png" longdesc="/mediawiki1.7/index.php/Image:Mcs75_glyphs_fpplinks_hexwing.png" height="594" width="941"></a>
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Mcs75_glyphs_fpplinks_hexwing_run2.png" class="image" title="Image:mcs75_glyphs_fpplinks_hexwing_run2.png"><img src="FPP_hex_files/Mcs75_glyphs_fpplinks_hexwing_run2.png" alt="Image:mcs75_glyphs_fpplinks_hexwing_run2.png" longdesc="/mediawiki1.7/index.php/Image:Mcs75_glyphs_fpplinks_hexwing_run2.png" height="594" width="941"></a>
+<br>Argh!  We can't reproduce results using RandomSeed? (is Julio using 'random' in his Python model?)
+</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Mcs76_cells_fpplinks_hexwing.png" class="image" title="Image:mcs76_cells_fpplinks_hexwing.png"><img src="FPP_hex_files/Mcs76_cells_fpplinks_hexwing.png" alt="Image:mcs76_cells_fpplinks_hexwing.png" longdesc="/mediawiki1.7/index.php/Image:Mcs76_cells_fpplinks_hexwing.png" height="594" width="941"></a>
+<br>Displaying normal cells instead of glyphs (but at next MCS).
+</p>
+<hr>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:351-0!1!0!0!!en!2 and timestamp 20120521200405 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/FPP_hex">http://old.compucell3d.org/mediawiki1.7/index.php/FPP_hex</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/FPP_hex">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:FPP_hex&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=FPP_hex&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=FPP_hex&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=FPP_hex">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(&quot;http://www.compucell3d.net/images/logo_trans.png&quot;);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=FPP_hex">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=FPP_hex">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=FPP_hex&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=FPP_hex&amp;oldid=27685">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="FPP_hex_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 20:42, 12 March 2012.</li>
+				<li id="viewcount">This page has been accessed 89 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.827 secs. -->
+
+</body></html>

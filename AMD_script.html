@@ -1,0 +1,359 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="AMD script,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>AMD script - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="AMD_script_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="AMD_script_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="AMD_script_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">AMD script</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>Abbas wanted to be able to specify a 3D camera view for rendering 
+using the .dml file.  So I added a "-p" arg to the cc3D cmd line.  One 
+would have previously saved a camera's params from a 3D
+graphics window using the Ctl-p (Cmd-p on OSX) which gets dumped into 
+"player.txt".
+Unfortunately, there seems to still be a problem capturing the "zoom" 
+factor. (rf. player/Plugins/ViewManagerPlugins/SimpleTabView.py: 
+processCommandLineOptions() and __dumpPlayerParams())
+</p>
+<pre>heiland@129-79-58-155:~/dev/Glazier/cc3d-3.5-jan14$ compucell3d.sh -i ~/Documents/Glazier/Abbas/2011/54-JRB-28_JRR-18_JRP-16_LRB30_LRR30_r0_xml_11_17_2010_15_14_30.dml -p player.txt
+</pre>
+<pre>heiland@Macintosh-91:~/dev/Glazier/cc3d-3.5-jan26$ ty player.txt 
+CameraPosition=  57.618023765965958  12.893181847341506  131.67053146725684 
+CameraFocalPoint=  42.747480207661482  20.562499368364175  -0.14456090171991509 
+CameraViewUp=  0.80097889769232666  0.59609785973579688  -0.05567896434011016 
+CameraClippingRange=  113.18473619133439  157.97642040272319 
+CameraDistance= 132.872758958
+ViewAngle= 30.0
+</pre>
+<p>Now, for Abbas's amd.py, we have a slightly modified input file:
+</p>
+<pre>heiland@Macintosh-91:~/Documents/Glazier/Abbas/2011$ ty celltypes.txt 
+celltype=7  rgb=(1,0,0)  smooth=50  opacity=1.0
+celltype=8  rgb=(1,1,0)  smooth=50  opacity=1.0
+celltype=5  rgb=(0,1,1)  smooth=50  opacity=1.0
+#celltype=99  rgb=(1,1,0.5)  smooth=0  opacity=1.0
+Zoom=1.5
+CameraPosition=  5289.5989438821525  1868.6044857235704  -5315.4983099185511 
+CameraFocalPoint=  20.25  20.25  17.75 
+CameraViewUp=  -0.67304223561217058  -0.16291145112384864  -0.7214388457623373 
+CameraClippingRange=  7583.0274838250771  7915.0814225265613 
+CameraDistance= 7721.78671892
+ViewAngle= 0.5
+WindowSize= 640 480
+</pre>
+<p>Note that the rendering script only renders 3D discrete cell type isosurfs:
+</p>
+<pre>#!/usr/bin/env python
+
+# amd.py 54-JRB-28_JRR-18_JRP-16_LRB30_LRR30_r0_xml_11_17_2010_15_14_30_000000.vtk celltypes.txt
+
+import sys, string
+from vtk import *
+
+argc = len(sys.argv)
+print 'argc=',argc
+if argc &lt; 3:
+        print 'Usage: ',sys.argv[0],' &lt;vtkFile&gt; &lt;paramsFile&gt;'
+        raise ValueError, 'Too few input args'
+
+idx = 1
+vtkFile = sys.argv[idx]
+idx += 1
+paramsFile = sys.argv[idx]
+idx += 1
+
+#----------------------------------------
+# Create the renderer, render window, and interactor.
+ren = vtkRenderer()
+renWin = vtkRenderWindow()
+winW = 400
+winH = 400
+renWin.SetSize(winW,winH)
+renWin.AddRenderer(ren)
+iren = vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
+
+#---- parse the paramsFile
+#celltype=7  rgb=(1,0,0)  smooth=0  opacity=1.0
+#celltype=8  rgb=(1,1,0)  smooth=0  opacity=1.0
+#Zoom=1.5
+#CameraPosition=  5289.5989438821525  1868.6044857235704  -5315.4983099185511 
+#...
+
+celltype = []
+ctColor = []
+smoothIters = []
+with open(paramsFile, 'r') as f:
+  while True:
+    l = f.readline()
+    if l == "": break
+    if l[0] == '#': 
+      print '---&gt; skip over: ',l
+      continue
+#    l = l.replace('=',' ').replace(',',' ')
+    while string.find(l,', ') &gt; -1: l = l.replace(', ', ',') 
+    while string.find(l,' ,') &gt; -1: l = l.replace(' ,', ',') 
+    while string.find(l,'( ') &gt; -1: l = l.replace('( ', '(') 
+    while string.find(l,' )') &gt; -1: l = l.replace(' )', ')') 
+      
+#    while string.find(l, ' ,'): l=l.replace(' ,',',') 
+    l = l.replace('=',' ')
+    v = l.split()
+    if len(v) == 0: break
+    print v
+    if string.find(v[0], 'celltype') &gt; -1:
+      celltype.append(int(v[1]))
+      ctColor.append((v[3]))
+      smoothIters.append(int(v[5]))
+#      print 'smoothIters = ',smoothIters
+    elif string.find(v[0], 'CameraPosition') &gt; -1:
+      ren.GetActiveCamera().SetPosition(float(v[1]), float(v[2]), float(v[3]))
+    elif string.find(v[0], 'CameraFocalPoint') &gt; -1:
+      ren.GetActiveCamera().SetFocalPoint(float(v[1]), float(v[2]), float(v[3]))
+    elif string.find(v[0], 'CameraViewUp') &gt; -1:
+      ren.GetActiveCamera().SetViewUp(float(v[1]), float(v[2]), float(v[3]))
+    elif string.find(v[0], 'CameraClippingRange') &gt; -1:
+      ren.GetActiveCamera().SetClippingRange(float(v[1]), float(v[2]))
+    elif string.find(v[0], 'ViewAngle') &gt; -1:
+      ren.GetActiveCamera().SetViewAngle(float(v[1]))
+    elif string.find(v[0], 'WindowSize') &gt; -1:
+      renWin.SetSize(int(v[1]), int(v[2]))
+
+print 'celltype = ',celltype
+print 'ctColor = ',ctColor
+
+
+#----------------------------------------
+reader = vtkStructuredPointsReader()
+reader.SetFileName(vtkFile)
+reader.Update()
+#print 'info = ', reader.GetInformation()
+#print 'num PtArrays = ', reader.GetNumberOfPointArrays()
+
+aa = vtk.vtkAssignAttribute()
+aa.SetInputConnection(reader.GetOutputPort())
+aa.Assign("CellType", "SCALARS", "POINT_DATA")
+#aa.Assign("CellId", "SCALARS", "POINT_DATA")
+#aa.Assign("Cells", "SCALARS", "POINT_DATA")
+aa.Update()
+
+#---------------------------------------------
+# Cell types:
+# vasc = 7
+#---------------------------------------------
+
+dmc = ['dmc'+str(x) for x in celltype]
+smooth = ['smooth'+str(x) for x in celltype]
+normals = ['normals'+str(x) for x in celltype]
+mapper = ['mapper'+str(x) for x in celltype]
+actor = ['actor'+str(x) for x in celltype]
+
+idx = 0
+for idx in range(len(celltype)):
+  dmc[idx] = vtkDiscreteMarchingCubes()
+  dmc[idx].SetInputConnection(aa.GetOutputPort())
+  dmc[idx].SetValue(0, celltype[idx])
+
+  mapper[idx] = vtkPolyDataMapper()
+  mapper[idx].ScalarVisibilityOff()   # turn off for single color isosurface
+
+  normals[idx] = vtkPolyDataNormals()
+  if smoothIters[idx] &gt; 0:
+    smooth[idx] = vtkSmoothPolyDataFilter()
+    smooth[idx].SetInput(dmc[idx].GetOutput())
+    print 'smoothing polydata with # iters = ',smoothIters[idx]
+    smooth[idx].SetNumberOfIterations(smoothIters[idx])
+    normals[idx].SetInputConnection(smooth[idx].GetOutputPort())
+    #normals[idx].FlipNormalsOn()
+    mapper[idx].SetInputConnection(normals[idx].GetOutputPort())
+  else:
+    mapper[idx].SetInputConnection(dmc[idx].GetOutputPort())
+
+
+  actor[idx] = vtkActor()
+  actor[idx].SetMapper(mapper[idx])
+  actor[idx].GetProperty().SetOpacity(1.0)
+  print 'ctColor[idx] =',ctColor[idx]
+  rgb = ctColor[idx].replace('(','').replace(')','').replace(',',' ')
+  print 'rgb=',rgb
+#  print 'rgb.split() = ',rgb.split()
+  rgb = rgb.split()
+  print 'rgb split=',rgb
+  red = float(rgb[0])/255.0
+  green = float(rgb[1])/255.0
+  blue = float(rgb[2])/255.0
+  print 'r,g,b=',red,green,blue
+#  for x in rgb: print x
+#  color = [int(x) for x in rgb]
+#  color = [float(x) for x in rgb]
+#  print 'color=',color
+#  r1,g1,b1 = 1.0, 0.0, 0.0
+  actor[idx].GetProperty().SetColor(red, green, blue)
+#  actor[idx].GetProperty().SetColor(color)
+
+  ren.AddActor(actor[idx])
+
+#---------------------------------------------
+# Create outline an outline of the sampled data.
+outline = vtkOutlineFilter()
+outline.SetInputConnection(reader.GetOutputPort())
+
+outlineMapper = vtkPolyDataMapper()
+outlineMapper.SetInputConnection(outline.GetOutputPort())
+
+outlineActor = vtkActor()
+outlineActor.SetMapper(outlineMapper)
+outlineActor.GetProperty().SetColor(0, 0, 0)
+outlineActor.GetProperty().SetColor(1, 1, 1)
+
+ren.SetBackground(0, 0, 0)
+
+ren.AddActor(outlineActor)
+
+# Zoom in a little bit.
+ren.ResetCamera()
+zoomVal = 1.2
+ren.GetActiveCamera().Zoom(zoomVal)
+
+# cam pos= (49.5, 49.5, 488.774513361804)
+#print 'cam pos=',ren.GetActiveCamera().GetPosition()
+#ren.GetActiveCamera().SetPosition([49.5, )
+#ren.GetActiveCamera().SetViewUp([49.5, )
+
+setCamera = False
+if setCamera:
+  ren.GetActiveCamera().SetPosition(215.94006926349266, -292.4357250468081, 230.77223991140951)
+  ren.GetActiveCamera().SetViewUp(-0.13254870277375616, 0.34633686019740406, 0.92869888589445293)
+  ren.GetActiveCamera().SetDistance(409.274513362)
+  ren.GetActiveCamera().SetFocalPoint(49.5, 49.5, 79.5)
+  ren.GetActiveCamera().SetEyeAngle(2.0)  
+  #ren.GetActiveCamera().SetOrientation(-56.664592359680611, -47.733269186959966, -50.932805156390216)
+#  ren.GetActiveCamera().SetRoll(-50.9328051564)       
+
+# Initialize and start the event loop.
+iren.Initialize()
+renWin.Render()
+
+w2i = vtkWindowToImageFilter()
+w2i.SetInput(renWin)
+
+imgw = vtkPNGWriter()
+imgw.SetInput(w2i.GetOutput())
+fileOut = vtkFile[:-4] + ".png"
+fileOut = "foo.png"
+print '--&gt; ',fileOut
+imgw.SetFileName(fileOut)
+imgw.Write()
+
+iren.Start()   # comment out for ipython?
+</pre>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:236-0!1!0!0!!en!2 and timestamp 20120521202053 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/AMD_script">http://old.compucell3d.org/mediawiki1.7/index.php/AMD_script</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/AMD_script">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:AMD_script&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=AMD_script&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=AMD_script&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=AMD_script">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(&quot;http://www.compucell3d.net/images/logo_trans.png&quot;);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=AMD_script">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=AMD_script">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=AMD_script&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=AMD_script&amp;oldid=27769">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="AMD_script_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 18:14, 20 April 2012.</li>
+				<li id="viewcount">This page has been accessed 72 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.373 secs. -->
+
+</body></html>

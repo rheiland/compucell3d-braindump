@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="Testing,Heiland" />
+<link rel="shortcut icon" href="/favicon.ico" />
+		<title>Testing - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="/mediawiki1.7/skins/common/commonPrint.css" />
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="/mediawiki1.7/skins/common/wikibits.js?1"><!-- wikibits js --></script>
+		<script type="text/javascript" src="/mediawiki1.7/index.php?title=-&amp;action=raw&amp;gen=js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body  class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Testing</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>This page attempts to describe various techniques we use to test CompuCell3D.  Admittedly, there is much more work to do in this important area.  (Although very VTK-specific, one can learn a lot by referring to the following VTK file:
+.../Wrapping/Python/vtk/test/Testing.py)
+</p><p>For starters, we provide a Python script, testXML.py, that will do some simple editing of a .xml configuration file and run compucell on the file, saving the generated output to a file.  Running this script on all provided .xml config files will test for errors.
+</p>
+<pre>
+# example use (on Unix):
+# % mkdir xml-tests
+# % cd xml-tests
+# % cp ../*.pif .
+# % cp ../*.txt .
+# % testXML.py vectorPlot.xml
+# % ../compucell3d.sh -i vectorPlot.xml
+# % ls -l *.xml|awk {'print &quot;testXML.py  &quot; $9'} &gt; testAll.sh
+# % sh testAll.sh
+</pre>
+<p>Here is the (merged) output of running such a test on one set of .xml files revealing, for example, various missing plugins:
+</p>
+<pre>
+../compucell3d.sh -i ContSorting2.xml
+../compucell3d.sh -i ContactMultiCad.xml
+../compucell3d.sh -i Foam_1.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/Foam_1.xml:33:32 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'CellVelocity not found!
+
+../compucell3d.sh -i Foam_try.xml
+../compucell3d.sh -i Foam_uniform.xml
+../compucell3d.sh -i amoebae_2D.xml
+../compucell3d.sh -i amoebae_2D_PlayerSettings.xml
+../compucell3d.sh -i amoebae_2D_secretion.xml
+../compucell3d.sh -i bacterium_macrophage_2D.xml
+../compucell3d.sh -i cellsort.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/cellsort.xml:46:32 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'OutputData not found!
+
+../compucell3d.sh -i cellsort_2D.xml
+../compucell3d.sh -i cellsort_2D_box_watcher.xml
+../compucell3d.sh -i cellsort_2D_contact_local_flex.xml
+../compucell3d.sh -i cellsort_2D_hex.xml
+../compucell3d.sh: line 200: 15710 Bus error               ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i cellsort_2D_statistics.xml
+../compucell3d.sh -i cellsort_2D_statistics_spin_flip.xml
+../compucell3d.sh -i cellsort_3D.xml
+../compucell3d.sh -i cellsort_engulfment_2D.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/cellsort_engulfment_2D.xml:50:32 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'OutputData not found!
+
+../compucell3d.sh -i cellsort_engulfment_diffusion_2D.xml
+../compucell3d.sh: line 200: 15742 Bus error               ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i connectivityTest.xml
+../compucell3d.sh -i dicty_try_40x40.xml
+../compucell3d.sh -i diffusion_2D.xml
+../compucell3d.sh: line 200: 15761 Bus error               ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+ERROR: In /Users/heiland/Documents/workspace/VTK-DistribGraph/Common/vtkObject.cxx, line 160
+vtkObject (0x568ed80): Trying to delete object with non-zero reference count.
+Generic Warning: In /Users/heiland/Documents/workspace/VTK-DistribGraph/Common/vtkObjectBase.cxx, line 76
+Trying to delete object with non-zero reference count.
+
+../compucell3d.sh -i diffusion_2D_multicall.xml
+ERROR: In /Users/heiland/Documents/workspace/VTK-DistribGraph/Common/vtkObject.cxx, line 160
+vtkObject (0x568e810): Trying to delete object with non-zero reference count.
+Generic Warning: In /Users/heiland/Documents/workspace/VTK-DistribGraph/Common/vtkObjectBase.cxx, line 76
+Trying to delete object with non-zero reference count.
+
+../compucell3d.sh -i diffusion_2D_try.xml
+../compucell3d.sh: line 200: 15774 Segmentation fault      ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i diffusion_fast_box.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/diffusion_fast_box.xml:39:44 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/CompuCell3D/Boundary/BoundaryStrategy.h:191 instantiate function has not been called yet for BoundaryStrategy. Cannot return an object
+
+../compucell3d.sh -i diffusion_inside_2D.xml
+../compucell3d.sh -i diffusion_wall_2D.xml
+../compucell3d.sh: line 200: 15793 Segmentation fault      ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i drosophila_wing.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/drosophila_wing.xml:13:29 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'VolumeLocal not found!
+
+../compucell3d.sh -i drosophila_wing_contact_local_flex.xml
+../compucell3d.sh -i drosophila_wing_contact_local_product.xml
+../compucell3d.sh -i drosophila_wing_extra_attrib.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/drosophila_wing_extra_attrib.xml:13:29 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'VolumeLocal not found!
+
+../compucell3d.sh -i elongationFlexTest.xml
+../compucell3d.sh: line 200: 15824 Segmentation fault      ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i elongationTest.xml
+../compucell3d.sh -i flexDiff.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/flexDiff.xml:37:29 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'ContactFlex not found!
+
+../compucell3d.sh -i growingcells.xml
+../compucell3d.sh: line 200: 15843 Bus error               ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i oriented-cellsort.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/oriented-cellsort.xml:49:34 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'MomentOfInertia not found!
+
+../compucell3d.sh -i plasticitytest.xml
+../compucell3d.sh -i vectorPlot.xml
+</pre>
+<li>Back to <a href="/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:39-0!1!0!0!!en!2 and timestamp 20120522020606 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Testing">http://old.compucell3d.org/mediawiki1.7/index.php/Testing</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a href="/mediawiki1.7/index.php/Testing">Article</a></li>
+				 <li id="ca-talk" class="new"><a href="/mediawiki1.7/index.php?title=Talk:Testing&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a href="/mediawiki1.7/index.php?title=Testing&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a href="/mediawiki1.7/index.php?title=Testing&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Testing">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(http://www.compucell3d.net/images/logo_trans.png);" href="/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class='portlet' id='p-navigation'>
+		<h5>Navigation</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage"><a href="/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li id="n-portal"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li id="n-currentevents"><a href="/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a href="/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a href="/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li id="n-help"><a href="/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li id="n-sitesupport"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" type="text" accesskey="f" value="" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="Go" />&nbsp;
+				<input type='submit' name="fulltext" class="searchButton" value="Search" />
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Testing">What links here</a></li>
+				<li id="t-recentchangeslinked"><a href="/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Testing">Related changes</a></li>
+<li id="t-upload"><a href="/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a href="/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="/mediawiki1.7/index.php?title=Testing&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="/mediawiki1.7/index.php?title=Testing&amp;oldid=244">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="/mediawiki1.7/skins/common/images/poweredby_mediawiki_88x31.png" alt="MediaWiki" /></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 14:51, 11 March 2009.</li>
+				<li id="viewcount">This page has been accessed 176 times.</li>
+				<li id="privacy"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.468 secs. -->
+</body></html>

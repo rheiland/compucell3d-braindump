@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="Cc3d on bigred,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>Cc3d on bigred - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="Cc3d_on_bigred_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="Cc3d_on_bigred_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="Cc3d_on_bigred_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Cc3d on bigred</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>Trying to document the pain in building on BigRed.  Some of the issues involve older gcc, older Python, pre-built VTK, etc.
+</p>
+<pre>----------- first, my environment --------------
+
+heiland@BigRed:~/dev/Abbas&gt; more ~/.soft
+#   
+# This is the .soft file.
+# It is used to customize your environment by setting up environment
+# variables such as PATH and MANPATH.
+# To learn what can be in this file, use 'man softenv'.
+#
+#
+#+python-2.4.3_32
+#+python-2.6.1_32
+#+python-2.6.1_64
+#+gcc-4.2.2
+#+gcc-4.1.1
++cmake-2.6.4
++swig-1.3.29
+#+vtk-5.0.3
+##+vtk-5.0.2-64
+#@namd-ibm-64
+#+openmpi-1.2.6-gcc-64
+#@globus-4.0
+@bigred
+
+
+---------------------
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; which gcc
+/usr/bin/gcc
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; gcc --version
+gcc (GCC) 3.3.3 (SuSE Linux)
+Copyright (C) 2003 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; which swig
+/N/soft/linux-sles9-ppc64/swig-1.3.29/bin/swig
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; swig -version
+SWIG Version 1.3.29
+Compiled with g++ [powerpc64-unknown-linux-gnu]
+
+
+heiland@BigRed:~/dev/Abbas&gt; env|grep -i vtk
+VTK_DIR=/N/u/heiland/BigRed/dev/VTK-build-py2.3
+
+
+---------------------
+
+I copied over the cc3D source from Abbas's dir (because /N/dc was VERY slow and because I knew I'd likely be making 
+edits to the source):
+
+heiland@BigRed:~/dev/Abbas/cc3d-src/&gt;  cp -R /N/dc/projects/Compucell3D/Abbas_Shirinifard_CC3D/3-4-2-branch-source .
+
+then the build begins...
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; cmake -DCMAKE_INSTALL_PREFIX:PATH=~/dev/Abbas/cc3d-9-9-10  ~/dev/Abbas/cc3d-src/3-4-2-branch-source
+
+...
+
+make
+...
+/N/u/heiland/BigRed/dev/Abbas/cc3d-src/3-4-2-branch-source/core/PublicUtilities/Vector3.h:EOF: Error: Missing #endif for conditional starting on line 1
+make[2]: *** [core/pyinterface/CompuCellPython/CompuCellPYTHON_wrap.cxx] Error 1
+
+--&gt; just insert a newline after the #endif
+
+
+[100%] Swig source
+/N/u/heiland/BigRed/dev/Abbas/cc3d-src/3-4-2-branch-source/core/pyinterface/Example/PyNewPlugin.h:EOF: Error: Missing #endif for conditional starting on line 1
+make[2]: *** [core/pyinterface/Example/ExamplePYTHON_wrap.cxx] Error 1
+
+--&gt; add newline at end
+
+
+-----------------------
+Eventually discover that we need to avoid MolecularContact plugin (because it tries to use some low-level
+Python stuff and due to an old Python on BigRed, get problems with header, etc):
+
+Commenting out the MolecularContact plugin:
+heiland@BigRed:~/dev/Abbas/cc3d-src/3-4-2-branch-source/core/CompuCell3D/plugins&gt; vi CMakeLists.txt
+#ADD_SUBDIRECTORY(MolecularContact)
+and:
+heiland@BigRed:~/dev/Abbas/cc3d-src/3-4-2-branch-source/core/pyinterface/CompuCellPython&gt; vi CMakeLists.txt
+  #   MolecularContactShared
+
+
+Get rid of ALL attempted uses of MolecularContact plugin wrapping in the swig files!!
+
+heiland@BigRed:~/dev/Abbas/cc3d-src/3-4-2-branch-source/core/CompuCell3D/plugins&gt; vi CMakeLists.txt
+--&gt;
+#ADD_SUBDIRECTORY(MolecularContact)
+
+
+heiland@BigRed:~/dev/Abbas/cc3d-src/3-4-2-branch-source/core/pyinterface/CompuCellPython&gt; grep larconta *
+CMakeLists.txt:#   MolecularContactShared
+CompuCellExtraDeclarations.i:#define MOLECULARCONTACT_EXPORT
+CompuCellExtraDeclarations.i://MolecularContactPlugin
+CompuCellExtraDeclarations.i:%include &lt;CompuCell3D/plugins/MolecularContact/MolecularContactPlugin.h&gt;
+
+---&gt;
+heiland@BigRed:~/dev/Abbas/cc3d-src/3-4-2-branch-source/core/pyinterface/CompuCellPython&gt; vi CompuCell.i
+//#define MOLECULARCONTACT_EXPORT
+
+CompuCellExtraDeclarations.i:
+//#define MOLECULARCONTACT_EXPORT
+...
+//%include &lt;CompuCell3D/plugins/MolecularContact/MolecularContactPlugin.h&gt;
+/* %nothread MolecularContactPlugin */
+/* %template (moleculemapaccessor) BasicClassAccessor&lt;MoleculeNameMap_t&gt;; //necessary to get MolecularContactPlugin accessor working */
+
+/* %template (molecularlcontactMapPyItr) STLPyIterator&lt;std::map&lt;CompuCell3D::MolecularContactData&gt; &gt;; */
+/* %template (molecularlcontactDataSet) std::map&lt;CompuCell3D::MolecularContactData&gt;; //necessary to get basic map functionality working */
+   
+/*
+%inline %{
+   MolecularContactPlugin * getMolecularContactPlugin(){
+      return (MolecularContactPlugin *)Simulator::pluginManager.get("MolecularContact");
+   }   
+%}
+*/
+CompuCellExtraIncludes.i://#include &lt;CompuCell3D/plugins/MolecularContact/MolecularContactPlugin.h&gt;
+
+
+----------------------------------------------------------------
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; ty runScript.sh 
+
+current_directory=$(pwd)
+
+export PREFIX_CC3D=/N/u/heiland/BigRed/dev/Abbas/cc3d-9-9-10
+
+export VTK_DIR=/N/u/heiland/BigRed/dev/VTK-build-py2.3
+
+
+# following dir contains _CompuCell.so
+# core/pyinterface/CompuCellPython
+
+cd $PREFIX_CC3D
+export LD_LIBRARY_PATH=${VTK_DIR}/bin
+
+export COMPUCELL3D_PLUGIN_PATH=${PREFIX_CC3D}/lib/CompuCell3DPlugins
+export COMPUCELL3D_STEPPABLE_PATH=${PREFIX_CC3D}/lib/CompuCell3DSteppables
+
+export LD_LIBRARY_PATH=${PREFIX_CC3D}/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${PREFIX_CC3D}/lib/python:$LD_LIBRARY_PATH
+#export LD_LIBRARY_PATH=${PREFIX_CC3D}/core/pyinterface/CompuCellPython:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${COMPUCELL3D_PLUGIN_PATH}:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${COMPUCELL3D_STEPPABLE_PATH}:$LD_LIBRARY_PATH
+
+echo "LD_LIB_PATH =  $LD_LIBRARY_PATH"
+
+export SWIG_LIB_INSTALL_DIR=${PREFIX_CC3D}/lib/python
+#export PYTHON_MODULE_PATH=${PREFIX_CC3D}/pythonSetupScripts:${PREFIX_CC3D}/core/pyinterface/CompuCellPython
+export PYTHONPATH=${PREFIX_CC3D}/pythonSetupScripts:${PREFIX_CC3D}/core/pyinterface/CompuCellPython:$PYTHONPATH
+export PYTHON_MODULE_PATH=.
+
+
+export COMPUCELL3D_MAJOR_VERSION=3
+export COMPUCELL3D_MINOR_VERSION=4
+export COMPUCELL3D_BUILD_VERSION=2
+
+export SOSLIB_PATH=${PREFIX_CC3D}/examplesSoslib
+
+echo "CompuCell3D - version $COMPUCELL3D_MAJOR_VERSION.$COMPUCELL3D_MINOR_VERSION.$COMPUCELL3D_BUILD_VERSION"
+
+python ${PREFIX_CC3D}/player/CompuCellPythonSimulationCML.py $* --currentDir=${current_directory}
+
+cd ${current_directory}
+
+----------------------------------------------------------------
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; runScript.sh -i Demos/cellsort_2D/cellsort_2D.xml
+
+... (get this error in different places; due to different APIs in different Pythons)
+Traceback (most recent call last):
+  File "/N/u/heiland/BigRed/dev/Abbas/cc3d-9-9-10/player/CompuCellPythonSimulationCML.py", line 111, in&nbsp;?
+    traceback_message=traceback.format_exc()
+AttributeError: 'module' object has no attribute 'format_exc'
+
+--&gt;
+    #traceback_message=traceback.format_exc()
+    traceback_message=traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback)
+
+
+----------------------------------------------------------------
+
+/N/u/heiland/BigRed/dev/Abbas/cc3d-9-9-10/pythonSetupScripts/CMLFieldHandler.py
+#class CMLFieldHandler():
+class CMLFieldHandler:
+
+following had a tab, change to spaces:
+        if (_mcs % 100):  return   # only dump modulo N mcs steps
+
+
+----------------------------------------------------------------
+
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; nm /N/u/heiland/BigRed/dev/Abbas/cc3d-9-9-10/core/pyinterface/CompuCellPython/_CompuCell.so | grep -i molecularcontact
+
+
+----------------------------------------------------------------
+
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt;  runScript.sh -i /N/u/heiland/BigRed/dev/Abbas/model/1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_SimData/1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0.xml
+...
+
+
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; ls ../model/
+1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_SimData/
+
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; ls ../model/1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_SimData/
+1-JRB-38JRR-40JRP-16LRB300LRR300r0_08092010_10_50_10.txt	  40x40-OuterRetina-BrM-CC.txt*		      angio_growth_steppables_08092010_10_50_10.py*
+1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0.xml*			  angio_growth_08092010_10_50_10.py*	      angio_growth_steppables_08092010_10_50_10.pyc
+1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_xml_09_09_2010_11_02_34/  angio_growth_plugins_08092010_10_50_10.py*
+1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_xml_09_09_2010_11_43_25/  angio_growth_plugins_08092010_10_50_10.pyc
+
+heiland@BigRed:~/dev/Abbas/cc3d-9-9-10&gt; ll ../model/1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_SimData/1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_xml_09_09_2010_11_43_25/
+total 1360
+-rw-r--r--  1 heiland uits 1382821 2010-09-09 11:43 1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_xml_09_09_2010_11_43_25_000000.vtk
+-rw-r--r--  1 heiland uits    1082 2010-09-09 11:43 1-JRB-38_JRR-40_JRP-16_LRB300_LRR300_r0_xml_09_09_2010_11_43_25.dml
+
+</pre>
+<p>We copy the .dml and .vtk files back to a laptop to display via cc3D:
+</p>
+<p>
+<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Bigred-abbas-mcs0.png" class="image" title="Image:bigred-abbas-mcs0.png"><img src="Cc3d_on_bigred_files/Bigred-abbas-mcs0.png" alt="Image:bigred-abbas-mcs0.png" longdesc="/mediawiki1.7/index.php/Image:Bigred-abbas-mcs0.png" height="517" width="797"></a>
+
+</p><hr>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a><p></p>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:214-0!1!0!0!!en!2 and timestamp 20120521202303 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Cc3d_on_bigred">http://old.compucell3d.org/mediawiki1.7/index.php/Cc3d_on_bigred</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Cc3d_on_bigred">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Cc3d_on_bigred&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cc3d_on_bigred&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cc3d_on_bigred&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Cc3d_on_bigred">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(&quot;http://www.compucell3d.net/images/logo_trans.png&quot;);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Cc3d_on_bigred">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Cc3d_on_bigred">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cc3d_on_bigred&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Cc3d_on_bigred&amp;oldid=21601">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Cc3d_on_bigred_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 18:41, 9 September 2010.</li>
+				<li id="viewcount">This page has been accessed 404 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.589 secs. -->
+
+</body></html>

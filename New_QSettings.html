@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="New QSettings,Heiland,Startup params">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>New QSettings - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="New_QSettings_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="New_QSettings_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="New_QSettings_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">New QSettings</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Startup_params" title="Startup params">startup_params</a> - for older wiki page on saving Prefs
+</p><p>We now use the QSettings.IniFormat format instead of the 
+.NativeFormat format.  This means the cc3D Preferences file will be 
+saved locally in a user's directory, instead of some system-level 
+directory/registry.  And this will offer us a better way to provide cc3D
+ simulation-dependent preferences. 
+</p><p>For more information, rf <a href="http://www.riverbankcomputing.co.uk/static/Docs/PyQt4/html/qsettings.html#Format-enum" class="external free" title="http://www.riverbankcomputing.co.uk/static/Docs/PyQt4/html/qsettings.html#Format-enum" rel="nofollow">http://www.riverbankcomputing.co.uk/static/Docs/PyQt4/html/qsettings.html#Format-enum</a>
+</p><p>For now, we simply make it possible for the user to specify a 
+new/existing Prefs filename on the compucell3d startup script.  If none 
+is specified, then the default file "cc3d_default.ini" will be used.  
+However, it is now possible to specify a different file via:
+</p><p>compucell3d.sh --prefs=my_cool_sim_prefs
+</p><p>The preferences filename will be shown in a the Output tab of the
+ CC3D Preferences dialog; however, the widgets to change it during a 
+simulation are currently disable.  Eventually, we make them functional 
+so that a user could change the preferences from within the GUI.
+</p>
+<pre>On OSX/Linux:
+~/.config/Biocomplexity$ ll
+total 8
+-rw-r--r--  1 heiland  staff  2934 Aug 31 15:24 cc3d_default.ini
+-rw-r--r--  1 heiland  staff  2739 Sep 16 10:16 my_cool_sim_prefs.ini
+
+
+On Windows:
+??
+
+</pre>
+<p>Unfortunately, some of the parameters are stored as Qt QVariants, which are not ascii-legible, e.g.:
+</p>
+<pre>~/.config/Biocomplexity$ more cc3d_default.ini 
+[General]
+FPPLinksOn=false
+FPPLinksColorOn=false
+CellGlyphsOn=false
+CellBordersOn=false
+FieldParams=@Variant(\0\0\0\b
+...(very lengthy nonsense)...
+TabIndex=2
+ScreenUpdateFrequency=1
+ImageOutputOn=false
+SaveImageFrequency=1
+LatticeOutputOn=false
+SaveLatticeFrequency=20
+UseInternalConsole=false
+ClosePlayerAfterSimulationDone=false
+ProjectLocation=/Users/heiland/dev/Glazier/cc3d-11-22-11
+OutputLocation=/Users/heiland/CC3DWorkspace
+OutputToProjectOn=false
+PreferencesFile=cc3d_default
+TypeColorMap=0, #000000, 1, #fff6f9, 2, #0d7dff, 3, #ff0000, 4, #377880, 5, #c0c0c0, 6, #ff00ff, 7, #000080, 8, #00ffff, 9, #008000, 10, #ffffff
+MinRange=10.0
+MinRangeFixed=false
+MaxRange=5.0
+MaxRangeFixed=false
+NumberOfLegendBoxes=3
+NumberAccuracy=2
+LegendEnable=true
+NumberOfContourLines=5
+ContoursOn=false
+ArrowLength=1
+ScaleArrowsOn=false
+FixedArrowColorOn=false
+OverlayVectorsOn=false
+Types3DInvisible=0
+MainWindowPosition=@Point(347 57)
+ClusterBorderColor=@Variant(\0\0\0\x43\x1\xff\xff\0\0\0\0\xff\xff\0\0)
+ArrowColor=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
+PlayerSizes=@ByteArray(\0\0\0\xff\0\0\0\0\xfd\0\0\0\x2\0\0\0\0\0\0\x1\"\0\0\x2\x35\xfc\x2\0\0\0\x3\xfb\0\0\0\x1e\0M\0o\0\x64\0\x65\0l\0\x45\0\x64\0i\0t\0o\0r\0\x44\0o\0\x63\0k\x1\0\0\0\x1e\0\0\x2\x35\0\0\0\x66\0\xff\xff\xff\xfb\0\0\0\x16\0P\0l\0u\0g\0i\0n\0s\0\x44\0o\0\x63\0k\0\0\0\x1M\0\0\x1)\0\0\0\x66\0\xff\xff\xff\xfb\0\0\0\x1e\0L\0\x61\0t\0t\0i\0\x63\0\x65\0\x44\0\x61\0t\0\x61\0\x44\0o\0\x63\0k\0\0\0\0\x1e\0\0\x2O\0\0\0\x66\0\xff\xff\xff\0\0\0\x3\0\0\x2\x18\0\0\0\x81\xfc\x1\0\0\0\x1\xfb\0\0\0\xe\0\x43\0o\0n\0s\0o\0l\0\x65\0\0\0\x1\x1\0\0\x2\x18\0\0\0\x87\0\xff\xff\xff\0\0\x3|\0\0\x2\x35\0\0\0\x1\0\0\0\x4\0\0\0\x1\0\0\0\b\xfc\0\0\0\x1\0\0\0\x2\0\0\0\x4\0\0\0\x14\0S\0i\0m\0T\0o\0o\0l\0\x62\0\x61\0r\x1\0\0\0\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\x16\0\x46\0i\0l\0\x65\0T\0o\0o\0l\0\x62\0\x61\0r\x1\0\0\0\x91\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\x16\0V\0i\0\x65\0w\0T\0o\0o\0l\0\x62\0\x61\0r\x1\0\0\x1\"\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\x1a\0W\0i\0n\0\x64\0o\0w\0T\0o\0o\0l\0\x62\0\x61\0r\x1\0\0\x1\xd8\xff\xff\xff\xff\0\0\0\0\0\0\0\0)
+ZoomFactor=1
+CC3DOutputOn=true
+BorderColor=@Variant(\0\0\0\x43\x1\xff\xff\tz\x5\x8d\xe\x11\0\0)
+ClusterBordersOn=false
+ContourColor=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
+CellsOn=true
+ConcentrationLimitsOn=true
+MainWindowSize=@Size(1183 616)
+RecentFile=/Users/heiland/dev/Glazier/cc3d-11-22-11/examples_PythonTutorial/diffusion_extra_player_field/diffusion_extra_player_field.cc3d
+Projection=0
+PenColor=@Variant(\0\0\0\x43\x1\xff\xff\0\0\0\0\0\0\0\0)
+BrushColor=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
+RecentSimulations=/Users/heiland/dev/Glazier/cc3d-11-22-11/examples_PythonTutorial/diffusion_extra_player_field/diffusion_extra_player_field.cc3d, /Users/heiland/dev/Glazier/cc3d-11-22-11/examples_PythonTutorial/cellsort_2D_extra_attrib/cellsort_2D_extra_attrib.cc3d, /Users/heiland/dev/Glazier/scientificHistBarPlots/sciHistBar_rwh.cc3d, /Users/heiland/dev/Glazier/scientificHistBarPlots/scientificHistBarPlots.cc3d, /Users/heiland/Documents/Glazier/Gilberto/wet_foam_data/StepLDF.dml
+CellGlyphPhiRes=8
+CellGlyphThetaRes=8
+CellGlyphScale=0.2
+
+</pre>
+<p>One issue with keeping all Field params in the same (default) .ini file is that they accumulate over multiple sims, e.g.:
+</p><p>--- ConfigurationDialog.py:  fieldComboBoxClicked():  
+allFieldsDict =  {' ': {'ArrowLength': 1, 'MaxRangeFixed': False, 
+'LegendEnable': True, 'MinRange': 10.0, 'MaxRange': 5.0, 
+'MinRangeFixed': False, 'ContoursOn': False, 'ScaleArrowsOn': False, 
+'FixedArrowColorOn': False, 'NumberOfLegendBoxes': 4, 'NumberAccuracy': 
+2, 'NumberOfContourLines': 5, 'ArrowColor': '#ffffff', 
+'OverlayVectorsOn': False}, 'VectorField': {'ArrowLength': 1, 
+'MaxRangeFixed': True, 'LegendEnable': True, 'MinRange': 10.0, 
+'MaxRange': 5.0, 'MinRangeFixed': False, 'ContoursOn': False, 
+'ScaleArrowsOn': False, 'FixedArrowColorOn': False, 
+'NumberOfLegendBoxes': 4, 'NumberAccuracy': 2, 'NumberOfContourLines': 
+5, 'ArrowColor': '#ffffff', 'OverlayVectorsOn': False}, 'IdField': 
+{'ArrowLength': 1, 'MaxRangeFixed': False, 'LegendEnable': True, 
+'MinRange': 10.0, 'MaxRange': 5.0, 'MinRangeFixed': False, 'ContoursOn':
+ False, 'ScaleArrowsOn': False, 'FixedArrowColorOn': False, 
+'NumberOfLegendBoxes': 4, 'NumberAccuracy': 2, 'NumberOfContourLines': 
+5, 'ArrowColor': '#ffffff', 'OverlayVectorsOn': False}, 'ExtraField': 
+{'ArrowLength': 1, 'MaxRangeFixed': False, 'LegendEnable': True, 
+'MinRange': 10.0, 'MaxRange': 5.0, 'MinRangeFixed': False, 'ContoursOn':
+ False, 'ScaleArrowsOn': False, 'FixedArrowColorOn': False, 
+'NumberOfLegendBoxes': 3, 'NumberAccuracy': 2, 'NumberOfContourLines': 
+5, 'ArrowColor': '#ffffff', 'OverlayVectorsOn': False}, 
+'VectorFieldCellLevel': {'ArrowLength': 1, 'MaxRangeFixed': True, 
+'LegendEnable': True, 'MinRange': 10.0, 'MaxRange': 5.0, 
+'MinRangeFixed': False, 'ContoursOn': False, 'ScaleArrowsOn': False, 
+'FixedArrowColorOn': False, 'NumberOfLegendBoxes': 4, 'NumberAccuracy': 
+2, 'NumberOfContourLines': 5, 'ArrowColor': '#ffffff', 
+'OverlayVectorsOn': False}, 'CustomGraph': {'ArrowLength': 1, 
+'MaxRangeFixed': False, 'LegendEnable': True, 'MinRange': 10.0, 
+'MaxRange': 5.0, 'MinRangeFixed': False, 'ContoursOn': False, 
+'ScaleArrowsOn': False, 'FixedArrowColorOn': False, 
+'NumberOfLegendBoxes': 4, 'NumberAccuracy': 2, 'NumberOfContourLines': 
+5, 'ArrowColor': '#ffffff', 'OverlayVectorsOn': False}, 'FGF': 
+{'ArrowLength': 1, 'MaxRangeFixed': True, 'LegendEnable': True, 
+'MinRange': 10.0, 'MaxRange': 5.0, 'MinRangeFixed': False, 'ContoursOn':
+ False, 'ScaleArrowsOn': False, 'FixedArrowColorOn': False, 
+'NumberOfLegendBoxes': 3, 'NumberAccuracy': 2, 'NumberOfContourLines': 
+5, 'ArrowColor': '#ffffff', 'OverlayVectorsOn': False}, 'CustomCone': 
+{'ArrowLength': 1, 'MaxRangeFixed': False, 'LegendEnable': True, 
+'MinRange': 10.0, 'MaxRange': 5.0, 'MinRangeFixed': False, 'ContoursOn':
+ False, 'ScaleArrowsOn': False, 'FixedArrowColorOn': False, 
+'NumberOfLegendBoxes': 4, 'NumberAccuracy': 2, 'NumberOfContourLines': 
+5, 'ArrowColor': '#ffffff', 'OverlayVectorsOn': False}}
+</p>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:300-0!1!0!0!!en!2 and timestamp 20120521200753 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/New_QSettings">http://old.compucell3d.org/mediawiki1.7/index.php/New_QSettings</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/New_QSettings">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:New_QSettings&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=New_QSettings&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=New_QSettings&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=New_QSettings">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(&quot;http://www.compucell3d.net/images/logo_trans.png&quot;);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=New_QSettings">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=New_QSettings">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=New_QSettings&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=New_QSettings&amp;oldid=27464">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="New_QSettings_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 18:07, 30 November 2011.</li>
+				<li id="viewcount">This page has been accessed 34 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.401 secs. -->
+
+</body></html>

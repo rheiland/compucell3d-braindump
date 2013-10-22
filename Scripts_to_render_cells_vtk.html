@@ -1,0 +1,558 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="keywords" content="Scripts to render cells vtk,Heiland">
+<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
+		<title>Scripts to render cells vtk - CompuCell3D Wiki</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="Scripts%20to%20render%20cells%20vtk%20-%20CompuCell3D%20Wiki_files/commonPrint.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
+		<script type="text/javascript" src="Scripts%20to%20render%20cells%20vtk%20-%20CompuCell3D%20Wiki_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="Scripts%20to%20render%20cells%20vtk%20-%20CompuCell3D%20Wiki_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
+@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+			</head>
+<body class="ns-0 ltr">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">Scripts to render cells vtk</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From CompuCell3D Wiki</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>The following 2 scripts demonstrate how we can render cells from a
+ .vtk lattice file dumped by cc3D.  The first script includes a callback
+ method for dumping camera parameters (via 'c' keypress) which can then 
+be inserted into the camera's "Set" methods if one wants a preset view 
+on subsequent calls.
+</p>
+<pre># renCellTypes.py
+# Sample usage: python renCellTypes.py Step_01880 cells.dat 200 -1 
+import vtk
+from vtk.util.numpy_support import numpy_to_vtk, vtk_to_numpy
+import sys
+import string
+
+argc = len(sys.argv)
+#print 'argc=',argc
+if argc &lt; 5:
+      print 'Usage: ',sys.argv[0],' &lt;root-filename[without .vtk]&gt; &lt;celltype-filename&gt;  smoothIters maxCells '
+      raise ValueError, 'Too few input args'
+
+def Keypress(obj,event):
+    global camera
+    key = obj.GetKeySym()
+    if key == 'c':
+        print '------- camera params -------'
+        print '    camera.SetPosition',camera.GetPosition()
+        print '    camera.SetFocalPoint',camera.GetFocalPoint()
+        print '    camera.SetViewUp=',camera.GetViewUp()
+        print '    camera.SetDistance(',camera.GetDistance(),')'
+        print '    camera.SetClippingRange',camera.GetClippingRange()
+
+
+idx=1
+root_fname = sys.argv[idx]
+print 'root_fname=',root_fname
+idx=idx+1
+celltype_fname = sys.argv[idx]
+idx=idx+1
+smoothIters = string.atoi(sys.argv[idx])
+idx=idx+1
+maxCells = string.atoi(sys.argv[idx])
+idx=idx+1
+print 'maxCells=',maxCells
+
+cellTypeDict = {}
+cellTypeColorDict = {}
+fp = open(celltype_fname, 'r')
+print '--------- cell params -------'
+for line in fp:
+    items=line.split()
+    print items
+    cellTypeDict[int(items[0])] = []
+    cellTypeColorDict[int(items[0])] = [float(items[1]),float(items[2]),float(items[3])]
+        
+print 'cellTypeDict=',cellTypeDict
+print 'cellTypeColorDict=',cellTypeColorDict
+
+# making VOI larger than actual lattice is fine
+maxX = 500
+maxY = 500
+maxZ = 500
+
+ren1 = vtk.vtkRenderer()
+ren1.SetBackground(1,1,1)  # white
+ren1.SetBackground(0,0,0)  # black
+renWin = vtk.vtkRenderWindow()
+renWin.AddRenderer(ren1)
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
+
+reader = vtk.vtkDataSetReader()
+reader.SetFileName(root_fname + '.vtk')
+
+#--------------------
+aax0 = vtk.vtkAssignAttribute()
+aax0.SetInputConnection(reader.GetOutputPort())
+aax0.Assign("CellType","SCALARS","POINT_DATA")
+
+updateFlag = True
+if updateFlag:
+  aax0.Update()
+typeRange = aax0.GetOutput().GetScalarRange()
+print 'CellType range: ',typeRange   # CellId: (748.0, 725445.0);  CellType: (1.0, 2.0)
+
+#-------------------
+srate = 1
+ct_voi = vtk.vtkExtractVOI()
+ct_voi.SetInputConnection(aax0.GetOutputPort())
+ct_voi.SetVOI(0,maxX,0,maxY,0,maxZ)
+ct_voi.SetSampleRate(srate,srate,srate)
+if updateFlag:
+  ct_voi.Update()
+
+pd = ct_voi.GetOutput().GetPointData()
+ct = pd.GetScalars()  # (vtkCharArray)0x10d358730
+#print type(ct)
+
+ct_array_all = vtk_to_numpy(ct)   # --&gt; numpy.ndarray
+
+cont_type = []
+smoother = []
+normals = []
+mapper = []
+actor = []
+
+# -------  loop over all requested cell types:
+for cellTypeCount in range(len(cellTypeDict)):
+    cellType = cellTypeDict.keys()[cellTypeCount]
+    print 'cellType, len(ct_array_all)=', cellType,len(ct_array_all)
+
+    print 'cellType=',cellType
+    
+    cont_type.append(vtk.vtkDiscreteMarchingCubes())
+    cont_type[cellTypeCount].SetInputConnection(aax0.GetOutputPort())
+    cont_type[cellTypeCount].SetValue(0,cellType)
+
+    #  print unique_cell_ids_type2[idx]
+    #print '----------'
+    
+    smoother.append(vtk.vtkSmoothPolyDataFilter())
+    smoother[cellTypeCount].SetInputConnection(cont_type[cellTypeCount].GetOutputPort())
+    smoother[cellTypeCount].SetNumberOfIterations(smoothIters)
+    smoother[cellTypeCount].FeatureEdgeSmoothingOff()  # default 'off'
+    
+    normals.append( vtk.vtkPolyDataNormals())
+    normals[cellTypeCount].SetInputConnection(smoother[cellTypeCount].GetOutputPort())
+    
+    mapper.append( vtk.vtkDataSetMapper())
+    mapper[cellTypeCount].SetInputConnection(normals[cellTypeCount].GetOutputPort())
+    mapper[cellTypeCount].ScalarVisibilityOff()
+    
+    actor.append(vtk.vtkActor())
+    actor[cellTypeCount].SetMapper(mapper[cellTypeCount])
+    actor[cellTypeCount].GetProperty().SetColor(cellTypeColorDict[cellType])  # red, green, blue
+    
+    ren1.AddActor(actor[cellTypeCount])
+
+#----------------------
+outline = vtk.vtkOutlineFilter()
+outline.SetInputConnection(reader.GetOutputPort())
+mapOutline = vtk.vtkPolyDataMapper()
+mapOutline.SetInputConnection(outline.GetOutputPort())
+outlineActor = vtk.vtkActor()
+outlineActor.SetMapper(mapOutline)
+outlineActor.GetProperty().SetColor(0, 0, 0)
+ren1.AddActor(outlineActor)
+
+#------------------
+renWin.SetSize(400,400)
+
+ren1.ResetCamera()
+
+#cam.Elevation(40.0)
+#cam.Azimuth(degRot)   # Elevation would spin about X
+#cam.SetRoll(-55.61345070045176)
+#cam.SetDirectionOfProjection(-0.32895916388395147, 0.45637174018064514, -0.826747061235334)
+
+camera = ren1.GetActiveCamera()
+
+# To use, one would substitute values to these 'Set' methods with those dumped via the 'Keypress' callback ('c' press)
+presetCamera = True
+if presetCamera:   
+    camera.SetPosition (-44.247221307251955, 64.40839199911628, 167.57254230515747)
+    camera.SetFocalPoint (19.567391616515522, 50.33463694646327, 35.00283926385244)
+    camera.SetViewUp= (0.05328069321608024, 0.9953681040633562, -0.08002190414963661)
+    camera.SetDistance(147.80088487)
+    camera.SetClippingRange (6.058680013013827, 326.58162226401134)
+#  camera.SetViewAngle(30)
+#  camera.SetViewUp(0.0,1.0,0.0 )
+#  camera.OrthogonalizeViewUp()
+
+renWin.Render()
+
+# ----- capture rendered window as .png
+w2i = vtk.vtkWindowToImageFilter()
+w2i.SetInput(renWin)
+
+iw = vtk.vtkPNGWriter()
+iw.SetInput(w2i.GetOutput())
+iw.SetFileName(root_fname+".png")
+#print root_fname,', # unique cells=',len(unique_cell_ids)
+iw.Write()
+
+iren.AddObserver("KeyPressEvent", Keypress)
+
+iren.Start()
+</pre>
+<p>Sample input file of cell params (celltype  R G B):
+</p>
+<pre>~/Documents/Glazier/StJude/Sep2012/LatticeData$ ty cells.dat 
+1   1 0 0
+2   0 1 0
+</pre>
+<p>Sample run:
+</p>
+<pre>~/Documents/Glazier/StJude/Sep2012/LatticeData$ python renCellTypes.py Step_00010 cells.dat 100 -1
+root_fname= Step_00010
+maxCells= -1
+--------- cell params -------
+['1', '1', '0', '0']
+['2', '0', '1', '0']
+cellTypeDict= {1: [], 2: []}
+cellTypeColorDict= {1: [1.0, 0.0, 0.0], 2: [0.0, 1.0, 0.0]}
+CellType range:  (0.0, 2.0)
+cellType, len(ct_array_all)= 1 1000000
+cellType= 1
+cellType, len(ct_array_all)= 2 1000000
+cellType= 2
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Step_00010_celltype_contour.png" class="image" title="Image:Step_00010_celltype_contour.png"><img src="Scripts%20to%20render%20cells%20vtk%20-%20CompuCell3D%20Wiki_files/Step_00010_celltype_contour.png" alt="Image:Step_00010_celltype_contour.png" longdesc="/mediawiki1.7/index.php/Image:Step_00010_celltype_contour.png" height="400" width="400"></a>
+</p><p>Using a sample .vtk lattice file dumped by cc3D for the cellsort_3D Demo.
+</p>
+<hr>
+<p>To render individual cells:
+</p>
+<pre># renCells.py
+# Sample usage: python renCells.py Step_01880 cells.dat 200 -1 
+import vtk
+from vtk.util.numpy_support import numpy_to_vtk, vtk_to_numpy
+import sys
+import string
+
+argc = len(sys.argv)
+#print 'argc=',argc
+if argc &lt; 5:
+      print 'Usage: ',sys.argv[0],' &lt;root-filename[without .vtk]&gt; &lt;celltype-filename&gt;  smoothIters maxCells '
+      raise ValueError, 'Too few input args'
+
+idx=1
+root_fname = sys.argv[idx]
+print 'root_fname=',root_fname
+idx=idx+1
+celltype_fname = sys.argv[idx]
+idx=idx+1
+smoothIters = string.atoi(sys.argv[idx])
+idx=idx+1
+maxCells = string.atoi(sys.argv[idx])
+idx=idx+1
+print 'maxCells=',maxCells
+
+cellTypeDict = {}
+cellTypeColorDict = {}
+fp = open(celltype_fname, 'r')
+print '--------- cell params -------'
+for line in fp:
+    items=line.split()
+    print items
+    cellTypeDict[int(items[0])] = []
+    cellTypeColorDict[int(items[0])] = [float(items[1]),float(items[2]),float(items[3])]
+        
+print 'cellTypeDict=',cellTypeDict
+print 'cellTypeColorDict=',cellTypeColorDict
+
+# making VOI larger than actual lattice is fine
+maxX = 500
+maxY = 500
+maxZ = 500
+
+ren1 = vtk.vtkRenderer()
+ren1.SetBackground(0,0,0)
+renWin = vtk.vtkRenderWindow()
+renWin.AddRenderer(ren1)
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
+
+reader = vtk.vtkDataSetReader()
+reader.SetFileName(root_fname + '.vtk')
+
+#--------------------
+aax0 = vtk.vtkAssignAttribute()
+aax0.SetInputConnection(reader.GetOutputPort())
+aax0.Assign("CellType","SCALARS","POINT_DATA")
+
+updateFlag = True
+if updateFlag:
+  aax0.Update()
+typeRange = aax0.GetOutput().GetScalarRange()
+print 'CellType range: ',typeRange   # CellId: (748.0, 725445.0);  CellType: (1.0, 2.0)
+
+#-------------------
+srate = 1
+ct_voi = vtk.vtkExtractVOI()
+ct_voi.SetInputConnection(aax0.GetOutputPort())
+ct_voi.SetVOI(0,maxX,0,maxY,0,maxZ)
+slice_num = 170
+#ct_voi.SetVOI(0,maxX,0,maxY,slice_num,slice_num)
+#ct_voi.SetSampleRate(srate,srate,1)
+if updateFlag:
+  ct_voi.Update()
+
+pd = ct_voi.GetOutput().GetPointData()
+ct = pd.GetScalars()  # (vtkCharArray)0x10d358730
+#print type(ct)
+
+ct_array_all = vtk_to_numpy(ct)   # --&gt; numpy.ndarray
+
+#-------
+aax = vtk.vtkAssignAttribute()
+aax.SetInputConnection(reader.GetOutputPort())
+aax.Assign("CellId","SCALARS","POINT_DATA")
+if updateFlag:
+  aax.Update()
+idRange = aax.GetOutput().GetScalarRange()
+print 'CellId range (all): ',idRange   # CellId: (748.0, 725445.0);  CellType: (1.0, 2.0)
+
+cid_voi = vtk.vtkExtractVOI()
+cid_voi.SetInputConnection(aax.GetOutputPort())
+cid_voi.SetVOI(0,maxX,0,maxY,0,maxZ)
+cid_voi.SetSampleRate(srate,srate,srate)
+if updateFlag:
+  cid_voi.Update()
+
+pd = cid_voi.GetOutput().GetPointData()
+cid = pd.GetScalars()  # (vtkCharArray)0x10d358730
+
+cid_array_all = vtk_to_numpy(cid)   # --&gt; numpy.ndarray
+print 'len(cid_array_all)=',len(cid_array_all)
+
+cont_type = []
+smoother = []
+normals = []
+mapper = []
+actor = []
+
+# -------  loop over all requested cell types:
+for cellTypeCount in range(len(cellTypeDict)):
+    cellType = cellTypeDict.keys()[cellTypeCount]
+    print 'cellType, len(ct_array_all)=', cellType,len(ct_array_all)
+
+    for idx in range(len(ct_array_all)):
+      cid = cid_array_all[idx]
+      if ct_array_all[idx] == cellType:
+          if (cid not in cellTypeDict[cellType]):
+            cellTypeDict[cellType].append(cid)    # append new unique cell id
+    
+    print cellType,') # unique cellids = ',len(cellTypeDict[cellType])
+    
+    #------------------------------------
+    cont_type.append(vtk.vtkDiscreteMarchingCubes())
+    cont_type[cellTypeCount].SetInputConnection(aax.GetOutputPort())
+    
+    maxCells2 = maxCells
+    if maxCells &lt; 0:
+      maxCells2 = len(cellTypeDict[cellType])
+    #print '--------- type1 isovals:'
+    for idx in range(maxCells2):
+      cont_type[cellTypeCount].SetValue(idx,cellTypeDict[cellType][idx])
+    #  print unique_cell_ids_type2[idx]
+    #print '----------'
+    
+    smoother.append(vtk.vtkSmoothPolyDataFilter())
+    smoother[cellTypeCount].SetInputConnection(cont_type[cellTypeCount].GetOutputPort())
+    smoother[cellTypeCount].SetNumberOfIterations(smoothIters)
+#    print 'GetEdgeAngle=',smoother[cellTypeCount].GetEdgeAngle()
+#    print 'GetFeatureAngle=',smoother[cellTypeCount].GetFeatureAngle()
+#    print 'GetBoundarySmoothing=',smoother[cellTypeCount].GetBoundarySmoothing()  # default 'on'
+#    smoother.BoundarySmoothingOff()   # don't see any difference
+#    print 'GetFeatureEdgeSmoothing=',smoother[cellTypeCount].GetFeatureEdgeSmoothing()
+#    smoother.FeatureEdgeSmoothingOn()  # weird - generates less smooth surface!
+    smoother[cellTypeCount].FeatureEdgeSmoothingOff()  # default 'off'
+    
+    normals.append( vtk.vtkPolyDataNormals())
+    normals[cellTypeCount].SetInputConnection(smoother[cellTypeCount].GetOutputPort())
+    
+    mapper.append( vtk.vtkDataSetMapper())
+    mapper[cellTypeCount].SetInputConnection(normals[cellTypeCount].GetOutputPort())
+    mapper[cellTypeCount].ScalarVisibilityOff()
+    
+    actor.append(vtk.vtkActor())
+    actor[cellTypeCount].SetMapper(mapper[cellTypeCount])
+    actor[cellTypeCount].GetProperty().SetColor(cellTypeColorDict[cellType])  # red, green, blue
+    
+    ren1.AddActor(actor[cellTypeCount])
+
+#----------------------
+outline = vtk.vtkOutlineFilter()
+outline.SetInputConnection(reader.GetOutputPort())
+mapOutline = vtk.vtkPolyDataMapper()
+mapOutline.SetInputConnection(outline.GetOutputPort())
+outlineActor = vtk.vtkActor()
+outlineActor.SetMapper(mapOutline)
+outlineActor.GetProperty().SetColor(0, 0, 0)
+ren1.AddActor(outlineActor)
+
+#------------------
+renWin.SetSize(400,400)
+
+cam = ren1.GetActiveCamera()
+ren1.ResetCamera()
+
+#cam.Elevation(40.0)
+#cam.Azimuth(degRot)   # Elevation would spin about X
+#cam.SetRoll(-55.61345070045176)
+#cam.SetDirectionOfProjection(-0.32895916388395147, 0.45637174018064514, -0.826747061235334)
+presetCamera = False
+if presetCamera:
+  cam = ren1.GetActiveCamera()
+  cam.SetPosition(0.0,0.0,1.0)
+  cam.SetFocalPoint(0.0,0.0,0.0)
+  cam.SetDistance(1.0)
+  cam.SetViewAngle(30)
+  cam.SetViewUp(0.0,1.0,0.0 )
+  cam.OrthogonalizeViewUp()
+
+
+renWin.Render()
+
+w2i = vtk.vtkWindowToImageFilter()
+w2i.SetInput(renWin)
+
+iw = vtk.vtkPNGWriter()
+iw.SetInput(w2i.GetOutput())
+iw.SetFileName(root_fname+".png")
+#print root_fname,', # unique cells=',len(unique_cell_ids)
+iw.Write()
+
+iren.Start()
+</pre>
+<p><br>
+</p>
+<pre>~/Documents/Glazier/StJude/Sep2012/LatticeData$&nbsp;!py
+python renCells.py Step_00010 cells.dat 100 -1
+root_fname= Step_00010
+maxCells= -1
+--------- cell params -------
+['1', '1', '0', '0']
+['2', '0', '1', '0']
+cellTypeDict= {1: [], 2: []}
+cellTypeColorDict= {1: [1.0, 0.0, 0.0], 2: [0.0, 1.0, 0.0]}
+CellType range:  (0.0, 2.0)
+CellId range (all):  (0.0, 2103.0)
+len(cid_array_all)= 1000000
+cellType, len(ct_array_all)= 1 1000000
+1 ) # unique cellids =  1089
+cellType, len(ct_array_all)= 2 1000000
+2 ) # unique cellids =  1014
+</pre>
+<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Step_00010_cells_contour.png" class="image" title="Image:Step_00010_cells_contour.png"><img src="Scripts%20to%20render%20cells%20vtk%20-%20CompuCell3D%20Wiki_files/Step_00010_cells_contour.png" alt="Image:Step_00010_cells_contour.png" longdesc="/mediawiki1.7/index.php/Image:Step_00010_cells_contour.png" height="400" width="400"></a>
+</p><p><br>
+</p>
+<hr>
+<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:505-0!1!0!0!!en!2 and timestamp 20130212211435 -->
+<div class="printfooter">
+Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Scripts_to_render_cells_vtk">http://old.compucell3d.org/mediawiki1.7/index.php/Scripts_to_render_cells_vtk</a>"</div>
+						<!-- end content -->
+			<div class="visualClear"></div>
+		</li></div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<ul>
+				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Scripts_to_render_cells_vtk">Article</a></li>
+				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Scripts_to_render_cells_vtk&amp;action=edit">Discussion</a></li>
+				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Scripts_to_render_cells_vtk&amp;action=edit">Edit</a></li>
+				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Scripts_to_render_cells_vtk&amp;action=history">History</a></li>
+		</ul>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Scripts_to_render_cells_vtk">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div title="Main Page" class="portlet" id="p-logo">
+		<a style="background-image: url(http://www.compucell3d.net/images/logo_trans.png);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
+				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
+				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
+				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
+				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
+				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
+				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Scripts_to_render_cells_vtk">What links here</a></li>
+				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Scripts_to_render_cells_vtk">Related changes</a></li>
+<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
+<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
+				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Scripts_to_render_cells_vtk&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Scripts_to_render_cells_vtk&amp;oldid=27940">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Scripts%20to%20render%20cells%20vtk%20-%20CompuCell3D%20Wiki_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 16:26, 26 September 2012.</li>
+				<li id="viewcount">This page has been accessed 52 times.</li>
+				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
+				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by babbage in 0.293 secs. -->
+
+</body></html>
