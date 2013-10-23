@@ -1,0 +1,100 @@
+<html><body>
+<p>This page attempts to describe various techniques we use to test CompuCell3D.  Admittedly, there is much more work to do in this important area.  (Although very VTK-specific, one can learn a lot by referring to the following VTK file:
+.../Wrapping/Python/vtk/test/Testing.py)
+</p><p>For starters, we provide a Python script, testXML.py, that will do some simple editing of a .xml configuration file and run compucell on the file, saving the generated output to a file.  Running this script on all provided .xml config files will test for errors.
+</p>
+<pre>
+# example use (on Unix):
+# % mkdir xml-tests
+# % cd xml-tests
+# % cp ../*.pif .
+# % cp ../*.txt .
+# % testXML.py vectorPlot.xml
+# % ../compucell3d.sh -i vectorPlot.xml
+# % ls -l *.xml|awk {'print &quot;testXML.py  &quot; $9'} &gt; testAll.sh
+# % sh testAll.sh
+</pre>
+<p>Here is the (merged) output of running such a test on one set of .xml files revealing, for example, various missing plugins:
+</p>
+<pre>
+../compucell3d.sh -i ContSorting2.xml
+../compucell3d.sh -i ContactMultiCad.xml
+../compucell3d.sh -i Foam_1.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/Foam_1.xml:33:32 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'CellVelocity not found!
+
+../compucell3d.sh -i Foam_try.xml
+../compucell3d.sh -i Foam_uniform.xml
+../compucell3d.sh -i amoebae_2D.xml
+../compucell3d.sh -i amoebae_2D_PlayerSettings.xml
+../compucell3d.sh -i amoebae_2D_secretion.xml
+../compucell3d.sh -i bacterium_macrophage_2D.xml
+../compucell3d.sh -i cellsort.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/cellsort.xml:46:32 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'OutputData not found!
+
+../compucell3d.sh -i cellsort_2D.xml
+../compucell3d.sh -i cellsort_2D_box_watcher.xml
+../compucell3d.sh -i cellsort_2D_contact_local_flex.xml
+../compucell3d.sh -i cellsort_2D_hex.xml
+../compucell3d.sh: line 200: 15710 Bus error               ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i cellsort_2D_statistics.xml
+../compucell3d.sh -i cellsort_2D_statistics_spin_flip.xml
+../compucell3d.sh -i cellsort_3D.xml
+../compucell3d.sh -i cellsort_engulfment_2D.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/cellsort_engulfment_2D.xml:50:32 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'OutputData not found!
+
+../compucell3d.sh -i cellsort_engulfment_diffusion_2D.xml
+../compucell3d.sh: line 200: 15742 Bus error               ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i connectivityTest.xml
+../compucell3d.sh -i dicty_try_40x40.xml
+../compucell3d.sh -i diffusion_2D.xml
+../compucell3d.sh: line 200: 15761 Bus error               ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+ERROR: In /Users/heiland/Documents/workspace/VTK-DistribGraph/Common/vtkObject.cxx, line 160
+vtkObject (0x568ed80): Trying to delete object with non-zero reference count.
+Generic Warning: In /Users/heiland/Documents/workspace/VTK-DistribGraph/Common/vtkObjectBase.cxx, line 76
+Trying to delete object with non-zero reference count.
+
+../compucell3d.sh -i diffusion_2D_multicall.xml
+ERROR: In /Users/heiland/Documents/workspace/VTK-DistribGraph/Common/vtkObject.cxx, line 160
+vtkObject (0x568e810): Trying to delete object with non-zero reference count.
+Generic Warning: In /Users/heiland/Documents/workspace/VTK-DistribGraph/Common/vtkObjectBase.cxx, line 76
+Trying to delete object with non-zero reference count.
+
+../compucell3d.sh -i diffusion_2D_try.xml
+../compucell3d.sh: line 200: 15774 Segmentation fault      ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i diffusion_fast_box.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/diffusion_fast_box.xml:39:44 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/CompuCell3D/Boundary/BoundaryStrategy.h:191 instantiate function has not been called yet for BoundaryStrategy. Cannot return an object
+
+../compucell3d.sh -i diffusion_inside_2D.xml
+../compucell3d.sh -i diffusion_wall_2D.xml
+../compucell3d.sh: line 200: 15793 Segmentation fault      ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i drosophila_wing.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/drosophila_wing.xml:13:29 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'VolumeLocal not found!
+
+../compucell3d.sh -i drosophila_wing_contact_local_flex.xml
+../compucell3d.sh -i drosophila_wing_contact_local_product.xml
+../compucell3d.sh -i drosophila_wing_extra_attrib.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/drosophila_wing_extra_attrib.xml:13:29 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'VolumeLocal not found!
+
+../compucell3d.sh -i elongationFlexTest.xml
+../compucell3d.sh: line 200: 15824 Segmentation fault      ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i elongationTest.xml
+../compucell3d.sh -i flexDiff.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/flexDiff.xml:37:29 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'ContactFlex not found!
+
+../compucell3d.sh -i growingcells.xml
+../compucell3d.sh: line 200: 15843 Bus error               ${PREFIX_CC3D}/bin/CompuCellPlayer --xml=$xmlFile --outputDirectory=$outDir --screenshotDescription=$scrDsc
+../compucell3d.sh -i oriented-cellsort.xml
+ERROR: @ /Users/heiland/dev/Glazier/cc3d-5-21-08/xmlTests/oriented-cellsort.xml:49:34 While parsing configuration!
+ caused by: @ /Users/heiland/Documents/workspace/cc3d-src-3.2.1-all/BasicUtils/BasicPluginManager.h:325 Plugin 'MomentOfInertia not found!
+
+../compucell3d.sh -i plasticitytest.xml
+../compucell3d.sh -i vectorPlot.xml
+</pre>
+<li>Back to <a href="index.html">index</a></body></html>

@@ -1,0 +1,56 @@
+<html><body>
+				<h1 class="firstHeading">Rollback importer error</h1>
+			<pre>rf. May '11 .log
+
+  File "pythonSetupScripts/CompuCellPythonSimulationNewPlayer.py", line 221, in &lt;module&gt;
+    CompuCellSetup.mainLoop(sim,simthread,steppableRegistry) # main loop - simulation is invoked inside this function
+  File "/Users/heiland/dev/Glazier/cc3d-3.6.0-new/pythonSetupScripts/CompuCellSetup.py", line 1277, in mainLoop
+    return mainLoopNewPlayer(sim, simthread, steppableRegistry, _screenUpdateFrequency )
+  File "/Users/heiland/dev/Glazier/cc3d-3.6.0-new/pythonSetupScripts/CompuCellSetup.py", line 1042, in mainLoopNewPlayer
+    cmlFieldHandler.getInfoAboutFields()
+  File "/Users/heiland/dev/Glazier/cc3d-3.6.0-new/pythonSetupScripts/CMLFieldHandler.py", line 141, in getInfoAboutFields
+    concFieldNameVec = self.sim.getConcentrationFieldNameVector()
+AttributeError: 'NoneType' object has no attribute 'getConcentrationFieldNameVector'
+
+
+---&gt; stop, try to step again (w/ lattice dump on): 
+...
+    CompuCellSetup.createCMLFieldHandler()
+  File "/Users/heiland/dev/Glazier/cc3d-3.6.0-new/pythonSetupScripts/CompuCellSetup.py", line 637, in createCMLFieldHandler
+    import CMLFieldHandler
+  File "/Users/heiland/dev/Glazier/cc3d-3.6.0-new/player/Plugins/ViewManagerPlugins/RollbackImporter.py", line 33, in _import
+    result = apply(self.realImport, (name, globals, locals, fromlist))
+  File "/Users/heiland/dev/Glazier/cc3d-3.6.0-new/pythonSetupScripts/CMLFieldHandler.py", line 4, in &lt;module&gt;
+    from distutils.dir_util  import mkpath
+  File "/Users/heiland/dev/Glazier/cc3d-3.6.0-new/player/Plugins/ViewManagerPlugins/RollbackImporter.py", line 33, in _import
+    result = apply(self.realImport, (name, globals, locals, fromlist))
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/dir_util.py", line 10, in &lt;module&gt;
+    from distutils import log
+ImportError: cannot import name log
+
+--------------------
+
+SimpleTabView:
+
+    def __stepSim(self):
+...
+            self.simulation.screenUpdateFrequency = 1
+            self.simulation.screenshotFrequency = self.__shotFrequency
+            self.screenshotDirectoryName = ""
+
+            from RollbackImporter import RollbackImporter
+            ...
+
+---------------------
+
+replace mkpath with os.makedirs  --&gt; yipeee!  (got to work for Gilberto also - he had additional 'mkpath' in his sim python script)
+CMLFieldHandler.py: prepareSimulationStorageDir()
+
+#                    res = distutils.dir_util.mkpath(_dirName)
+#                    print ' mkpath(2) res = ',res
+                    makedirs(_dirName)
+                    self.outputDirName = _dirName
+</pre>
+<p>&lt;/pre&gt;
+</p>
+<li>Back to <a href="index.html">index</a></body></html>

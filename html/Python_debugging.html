@@ -1,0 +1,48 @@
+<html><body>
+				<h1 class="firstHeading">Python debugging</h1>
+			<p>Try the following from your CC3D build directory (Linux/OSX):
+</p>
+<pre>% cp runScript.sh setup.sh
+
+Edit setup.sh and comment out the 'python' line (next to last) with a '#' preceding it:
+#python ${PREFIX_CC3D}/player/CompuCellPythonSimulationCML.py $* --currentDir=${current_directory}
+
+% source setup.sh    # this will simply set the proper env vars for a CC3D run
+
+
+Run the CC3D Python script with the Python debugger (pdb):
+
+$ python -m pdb player/CompuCellPythonSimulationCML.py -i Demos/cellsort_2D/cellsort_2D.xml
+&gt; /Users/heiland/dev/Glazier/cc3d-rev1367/player/CompuCellPythonSimulationCML.py(1)&lt;module&gt;()
+-&gt; import os
+(Pdb) n
+&gt; /Users/heiland/dev/Glazier/cc3d-rev1367/player/CompuCellPythonSimulationCML.py(2)&lt;module&gt;()
+-&gt; import sys
+(Pdb) n
+&gt; /Users/heiland/dev/Glazier/cc3d-rev1367/player/CompuCellPythonSimulationCML.py(6)&lt;module&gt;()
+-&gt; def setVTKPaths():
+(Pdb) c
+opts= [('-i', 'Demos/cellsort_2D/cellsort_2D.xml')]
+args= []
+o= -i
+a= Demos/cellsort_2D/cellsort_2D.xml
+GOT FILE  Demos/cellsort_2D/cellsort_2D.xml
+Platform: darwin
+steppablePath=/Users/heiland/dev/Glazier/cc3d-rev1367/lib/CompuCell3DSteppables
+pluginPath=/Users/heiland/dev/Glazier/cc3d-rev1367/lib/CompuCell3DPlugins
+THIS IS JUST BEFORE LOADING LIBRARIES
+ AFTER LOAD LIBRARIES
+...
+
+(Pdb) quit
+
+--------------------------
+
+To cause a break in a Python module, insert the following:
+import pdb; pdb.set_trace()
+
+</pre>
+<p><br>
+</p>
+<hr>
+<li>Back to <a href="index.html">index</a></body></html>

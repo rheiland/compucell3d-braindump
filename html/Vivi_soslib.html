@@ -1,0 +1,88 @@
+<html><body>
+<h3> Build notes </h3>
+<pre>
+You can download the sources for soslib and sundials 2.3.0 from the following:
+svn://sys-bio.org/SVN/rtroper/soslib-source/soslibPy
+svn://sys-bio.org/SVN/rtroper/sundials-2.3.0
+
+
+1) build libsbml:
+heiland@129-79-58-76:~/dev$ ll libsbml-3.4.0-src.zip
+-rw-r--r--@ 1 heiland  heiland  7407131 Nov 12 14:58 libsbml-3.4.0-src.zip
+
+configure
+make
+sudo make install
+
+--&gt;
+heiland@129-79-58-76:/usr/local/lib$ ll|grep sbml
+-rwxr-xr-x    1 root     wheel     3180600 Nov 12 15:19 libsbml.3.4.0.dylib*
+-rwxr-xr-x    1 root     wheel    40243952 Nov 12 15:19 libsbml.a*
+lrwxr-xr-x    1 root     wheel          19 Nov 12 15:19 libsbml.dylib@ -&gt; libsbml.3.4.0.dylib
+heiland@129-79-58-76:/usr/local/lib$ file libsbml.3.4.0.dylib
+libsbml.3.4.0.dylib: Mach-O 64-bit dynamically linked shared library x86_64
+
+
+2) build sundials:
+heiland@129-79-58-76:~/dev/Glazier/sundials-build$ cmake ~/Documents/workspace2/sundials-2.3.0/
+...
+sudo make install
+
+3) build soslibPy
+heiland@129-79-58-76:~/dev/Glazier/soslibPy$ cmake ~/Documents/workspace2/soslibPy/
+
+LIBSBML_INST_DIR:STRING=/usr/local/libsbml-3.4.0
+--&gt;
+LIBSBML_INST_DIR:STRING=/usr/local
+and
+SUNDIALS_INST_DIR:STRING=/usr/local/sundials-2.3.0      --&gt; /usr/local&nbsp;?
+
+and re-edit:
+cmake_install.cmake:    &quot;/usr/local/lib/libsbml.so&quot;   --&gt; change to .dylib
+
+make install
+</pre>
+<p><br />
+</p>
+<hr />
+<p>From: Vivi Andasari   maths.dundee.ac.uk
+Date: December 3, 2009 4:42:26 PM EST
+To: "Heiland, Randy" 
+Subject: Re: binary CC3D for Snow Leopard
+</p><p>Hi Randy,
+</p><p>No, it's only round #10 &nbsp;:-)
+</p><p>Well done! Now you can go ahead upload this binary on CC3D website&nbsp;:-)
+This one is working well now. 
+</p><p>Thanks again.
+</p><p>Oh, did you put that "Hello World" intentionally?&nbsp;:-)
+</p><p>Best wishes,
+/Vivi
+</p><p><br />
+</p><p>On 3 Dec 2009, at 20:59, Randy Heiland wrote:
+</p><p>Round #27?
+</p><p>Successfully uploaded 42.9MB file CC3DOSX-3.4.3-osx-installer.app.zip.
+It may be accessed via this URL:	<a href="https://www.slashtmp.iu.edu/public/download.php?FILE=heiland/66715maWm73" class="external free" title="https://www.slashtmp.iu.edu/public/download.php?FILE=heiland/66715maWm73" rel="nofollow">https://www.slashtmp.iu.edu/public/download.php?FILE=heiland/66715maWm73</a>
+</p><p>-Randy
+</p><p>On Dec 3, 2009, at 3:00 PM, Vivi Andasari wrote:
+</p><p>Hi Randy,
+</p><p>This first binary you sent today is working perfectly!
+And SOSlib is also working well. I'm very glad after so many attempts to get it running before. 
+Thank you so much for your help compiling/building all this stuff. 
+</p><p>BUT….
+for the latest installer, there are some problems. I attach 2 jpeg files of errors that occurred at the end of installation. And I can't run it either. I don't see compucell3d.command file in the main directory, there are only compucell3d.sh.in and runScript.sh.in files. 
+</p><p><br />
+Best wishes,
+/Vivi
+</p><p>&lt;error1.jpg&gt;&lt;error2.jpg&gt;
+</p><p>On 3 Dec 2009, at 18:49, Randy Heiland wrote:
+</p><p>Vivi,
+</p><p>Fyi, I also just uploaded a self-contained installer (which should not require editing anything in the scripts):
+</p><p><br />
+Successfully uploaded 42.9MB file CC3DOSX-3.4.3-osx-installer.app.zip.
+It may be accessed via this URL:	<a href="https://www.slashtmp.iu.edu/public/download.php?FILE=heiland/1271DxPuwF" class="external free" title="https://www.slashtmp.iu.edu/public/download.php?FILE=heiland/1271DxPuwF" rel="nofollow">https://www.slashtmp.iu.edu/public/download.php?FILE=heiland/1271DxPuwF</a>
+</p><p><br />
+thanks!
+-Randy
+</p><p>The University of Dundee is a Scottish Registered Charity, No. SC015096.
+</p>
+<li>Back to <a href="index.html">index</a></body></html>

@@ -1,0 +1,37 @@
+<html><body>
+				<h1 class="firstHeading">Plotting chaco</h1>
+			<p>Rf. _PythonTutorial/scientificPlotsSimple/
+</p>
+<hr>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Plotting_chaco&amp;action=edit&amp;section=1" title="Edit section: Chaco, PyQt/PySide API 1 vs API 2">edit</a>]</div><a name="Chaco.2C_PyQt.2FPySide_API_1_vs_API_2"></a><h3>Chaco, PyQt/PySide API 1 vs API 2</h3>
+<p>The seemingly simple evaluation of Chaco, as a plotting package for 
+CC3D, turned more complex once I learned about the differences in the 
+so-called API 1 vs. 2.  Some relevant links follow:
+</p>
+<li><a href="https://mail.enthought.com/pipermail/chaco-users/2012-October/thread.html" class="external free" title="https://mail.enthought.com/pipermail/chaco-users/2012-October/thread.html" rel="nofollow">https://mail.enthought.com/pipermail/chaco-users/2012-October/thread.html</a>  (my email exchanges on the Chaco-users list)
+</li><li><a href="http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt" class="external free" title="http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt" rel="nofollow">http://qt-project.org/wiki/Differences_Between_PySide_and_PyQt</a>
+</li><li><a href="http://spyder-ide.blogspot.com/2011/06/pyqt-api-1-pyqt-api-2-and-pyside.html" class="external free" title="http://spyder-ide.blogspot.com/2011/06/pyqt-api-1-pyqt-api-2-and-pyside.html" rel="nofollow">http://spyder-ide.blogspot.com/2011/06/pyqt-api-1-pyqt-api-2-and-pyside.html</a>
+</li><li><a href="http://stackoverflow.com/questions/6238193/pyqt-new-api-with-python-2" class="external free" title="http://stackoverflow.com/questions/6238193/pyqt-new-api-with-python-2" rel="nofollow">http://stackoverflow.com/questions/6238193/pyqt-new-api-with-python-2</a>
+
+<p>
+Currently, we use PyQt API 1 in CC3D.  Chaco uses/requires API 2.  API 2
+ does not support QString/QStringList and QVariant, something we use a 
+lot in CC3D (esp. Twedit).  Python 3 will only use API 2.  In addition, 
+we use QVariants in our Preferences file:
+</p><pre>~/.config/Biocomplexity$ grep variant cc3d_default.ini
+FieldParams=@Variant(\0\0\0\b\0\0\0\x1\0\0\0\0\0\0\0\b\0\0\0\r\0\0\0\x1a\0S\0\x63\0\x61\0l\0\x65\0\x41\0r\0r\0o\0w\0s\0O\0n\0\0\0\x1\0\0\0\0\x1e\0S\0\x63\0\x61\0l\0\x61\0r\0I\0s\0o\0V\0\x61\0l\0u\0\x65\0s\0\0\0\n\0\0\0\x2\0\x32\0\0\0&amp;\0N\0u\0m\0\x62\0\x65\0r\0O\0\x66\0L\0\x65\0g\0\x65\0n\0\x64\0\x42\0o\0x\0\x65\0s\0\0\0\x2\0\0\0\x6\0\0\0(\0N\0u\0m\0\x62\0\x65\0r\0O\0\x66\0\x43\0o\0n\0t\0o\0u\0r\0L\0i\0n\0\x65\0s\0\0\0\x2\0\0\0\0\0\0\0\x1c\0N\0u\0m\0\x62\0\x65\0r\0\x41\0\x63\0\x63\0u\0r\0\x61\0\x63\0y\0\0\0\x2\0\0\0\x2\0\0\0\x1a\0M\0i\0n\0R\0\x61\0n\0g\0\x65\0\x46\0i\0x\0\x65\0\x64\0\0\0\x1\0\0\0\0\x10\0M\0i\0n\0R\0\x61\0n\0g\0\x65\0\0\0\x6\0\0\0\0\0\0\0\0\0\0\0\x1a\0M\0\x61\0x\0R\0\x61\0n\0g\0\x65\0\x46\0i\0x\0\x65\0\x64\0\0\0\x1\0\0\0\0\x10\0M\0\x61\0x\0R\0\x61\0n\0g\0\x65\0\0\0\x6@Y\0\0\0\0\0\0\0\0\0\x18\0L\0\x65\0g\0\x65\0n\0\x64\0\x45\0n\0\x61\0\x62\0l\0\x65\0\0\0\x1\x1\0\0\0\"\0\x46\0i\0x\0\x65\0\x64\0\x41\0r\0r\0o\0w\0\x43\0o\0l\0o\0r\0O\0n\0\0\0\x1\0\0\0\0\x16\0\x41\0r\0r\0o\0w\0L\0\x65\0n\0g\0t\0h\0\0\0\x2\0\0\0\x1\0\0\0\x14\0\x41\0r\0r\0o\0w\0\x43\0o\0l\0o\0r\0\0\0\n\0\0\0\xe\0#\0\x30\0\x30\0\x30\0\x30\0\x30\0\x30)
+ClusterBorderColor=@Variant(\0\0\0\x43\x1\xff\xff\x19\x19\x19\x19\x19\x19\0\0)
+ArrowColor=@Variant(\0\0\0\x43)\0\0\0\0\0\0\0\0\0\0)
+BorderColor=@Variant(\0\0\0\x43\x1\xff\xff\x66\x66\xff\xff\xcc\xcc\0\0)
+ContourColor=@Variant(\0\0\0\x43\x1\xff\xff\xcc\xcc\xcc\xcc\xcc\xcc\0\0)
+WindowColor=@Variant(\0\0\0\x43)\0\0\0\0\0\0\0\0\0\0)
+PenColor=@Variant(\0\0\0\x43)\0\0\0\0\0\0\0\0\0\0)
+BrushColor=@Variant(\0\0\0\x43)\0\0\0\0\0\0\0\0\0\0)
+BoundingBoxColor=@Variant(\0\0\0\x43\x1\xff\xff\xff\xff\xff\xff\xff\xff\0\0)
+</pre>
+<p>What do we make of the fact that saving our preferences relies on?!:
+</p>
+<pre>void QSettings::setValue ( const QString &amp; key, const QVariant &amp; value )
+</pre>
+<hr>
+<li>Back to <a href="index.html">index</a></body></html>

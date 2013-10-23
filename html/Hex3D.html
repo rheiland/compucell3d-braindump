@@ -1,0 +1,30 @@
+<html><body>
+				<h1 class="firstHeading">Hex3D</h1>
+			<p>This page deals with issues involving a 3D hex lattice and the 
+display of cells, cell glyphs, and FPP links.  It was brought to our 
+attention by Severine at CWI.  (Refer to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/FPP_hex" title="FPP hex">FPP_hex</a> for the 2D case).
+<p><img src="../images/Disc_3D_300_300_Hex_Matrix_xml_00000.png" alt="Image:Disc_3D_300_300_Hex_Matrix_xml_00000.png" longdesc="/mediawiki1.7/index.php/Image:Disc_3D_300_300_Hex_Matrix_xml_00000.png" height="617" width="698"></a>The original image Severine captured, showing the FPP links offset (to the right)from the center blob of yellow cells.
+<p><img src="../images/Mcs4_cells_glyphs_hide_lamina.png" alt="Image:mcs4_cells_glyphs_hide_lamina.png" longdesc="/mediawiki1.7/index.php/Image:Mcs4_cells_glyphs_hide_lamina.png" height="574" width="685"></a>Another view demonstrating the problem, this time with just the inner blob of cells and their glyphs and FPP links.
+<p><img src="../images/Mcs3-glyphs-fpp.png" alt="Image:mcs3-glyphs-fpp.png" longdesc="/mediawiki1.7/index.php/Image:Mcs3-glyphs-fpp.png" height="609" width="881"></a>Just the cell glyphs and FPP links (correct).
+</p>
+<p>
+
+<p><img src="../images/Csort3d_hex_glyphs.png" alt="Image:csort3d_hex_glyphs.png" longdesc="/mediawiki1.7/index.php/Image:Csort3d_hex_glyphs.png" height="548" width="694"></a>Another situation is simply with a 3D cellsorting on a hex lattice, showing cells and their glyphs (incorrectly).
+
+</p><hr>
+<p>The basic reason for this alignment problem has to do with the 
+underlying data used to generate the visualizations 
+(/player/Graphics/MVCDrawModel3D.py).  For the glyphs and FPP links, we 
+use cell-based data, specifically cell.{x,y,z}COM (Center Of Mass).  For
+ a hex lattice, this COM undergoes a transformation that's explained in 
+the CC3D Manual. 
+<p><img src="../images/Mapping_hex.png" alt="Image:mapping_hex.png" longdesc="/mediawiki1.7/index.php/Image:Mapping_hex.png" height="349" width="575"></a>Mapping square lattice pixels to hex pixels. 
+</p>
+<hr>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Hex3D&amp;action=edit&amp;section=1" title="Edit section: A fix: scale actors by hex scaling factors">edit</a>]</div><a name="A_fix:_scale_actors_by_hex_scaling_factors"></a><h3>A fix: scale actors by hex scaling factors</h3>
+<p><img src="../images/Csort3d_hex_glyphs_scaled.png" alt="Image:csort3d_hex_glyphs_scaled.png" longdesc="/mediawiki1.7/index.php/Image:Csort3d_hex_glyphs_scaled.png" height="549" width="655">
+<p><img src="../images/Mcs4_cells_glyphs_hide_lamina_scaled.png" alt="Image:mcs4_cells_glyphs_hide_lamina_scaled.png" longdesc="/mediawiki1.7/index.php/Image:Mcs4_cells_glyphs_hide_lamina_scaled.png" height="574" width="685"></p><p>Notice the new, scaled actors appear slightly scrunched from the original (scaling factors: (1, 0.866, 0.816))
+<p><img src="../images/Mcs1_bbox_scaled_for_hex.png" alt="Image:mcs1_bbox_scaled_for_hex.png" longdesc="/mediawiki1.7/index.php/Image:Mcs1_bbox_scaled_for_hex.png" height="574" width="685"></p><p>After also applying the scaling to the bounding box of the lattice.
+</p>
+<hr>
+<li>Back to <a href="index.html">index</a></body></html>

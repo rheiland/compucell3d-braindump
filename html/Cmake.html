@@ -1,0 +1,31 @@
+<html><body>
+<p>This page tries to provide a bit of insight into using CMake for building CompuCell3D from source.  CMake is a platform-independent build system.
+</p><p>Obviously, the first thing needed is the (open source) <a href="http://www.cmake.org" class="external text" title="http://www.cmake.org" rel="nofollow">cmake</a> package installed on your computer.  Once this is done, you should have access to two executables: <b>cmake</b> and <b>ccmake</b>.  The former is the "manual" way of running CMake; the latter is the Curses interface for CMake.  Regardless of which one you use, the typical approach to using cmake is:
+</p>
+<pre>
+  cmake &lt;path-to-source&gt;
+
+and thereafter:
+  cmake &lt;path-to-existing-build&gt;
+</pre>
+<p>One straightforward way to try to build CompuCell3D is:
+</p>
+<ul><li> download the source from svn
+</li><li> run 'cmake .' in the root directory of the source
+</li><li> edit the generated CMakeCache.txt file and change CMAKE_INSTALL_PREFIX to point to a local dir
+</li><li> re-run 'cmake .' and 'make'
+</li></ul>
+<p>It is also assumed that you have installed all dependencies for CompuCell3, e.g. Qt and VTK, and that your [shell] environment is setup to point to these packages (including the location of the shared libs and whatever your env var is for that).  E.g. I have VTK_DIR and QTDIR env vars pointing to the roots of those builds.
+</p><p>CMake uses a FIND_PACKAGE command to locate various packages that may be needed for a project, e.g.:
+</p>
+<pre>
+player/CMakeLists.txt:FIND_PACKAGE(VTK REQUIRED)
+</pre>
+<p>Useful documentation:
+</p>
+<ul><li> <a href="http://www.cmake.org/cmake/help/documentation.html" class="external text" title="http://www.cmake.org/cmake/help/documentation.html" rel="nofollow">cmake doc</a>
+</li><li> <a href="http://www.cmake.org/Wiki/CMake" class="external text" title="http://www.cmake.org/Wiki/CMake" rel="nofollow">cmake wiki</a>
+</li><li> <a href="http://www.cmake.org/Wiki/CMake_HowToFindInstalledSoftware" class="external text" title="http://www.cmake.org/Wiki/CMake_HowToFindInstalledSoftware" rel="nofollow">FIND_PACKAGE</a>
+</li></ul>
+
+<li>Back to <a href="index.html">index</a></body></html>

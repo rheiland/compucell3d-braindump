@@ -1,0 +1,122 @@
+<html><body>
+				<h1 class="firstHeading">Glyph major minor axes</h1>
+			<p>Can we compute the major and minor axes of a 3D contour from a 
+vtkDiscreteMarchingCube, so that we can replace that contour with an 
+ellipsoid glyph?
+<p><img src="../images/700px-Hep_type9_cells123.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Hep_type9_cells123.png" height="224" width="700"><br>Showing (random) cell id contours for growing hep cells (cell type 
+9).  The problem is that these cells are just partial - they wrap around
+ the top due to periodic BCs (but we clip out those).  Therefore the 
+bottom of these cells are "open".
+<p><img src="../images/Growing_hep_cid11.png" alt="Image:growing_hep_cid11.png" longdesc="/mediawiki1.7/index.php/Image:Growing_hep_cid11.png" height="363" width="366"><br>Showing a (almost) whole growing hep cell (cid 4443; #11; in the 
+inner layer).  The tiny artifact floating above the primary cell for 
+this isovalue (=9) is a tiny piece of wraparound from periodic BCs.
+<p><img src="../images/MakeCell1.png" alt="Image:makeCell1.png" longdesc="/mediawiki1.7/index.php/Image:MakeCell1.png" height="225" width="722"><br>A computed ellipsoidal-shaped cell (script follow).
+<p><img src="../images/MakeCell12.png" alt="Image:makeCell12.png" longdesc="/mediawiki1.7/index.php/Image:MakeCell12.png" height="307" width="483"></p>
+<pre># ~/Documents/Glazier/JimSluka/cell_contour/makeCell.py
+import vtk
+import sys
+import string
+
+argc = len(sys.argv)
+#print 'argc=',argc
+#if argc &lt; 3:
+#if argc &lt; 4:
+#      print 'Usage: ',sys.argv[0],' &lt;root-filename&gt; degRot'
+#      print 'Usage: ',sys.argv[0],' &lt;root-filename&gt; maxCells elev'
+#      raise ValueError, 'Too few input args'
+
+ren1 = vtk.vtkRenderer()
+renWin = vtk.vtkRenderWindow()
+renWin.AddRenderer(ren1)
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
+
+xdim,ydim,zdim=6,6,12
+nvals = xdim*ydim*zdim
+
+sval=vtk.vtkIntArray()
+sval.SetNumberOfValues(nvals)
+for idx in range(nvals):
+    sval.SetValue(idx,0)
+
+# create 1st, long cell
+idx= -1
+for z in range(zdim):
+ for y in range(ydim):
+  for x in range(xdim):
+    idx += 1
+    if z&gt;1 and z&lt;zdim-2:
+     if y&gt;2 and y&lt;5:
+      if x&gt;3 and x&lt;5:
+          sval.SetValue(idx,1)
+    if z==2 and y==2 and x==4:  # dog-leg
+          sval.SetValue(idx,1)
+
+# create 2nd, shorter cell
+idx = -1
+for z in range(zdim):
+ for y in range(ydim):
+  for x in range(xdim):
+    idx += 1
+    if z&gt;8 and z&lt;11:
+     if y&gt;1 and y&lt;5:
+      if x&gt;1 and x&lt;3:
+          sval.SetValue(idx,1)
+
+lattice=vtk.vtkImageData()
+lattice.SetDimensions(xdim,ydim,zdim)
+lattice.GetPointData().SetScalars(sval)
+
+#pd.GetPointData().SetScalars(myScalars)
+
+dmc = vtk.vtkDiscreteMarchingCubes()
+#dmc.SetInputConnection(lattice.GetOutputPort())
+dmc.SetInput(lattice)
+dmc.SetValue(0,1)
+
+dmcMapper = vtk.vtkDataSetMapper()
+dmcMapper.SetInputConnection(dmc.GetOutputPort())
+dmcMapper.ScalarVisibilityOff()
+
+dmcActor = vtk.vtkActor()
+dmcActor.SetMapper(dmcMapper)
+
+dmcActor.GetProperty().SetColor(1,0,0)
+
+ren1.AddActor(dmcActor)
+
+#----------------------
+outline = vtk.vtkOutlineFilter()
+outline.SetInput(lattice)
+mapOutline = vtk.vtkPolyDataMapper()
+mapOutline.SetInputConnection(outline.GetOutputPort())
+outlineActor = vtk.vtkActor()
+outlineActor.SetMapper(mapOutline)
+outlineActor.GetProperty().SetColor(1, 1, 1)
+ren1.AddActor(outlineActor)
+
+#------------------
+renWin.SetSize(512,512)
+
+cam = ren1.GetActiveCamera()
+ren1.ResetCamera()
+#cam.Elevation(elev)
+#cam.Azimuth(degRot)   # Elevation would spin about X
+cam.OrthogonalizeViewUp()
+
+#------------------
+renWin.Render()
+
+w2i = vtk.vtkWindowToImageFilter()
+w2i.SetInput(renWin)
+
+iw = vtk.vtkPNGWriter()
+iw.SetInput(w2i.GetOutput())
+#iw.SetFileName(root_fname+".png")
+#print root_fname,', # unique cells=',len(unique_cell_ids)
+#iw.Write()
+
+iren.Start()
+</pre>
+<hr>
+<li>Back to <a href="index.html">index</a></body></html>

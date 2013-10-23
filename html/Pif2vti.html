@@ -1,0 +1,187 @@
+<html><body>
+<h1> pif2vti: converting PIF (.pif) format to VTK (.vti) format </h1>
+<p>This page is intended to, generally, explain how CompuCell3D deals with the geometry of results and, more specifically, discuss how we might (some day) consider switching to a different format.
+</p><p>Currently, CompuCell3D specifies cell positions using a PIF (Potts Initial File) format (rf. <a href="http://compucell3d.org/docs/CompuCellManual.pdf" class="external free" title="http://compucell3d.org/docs/CompuCellManual.pdf" rel="nofollow">http://compucell3d.org/docs/CompuCellManual.pdf</a>), an ascii formatted file where each line has:
+</p>
+<pre>
+cell# celltype x1 x2 y1 y2 z1 z2
+
+Where cell# is the unique integer index of a cell, celltype is a string 
+representing the cell's initial type, and x1 and x2 specify a range of 
+xcoordinates contained in the cell (similarly y1 and y2 specify a range 
+of ycoordinates and z1 and z2 specify a range of zcoordinates).
+Thus each line assigns a rectangular volume to a cell. If a cell is not
+perfectly rectangular, multiple lines can be used to build up the cell 
+out of rectangular subvolumes (just by reusing the cell# and celltype).
+</pre>
+<p>For example, for one of the foam simulations, a PIF input file might be:
+</p>
+<pre>
+0 Medium 0 101 0 101 0 0
+1 Foam 13 25 0 5 0 0
+2 Foam 25 39 0 5 0 0
+3 Foam 39 46 0 5 0 0
+4 Foam 46 57 0 5 0 0
+5 Foam 57 65 0 5 0 0
+6 Foam 65 76 0 5 0 0
+7 Foam 76 89 0 5 0 0
+
+These lines define a background of Medium which fills the whole lattice and is then
+overwritten by seven rectangular cells of type Foam numbered 1 through 7. Notice that
+these cells lie in the xy plane (z1=0 z2=0 implies that cells have thickness =1) so this
+example is a two-dimensional initialization.
+</pre>
+<p>There are a couple of concerns one might have about this format - 1) it's a custom format, rather than adhering to a more standard format, and 2) PIF file sizes can become quite large.
+When looking at some of Abbas's early tumor simulation PIF output data files (for a 100x100x160
+lattice and ~6 cell types), we see file sizes like the following:
+</p>
+<pre>
+    486258 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15000000.pif
+    545815 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15000025.pif
+...
+   2073897 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15000550.pif
+...
+  10043523 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15002475.pif
+...
+  13191192 Sep 18 07:30 TumorVasc3D_100x100x160_11092008_09_18_15002875.pif
+...
+  16378143 Sep 18 07:31 TumorVasc3D_100x100x160_11092008_09_18_15003250.pif
+</pre>
+<p>Obviously, the PIF sizes will depend on the lattice size and the "complexity" of cells' shapes.  But having a 16M data file to represent ~6 different (byte-length) cell types on a unit lattice having 1600000 (1.6M) cells seems excessive, especially when we consider that the user may be
+dumping many timesteps of data.  And if CompuCell becomes a serious modeling tool,  doing larger 3-D sims will become more commonplace.
+</p><p>One possible alternative to a PIF format is one of the VTK formats, .vti, for "image" data. 
+</p><p>Running this conversion on the very last pif file above, we get an ascii .vti file ~3.2M in size:
+</p>
+<pre>
+&lt;VTKFile type='ImageData' version='0.1' byte_order='LittleEndian'&gt;
+  &lt;ImageData WholeExtent='0 99 0 99 0 159' 
+    Origin='0 0 0' Spacing='1 1 1'&gt;
+  &lt;Piece Extent='0 99 0 99 0 159'&gt;
+   &lt;PointData Scalars='field1'&gt;
+    &lt;DataArray type='Int32' Name='field1' format='ascii'&gt;
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+...
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 2 3 2 3 3 3 3 3 3 3 2 
+...
+  &lt;/DataArray&gt;
+  &lt;/PointData&gt;
+  &lt;/Piece&gt;
+  &lt;/ImageData&gt;
+  &lt;/VTKFile&gt;
+</pre>
+<p>Where we lose, obviously, is converting a relatively empty, simple .pif file to .vti.
+</p><p>Fwiw, here's a program that can convert Abbas's particular PIF files to .vti:
+</p>
+<pre>
+/*
+    pif2vti TumorVasc3D_100x100x160_11092008_09_18_15003250.pif'
+
+Valid cell types (field names):
+1) FroVasc
+2) Malignant
+3) Necrotic        
+4) Vascular
+
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+/*  &lt;DataArray type='unsigned char' Name='field1' format='ascii'&gt;\n &quot;  */
+#define HEAD \
+&quot;&lt;VTKFile type='ImageData' version='0.1' byte_order='LittleEndian'&gt;\n  \
+&lt;ImageData WholeExtent='0 99 0 99 0 159' \n \
+   Origin='0 0 0' Spacing='1 1 1'&gt;\n  \
+&lt;Piece Extent='0 99 0 99 0 159'&gt;\n  \
+ &lt;PointData Scalars='field1'&gt;\n  \
+  &lt;DataArray type='Int32' Name='field1' format='ascii'&gt;\n &quot; 
+
+#define TAIL \
+&quot;  &lt;/DataArray&gt;\n \ 
+ &lt;/PointData&gt;\n  \
+&lt;/Piece&gt;\n  \
+&lt;/ImageData&gt;\n  \
+&lt;/VTKFile&gt;\n&quot; 
+
+
+int main(int argc, char **argv)
+{
+  FILE *fp;
+  int cnum,x0,x1,y0,y1,z0,z1, count, ix,iy,iz;
+  unsigned char f[160][100][100];
+  char field[20];
+
+/*  printf(&quot;argc = %d\n&quot;, argc);
+  printf(&quot;argv[1] = %s\n&quot;, argv[1]); */
+
+  for (iz=0; iz&lt;160; iz++)
+  for (iy=0; iy&lt;100; iy++)
+  for (ix=0; ix&lt;100; ix++)
+    f[iz][iy][ix] = 0;
+/*  printf(&quot;done w/ zeroing array\n&quot;); */
+
+
+  fp = fopen(argv[1],&quot;r&quot;);
+  if (!fp) printf(&quot;error opening file\n&quot;);
+  count = 0;
+  while (fscanf(fp,&quot;%d %s %d %d %d %d %d %d&quot;, &amp;cnum,field,&amp;x0,&amp;x1,&amp;y0,&amp;y1,&amp;z0,&amp;z1)&nbsp;!= EOF) {
+/*    printf(&quot;%d %d %d\n&quot;,x0,y0,z0); */
+    if ((x0&nbsp;!= x1) || (y0&nbsp;!= y1) || (z0&nbsp;!= z1)) {
+      printf(&quot;%d more than a pixel\n&quot;,count);
+    }
+    else {
+      if (!strcmp(field,&quot;FroVasc&quot;)) {
+/*        printf(&quot;FroVasc... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 1;
+      }
+      else if (!strcmp(field,&quot;Malignant&quot;)) {
+/*        printf(&quot;Malignant... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 2;
+      }
+      else if (!strcmp(field,&quot;Necrotic&quot;)) {
+/*        printf(&quot;Necrotic... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 3;
+      }
+      else if (!strcmp(field,&quot;Vascular&quot;)) {
+/*        printf(&quot;Necrotic... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 4;
+      }
+      else if (!strcmp(field,&quot;NeoVascular&quot;)) {
+/*        printf(&quot;Neovascular... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 5;
+      }
+      else if (!strcmp(field,&quot;Quiescent&quot;)) {
+/*        printf(&quot;Neovascular... %d %d %d\n&quot;,x0,y0,z0); */
+        f[z0][y0][x0] = 6;
+      }
+      else {
+        printf(&quot;unknown field: %s \n&quot;,field);
+      }
+    }
+    count++;
+/*    if (count &gt; 20) exit(-1); */
+/*    if (!(count % 10000)) printf(&quot;%d\n&quot;,count); */
+  }
+/*  printf(&quot;count = %d\n&quot;, count); */
+
+  printf(&quot;%s&quot;,HEAD);
+  count = 0;
+  for (iz=0; iz&lt;160; iz++)
+  for (iy=0; iy&lt;100; iy++)
+  for (ix=0; ix&lt;100; ix++) {
+    count++;
+    printf(&quot;%d &quot;, f[iz][iy][ix]);
+    if (!(count % 80)) printf(&quot;\n&quot;); 
+  }
+  printf(&quot;\n&quot;);
+  printf(&quot;%s&quot;,TAIL);
+
+}
+</pre>
+<p>And what about FieldML (<a href="http://www.physiomeproject.org/xml_languages/fieldml" class="external free" title="http://www.physiomeproject.org/xml_languages/fieldml" rel="nofollow">http://www.physiomeproject.org/xml_languages/fieldml</a>) and other formats for specifying geometry?
+</p>
+<li>Back to <a href="index.html">index</a></body></html>

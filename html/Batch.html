@@ -1,0 +1,113 @@
+<html><body>
+				<h1 class="firstHeading">Batch</h1>
+			<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Batch&amp;action=edit&amp;section=1" title="Edit section: Why do batch processing?">edit</a>]</div><a name="Why_do_batch_processing.3F"></a><h3> Why do batch processing? </h3>
+<p>We make the assumption that our approach to simulation via CompuCell3D is:
+</p>
+<ul><li> perform a simulation with a GUI on "toy" problem sizes.  This 
+will allow a user to display output and change parameters interactively.
+</li><li> once the toy simulation parameters have been determined, the user can scale up the problem size, leading to...
+</li><li> large simulations: these will be quite large in the spatial 
+domain (and perhaps in time also).  Eventually, the simulation will 
+require parallelization (multicore and/or clusters).
+</li></ul>
+<p>Fortunately, providing the software for such batch processing means 
+that we can eliminate certain libraries as dependencies, e.g. for the 
+GUI (Qt) and the visualization (VTK).  We may, however, need to 
+incorporate other libraries, e.g. for multicore (threading) or clusters 
+(message-passing).
+</p>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Batch&amp;action=edit&amp;section=2" title="Edit section: Current state of CompuCell3D">edit</a>]</div><a name="Current_state_of_CompuCell3D"></a><h3> Current state of CompuCell3D </h3>
+<p>We need to understand/explain the current state of CompuCell3D, in 
+terms of the interconnectedness of computation, GUI, and visualization.
+</p><p>As of this writing (summer 2009), we now use PyQt (Python-wrapped Qt) for the GUI to produce the following:
+</p>
+<p><img src="../images/180px-Gui1.png" alt="Example simulation in GUI" longdesc="/mediawiki1.7/index.php/Image:Gui1.png" height="143" width="180"></a>  <div class="thumbcaption"><div class="magnify" style="float:right"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Gui1.png" class="internal" title="Enlarge"><img src="Batch_files/magnify-clip.png" alt="Enlarge" height="11" width="15"></a></div>Example simulation in GUI</div></div></div></<p>The Python script to produce GUI/simulation is (in the install dir under /player):
+</p>
+<pre># compucell3d.pyw - found in install dir /player
+
+import sys
+import os
+
+def setVTKPaths():
+   import sys
+   from os import environ
+   import string
+   import sys
+   platform=sys.platform
+   if platform=='win32':
+      sys.path.append(environ["VTKPATH"])
+      sys.path.append(environ["VTKPATH1"])
+      sys.path.append(environ["PYQT_PATH"])
+      sys.path.append(environ["SIP_PATH"])
+      sys.path.append(environ["SIP_UTILS_PATH"])
+#   else:
+#      swig_path_list=string.split(environ["VTKPATH"])
+#      for swig_path in swig_path_list:
+#         sys.path.append(swig_path)
+
+print "PATH=",sys.path
+setVTKPaths()
+print "PATH=",sys.path  
+
+import vtk    
+
+#from PyQt4.QtGui import QApplication. Hello&nbsp;:)
+from UI.UserInterface import UserInterface
+from CQt.CQApplication import CQApplication
+
+#mainWindow = None
+
+def main():
+    sys.path.append(os.environ["PYTHON_MODULE_PATH"])
+    sys.path.append(os.environ["SWIG_LIB_INSTALL_DIR"])
+    
+    import CompuCellSetup
+    CompuCellSetup.playerType="new" # the value of CompuCellSetup.playerType (can be "new" or "old") determines which PlayerPython module will be loaded. For the new player we want PlayerPythonNew
+    import PlayerPython # from now on import PlayerPython will import PlayerPythonNew
+    
+    #global mainWindow
+    app = CQApplication(sys.argv)
+    #app.connect(app, SIGNAL("lastWindowClosed()"), app, SLOT("quit()"))
+    mainWindow = UserInterface()
+    mainWindow.show()
+    app.exec_()
+
+if __name__ == '__main__':
+    main()
+</pre>
+<p>Let's take a look at the CompuCellSetup.py module (found in 
+/core/PythonScripts of svn; /pythonSetupScripts of install dir; delete 
+the corresponding .pyc file first):
+</p>
+<pre>heiland@Macintosh-3:~/dev/Glazier/cc3d-5-13-09/pythonSetupScripts$ python
+Python 2.5.1 (r251:54863, Jan 13 2009, 10:26:13) 
+[GCC 4.0.1 (Apple Inc. build 5465)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+&gt;&gt;&gt; import CompuCellSetup
+CompuCellSetup.py:277: SyntaxWarning: name 'simulationPaths' is used prior to global declaration
+  global simulationPaths
+CompuCellSetup.py:289: SyntaxWarning: name 'simulationPaths' is used prior to global declaration
+  global simulationPaths
+CompuCellSetup.py:290: SyntaxWarning: name 'cc3dXML2ObjConverter' is used prior to global declaration
+  global cc3dXML2ObjConverter
+CompuCellSetup.py:382: SyntaxWarning: name 'simulationPaths' is used prior to global declaration
+  global simulationPaths
+
+&gt;&gt;&gt; dir(CompuCellSetup)
+['CC3DCPlusPlusError', 'ExtractLatticeType', 'ExtractPythonScriptNameFromXML', 'SimulationPaths', 
+'XML2ObjConverterAdapter', '__builtins__', '__doc__', '__file__', '__name__', 'attachDictionaryToCells', 
+'attachListToCells', 'cStringIO', 'cc3dActiveSteerableList', 'cc3dModuleDictionary', 'cc3dXML2ObjConverter', 
+'cc3dXML2ObjConverterAdapter', 'clearActiveSteerableList', 'clearVectorFieldPy', 'createFloatFieldPy', 
+'createScalarFieldCellLevelPy', 'createScalarFieldPy', 'createVectorFieldCellLevelPy', 'createVectorFieldPy', 
+'executeSteering', 'extraInitSimulationObjects', 'getChangeWatcherRegistry', 'getCoreSimulationObjects', 
+'getCoreSimulationObjectsNewPlayer', 'getCoreSimulationObjectsOldPlayer', 'getEnergyFunctionRegistry', 
+'getModuleParseData', 'getSteppableRegistry', 'getStepperRegistry', 'initModules', 'initializeSimulationObjects', 
+'mainLoop', 'mainLoopNewPlayer', 'mainLoopOldPlayer', 'os', 'parseXML', 'playerType', 'registerPlugin', 'registerPotts', 
+'registerSteppable', 'setSimulationXMLDescription', 'setSimulationXMLDescriptionNewPlayer', 
+'setSimulationXMLDescriptionOldPlayer', 'setSimulationXMLFileName', 'simulationFileName', 'simulationObjectsCreated', 
+'simulationPaths', 'simulationPythonScriptName', 'simulationThreadObject', 'simulationXMLDescription', 'steer', 'sys',
+ 'traceback']
+</pre>
+<p><br>
+</p>
+<li>Back to <a href="index.html">index</a></body></html>

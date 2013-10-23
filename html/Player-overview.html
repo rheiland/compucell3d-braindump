@@ -1,0 +1,252 @@
+<html><body>
+				<h1 class="firstHeading">Player-overview</h1>
+			<pre>Adding a new menu item:
+
+UI/UserInterface.py:
+...
+    def __initMenus(self):
+--&gt;
+Plugins/ViewManagerPlugins/SimpleTabView.py:
+
+    def __setConnects(self):        
+...     
+        self.connect(self.openAct,  SIGNAL('triggered()'), self.__openSim)
+</pre>
+<p><br>
+</p>
+<pre>/player:
+
+UI/UserInterface.py:
+...
+    def __initMenus(self):
+        
+        self.__menus = {}
+        mb = self.menuBar()
+        
+        (fileMenu,recentSimulationsMenu)=self.viewmanager.initFileMenu()
+        self.__menus["file"] = fileMenu
+        self.connect(self.__menus["recentSimulations"] , SIGNAL("aboutToShow()"), 
+              self.viewmanager.updateRecentFileMenu )
+        
+        mb.addMenu(self.__menus["file"])
+        
+        self.__menus["view"] = QMenu(self.trUtf8("&amp;View"), self)
+        mb.addMenu(self.__menus["view"])
+        self.connect(self.__menus["view"], SIGNAL('aboutToShow()'), self.__showViewMenu)
+        
+        self.__menus["toolbars"] = QMenu("&amp;Toolbars", self.__menus["view"])   # View -&gt; Toolbars (submenu)
+...
+
+    def __initToolbars(self):
+...
+    def __initActions(self):
+...
+
+----------------------------
+ViewManager/__init__.py:
+import SimpleViewManager
+#from PyQt4.QtCore import *
+#from PyQt4.QtGui import *
+
+
+def factory(parent, ui):
+    """
+    Modul factory function to generate the right viewmanager type.
+    
+    The viewmanager is instantiated depending on the data set in
+    the current preferences.
+    
+    @param parent parent widget (QWidget)
+    @param pluginManager reference to the plugin manager object
+    @return the instantiated viewmanager
+    """
+    
+    """
+    # They don't instantiate the object directly. They use plugin manager!
+    
+    vm = pluginManager.getPluginObject("viewmanager", viewManagerStr)
+    if vm is None:
+        # load tabview view manager as default
+        vm = pluginManager.getPluginObject("viewmanager", "tabview")
+        if vm is None:
+            raise RuntimeError("Could not create a viemanager object.")
+    """
+    vm = SimpleViewManager.SimpleViewManager(ui) 
+    
+    return  vm
+
+-----------
+ViewManager/SimpleViewManager.py:
+import os
+import sys
+
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+#from PyQt4.QtXml import *
+import Configuration
+
+# ViewManager inherits from QObject to use its methods (e.g. self.connect)
+
+# class SimpleViewManager(QObject):
+class SimpleViewManager():
+    def __init__(self, ui):
+        # QObject.__init__(self)
+        self.visual = {}
+        self.visual["CellsOn"]    = Configuration.getVisualization("CellsOn")
+        self.visual["BordersOn"]  = Configuration.getVisualization("BordersOn")
+...
+    def initFileMenu(self):
+        menu = QMenu(QApplication.translate('ViewManager', '&amp;File'), self.ui)
+        menu.addAction(self.openAct)
+        menu.addAction(self.saveAct)
+...
+    def initVisualMenu(self):
+        menu = QMenu(QApplication.translate('ViewManager', '&amp;Visualization'), self.ui)
+...
+    def __initHelpActions(self):
+        self.quickAct = QAction("&amp;Quick Start", self)
+        self.tutorAct = QAction("&amp;Tutorials", self)
+        self.refManAct = QAction(QIcon("player/icons/man.png"), "&amp;Reference Manual", self)
+        self.aboutAct = QAction(QIcon("player/icons/cc3d_64x64_logo.png"), "&amp;About CompuCell3D", self)
+        self.connect(self.aboutAct, SIGNAL('triggered()'), self.__about)
+...
+    def __about(self):
+        QMessageBox.about(self, "CompuCell3D", 
+                          "&lt;h2&gt;CompuCell3D&lt;/h2&gt; Version 3.4.2 &lt;br /&gt;\
+                          Copyright © Biocomplexity Institute, &lt;br /&gt;\
+                          Indiana University, Bloomington,IN\
+                          &lt;p&gt;&lt;b&gt;CompuCell Player&lt;/b&gt; is a visualization engine for CompuCell.&lt;/p&gt;") 
+---------
+
+.../player$ grep summary */*.py
+ViewManager/SimpleViewManager.py:        menu.addAction(self.openLDSAct) # LDS lattice description summary  - xml file that specifies what simulation data has been written to the disk
+ViewManager/SimpleViewManager.py:        self.openLDSAct=QAction(QIcon("player/icons/screenshots_open.png"), "&amp;Open Lattice Description Summary File...", self)
+
+.../player$ grep summary */*/*.py
+Plugins/ViewManagerPlugins/SimpleTabView.py:        filter = "Lattice Description Summary file  (*.dml )" # self._getOpenFileFilter() 
+Plugins/ViewManagerPlugins/SimpleTabView.py:            QApplication.translate('ViewManager', "Open Lattice Description Summary file"),
+---------
+
+Plugins/ViewManagerPlugins/SimpleTabView.py:
+
+    def __setConnects(self):        
+        self.connect(self.runAct,   SIGNAL('triggered()'), self.__runSim) 
+        self.connect(self.stepAct,  SIGNAL('triggered()'), self.__stepSim)
+        self.connect(self.pauseAct, SIGNAL('triggered()'), self.__pauseSim)
+        self.connect(self.stopAct,  SIGNAL('triggered()'), self.__simulationStop)
+        
+        self.connect(self.openAct,  SIGNAL('triggered()'), self.__openSim)
+        self.connect(self.openLDSAct,  SIGNAL('triggered()'), self.__openLDSFile)
+
+        self.connect(self.saveAct,  SIGNAL('triggered()'), self.__saveSim)
+        self.connect(self.saveScreenshotDescriptionAct,  SIGNAL('triggered()'), self.__saveScrDesc)
+        self.connect(self.openScreenshotDescriptionAct,  SIGNAL('triggered()'), self.__openScrDesc)
+        
+        self.connect(self.cellsAct,    SIGNAL('triggered(bool)'),  self.__checkCells)
+        self.connect(self.borderAct,    SIGNAL('triggered(bool)'),  self.__checkBorder)
+        self.connect(self.cellGlyphsAct,  SIGNAL('triggered(bool)'),  self.__checkCellGlyphs)
+        self.connect(self.FPPLinksAct,  SIGNAL('triggered(bool)'),  self.__checkFPPLinks)
+...
+
+    def __openLDSFile(self,fileName=None):
+        filter = "Lattice Description Summary file  (*.dml )" # self._getOpenFileFilter() 
+        
+        self.__fileName = QFileDialog.getOpenFileName(\
+            self.ui,
+            QApplication.translate('ViewManager', "Open Lattice Description Summary file"),
+            os.getcwd(), 
+            filter
+            )
+        # converting Qstring to python string    
+        self.__fileName=str(self.__fileName)
+        from os.path import basename
+        # setting text for main window (self.__parent) title bar 
+        self.__parent.setWindowTitle(self.trUtf8(basename(self.__fileName)+" - CompuCell3D Player"))
+
+...
+    def __checkCellGlyphs(self, checked):
+        #print self.simulation.getCC3DModuleData()   #rwh
+        print '------- dir(self.simulation) = ',dir(self.simulation)
+        
+        # Should be disabled when the simulation is not loaded!
+        self.simulation.drawMutex.lock()
+        if self.cellGlyphsAct.isEnabled():
+            if checked:
+                if self.mainGraphicsWindow is not None:
+                            QMessageBox.about(self, "CompuCell3D", 
+                          "&lt;h2&gt;CompuCell3D&lt;/h2&gt; Version 3.4.2 &lt;br /&gt;\
+                          Copyright © Biocomplexity Institute, &lt;br /&gt;\
+                          Indiana University, Bloomington,IN\
+                          &lt;p&gt;&lt;b&gt;CompuCell Player&lt;/b&gt; is a visualization engine for CompuCell.&lt;/p&gt;") 
+                    self.mainGraphicsWindow.showCellGlyphs()
+                self.cellGlyphsAct.setChecked(True)
+            else:
+                if self.mainGraphicsWindow is not None:
+                    self.mainGraphicsWindow.hideCellGlyphs()
+                self.cellGlyphsAct.setChecked(False)
+
+        self.simulation.drawMutex.unlock()
+
+</pre>
+<pre>Where do we create NEW graphics windows?
+(unalias 'grep')
+
+heiland@Macintosh-91:~/Documents/workspace2/cc3d-3.6.0/player$ grep GraphicsFrameWidg */*/*.py
+Plugins/ViewManagerPlugins/ScreenshotManager.py:from  Graphics.GraphicsFrameWidget import GraphicsFrameWidget
+Plugins/ViewManagerPlugins/ScreenshotManager.py:        self.screenshotGraphicsWidget=GraphicsFrameWidget(self.tabViewWidget)
+Plugins/ViewManagerPlugins/SimpleTabView.py:from  Graphics.GraphicsFrameWidget import GraphicsFrameWidget
+Plugins/ViewManagerPlugins/SimpleTabView.py:        newWindow = GraphicsFrameWidget(self)
+Plugins/ViewManagerPlugins/SimpleTabView.py:        newWindow.setConnects(self)   # in GraphicsFrameWidget
+Plugins/ViewManagerPlugins/SimpleTabView.py:        self.mainGraphicsWindow = GraphicsFrameWidget(self)  
+
+notice it gets triggered from here:
+    def __setConnects(self):
+       ...
+        self.connect(self.newGraphicsWindowAct,    SIGNAL('triggered()'),      self.addNewGraphicsWindow)        
+           
+
+which itself is triggered from here:
+heiland@Macintosh-91:~/Documents/workspace2/cc3d-3.6.0/player$ grep newGraphicsWindowAct */*.py
+UI/UserInterface.py:        # self.connect(self.newGraphicsWindowAct, SIGNAL('triggered()'), self.viewmanager.addVTKWindowToWorkspace)
+ViewManager/SimpleViewManager.py:        # menu.addAction(self.newGraphicsWindowAct)
+ViewManager/SimpleViewManager.py:        wtb.addAction(self.newGraphicsWindowAct)
+ViewManager/SimpleViewManager.py:        self.newGraphicsWindowAct = QAction(QIcon("player/icons/kcmkwm.png"),"&amp;New Graphics Window", self)
+ViewManager/SimpleViewManager.py:        self.windowActions.append(self.newGraphicsWindowAct)
+
+</pre>
+<pre>Plots...
+
+class SimpleTabView(QMdiArea,SimpleViewManager):
+
+    def __init__(self, parent):
+     ...
+        from PlotManagerSetup import createPlotManager
+        self.plotManager = createPlotManager(self) # object that is responsible for creating and managing plot windows sdo that they are accessible from steppable level 
+        print "\n\n\n self.plotManager=",self.plotManager
+
+
+more generally:
+heiland@Macintosh-91:~/Documents/workspace2/cc3d-3.6.0/player$ grep plotmanager */*/*.py
+Plugins/ViewManagerPlugins/PlotManager.py:import PlotManagerSetup
+Plugins/ViewManagerPlugins/PlotManager.py:MODULENAME = '---- Plugins/ViewM-P-/PlotManager.py: '
+Plugins/ViewManagerPlugins/PlotManager.py:# class PlotWindowInterface(PlotManagerSetup.PlotWindowInterfaceBase,QtCore.QObject):
+Plugins/ViewManagerPlugins/PlotManager.py:        # PlotManagerSetup.PlotWindowInterfaceBase.__init__(self,_plotWindow)
+Plugins/ViewManagerPlugins/PlotManager.py:class PlotManager(QtCore.QObject):
+Plugins/ViewManagerPlugins/PlotManagerSetup.py:class PlotManagerBase:
+Plugins/ViewManagerPlugins/PlotManagerSetup.py:def createPlotManager(_viewManager=None):
+Plugins/ViewManagerPlugins/PlotManagerSetup.py:        from PlotManager import PlotManager
+Plugins/ViewManagerPlugins/PlotManagerSetup.py:        return PlotManager(_viewManager,plotSupportFlag)
+Plugins/ViewManagerPlugins/PlotManagerSetup.py:        return PlotManagerBase(_viewManager,plotSupportFlag)
+Plugins/ViewManagerPlugins/SimpleTabView.py:        from PlotManagerSetup import createPlotManager
+Plugins/ViewManagerPlugins/SimpleTabView.py:        self.plotManager = createPlotManager(self) # object that is responsible for creating and managing plot windows sdo that they are accessible from steppable level 
+Plugins/ViewManagerPlugins/SimpleTabView.py:        print "\n\n\n self.plotManager=",self.plotManager
+Plugins/ViewManagerPlugins/SimpleTabView.py:        # from PlotManager import CustomPlot        
+Plugins/ViewManagerPlugins/SimpleTabView.py:        # customPlot=CustomPlot(self.plotManager)
+Plugins/ViewManagerPlugins/SimpleTabView.py:        return self.plotManager.addNewPlotWindow()
+Plugins/ViewManagerPlugins/SimpleTabView.py:        self.plotManager.reset()
+Plugins/ViewManagerPlugins/SimpleTabView.py:        # from PlotManagerSetup import createPlotManager
+Plugins/ViewManagerPlugins/SimpleTabView.py:        # self.plotManager=createPlotManager(self) # object that is responsible for creating and managing plot windows sdo that they are accessible from steppable level 
+Plugins/ViewManagerPlugins/SimpleTabView.py:            # self.connect(self.plotManager,SIGNAL("newPlotWindow(bool)"),self.addNewPlotWindow)
+Plugins/ViewManagerPlugins/SimpleTabView.py:            self.plotManager.initSignalAndSlots()
+</pre>
+<li>Back to <a href="index.html">index</a></body></html>

@@ -1,0 +1,47 @@
+<html><body>
+				<h1 class="firstHeading">Multiwindow layout</h1>
+			<p>How one can save/re-use graphics window(s) position &amp; size:
+<p><img src="../images/Save3wins.png" alt="Image:save3wins.png" longdesc="/mediawiki1.7/index.php/Image:Save3wins.png" height="651" width="861"></p><p>The "Save ..." Windows menu item will create a file, windows.xml,
+ in the working directory.  You need to then manually copy/move that 
+file to your model definition directory and incorporate it into your 
+.cc3d file:
+</p>
+<pre>~/dev/Glazier/cc3d-git-10-31-12/Demos/arwh_secretion/Simulation$ cp ~/dev/Glazier/cc3d-git-10-31-12/windows.xml .
+
+~/dev/Glazier/cc3d-git-10-31-12/Demos/arwh_secretion/Simulation$ ty windows.xml 
+&lt;Windows&gt;
+    &lt;Window Name="Main Graphics Window 1"&gt;
+    &lt;Location x="10" y="10"/&gt;
+    &lt;Size width="343" height="280"/&gt;
+  &lt;/Window&gt;
+    &lt;Window Name="Aux Graphics Window 2"&gt;
+    &lt;Location x="361" y="12"/&gt;
+    &lt;Size width="342" height="325"/&gt;
+  &lt;/Window&gt;
+    &lt;Window Name="Aux Graphics Window 3"&gt;
+    &lt;Location x="15" y="343"/&gt;
+    &lt;Size width="682" height="303"/&gt;
+  &lt;/Window&gt;
+&lt;/Windows&gt;
+
+~/dev/Glazier/cc3d-git-10-31-12/Demos/arwh_secretion/Simulation$ ty ../arwh_secretion.cc3d 
+&lt;Simulation version="3.6.1"&gt;
+    &lt;XMLScript Type="XMLScript"&gt;Simulation/bacterium_macrophage_2D_secretion.xml&lt;/XMLScript&gt;
+    &lt;PythonScript&gt;Simulation/bacterium_macrophage_2D_secretion.py&lt;/PythonScript&gt; 
+    &lt;Resource Type="Python"&gt;Simulation/bacterium_macrophage_2D_secretion_steppables.py&lt;/Resource&gt;    
+    &lt;WindowScript Type="XML"&gt;Simulation/windows.xml&lt;/WindowScript&gt;
+    &lt;PIFFile&gt;Simulation/bacterium_macrophage_2D_wall.piff&lt;/PIFFile&gt;
+&lt;/Simulation&gt;
+</pre>
+<p><img src="../images/Load3wins.png" alt="Image:load3wins.png" longdesc="/mediawiki1.7/index.php/Image:Load3wins.png" height="738" width="987"></p><p>Note that when we use the windows.xml file in our .cc3d, it 
+positions/resizes the windows, but does not restore the particular types
+ of visualization in each window.
+</p>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Multiwindow_layout&amp;action=edit&amp;section=1" title="Edit section: Known Caveats">edit</a>]</div><a name="Known_Caveats"></a><h3>Known Caveats</h3>
+<li> If you delete the Main Graphics Window and then Save the windows 
+geometry, when you restart your simulation, using the saved windows .xml
+ file, a Main Graphics Windows will still be created.
+</li><li> The numbers associated with the Aux windows (e.g. "Aux Graphics Window 3") may not be consistent upon restart.
+
+<hr>
+<li>Back to <a href="index.html">index</a></body></html>

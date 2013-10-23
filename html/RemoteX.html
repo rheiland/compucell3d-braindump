@@ -1,0 +1,16 @@
+<html><body>
+				<h1 class="firstHeading">RemoteX</h1>
+			<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=RemoteX&amp;action=edit&amp;section=1" title="Edit section: Remote X display">edit</a>]</div><a name="Remote_X_display"></a><h3> Remote X display </h3>
+<p>Googling 'ubuntu x forwarding' should be useful (I was looking at the 1st hit: <a href="http://www.techotopia.com/index.php/Displaying_Ubuntu_Linux_Applications_Remotely_%28X11_Forwarding%29" class="external free" title="http://www.techotopia.com/index.php/Displaying_Ubuntu_Linux_Applications_Remotely_%28X11_Forwarding%29" rel="nofollow">http://www.techotopia.com/index.php/Displaying_Ubuntu_Linux_Applications_Remotely_%28X11_Forwarding%29</a> )
+</p><p>The first thing to try after ssh'ing to the server is simply 'xclock' and see if it appears on your client machine.
+<p><img src="../images/Xclock.jpg" alt="Image:xclock.jpg" longdesc="/mediawiki1.7/index.php/Image:Xclock.jpg" height="186" width="164"></p><p>I was able to install cc3d onto Abbas's 64-bit 'ace' ubuntu 
+machine from the binaries download page: Linux Distros (Version 3.4.1), 
+Ubuntu 9.04 64Bit (Jaunty Jackalope).  Then I could run cc3d on ace, at 
+least the 2D cellsort demo, and have it update the GUI being displayed 
+on my local machine (OSX running an X11 windows).
+</p><p><br>
+<p><img src="../images/Cc3d-remoteX-ace.png" alt="Image:cc3d-remoteX-ace.png" longdesc="/mediawiki1.7/index.php/Image:Cc3d-remoteX-ace.png" height="604" width="803"></p><p>Getting all this to work properly may require some config params 
+on the server (e.g. /etc/X11 and /etc/ssh/ssh_config  and perhaps also 
+on the client, 'xhost')
+</p>
+<li>Back to <a href="index.html">index</a></body></html>

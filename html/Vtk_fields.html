@@ -1,0 +1,130 @@
+<html><body>
+				<h1 class="firstHeading">Vtk fields</h1>
+			<p><a href="Vtk_binary_ascii_data.html" title="Vtk binary ascii data">Vtk_binary_ascii_data</a> - refer to related page
+</p><p><br>
+</p>
+<pre>I did some editing on the following file and converted some default float data fields into double.
+
+/core/pyinterface/PlayerPythonNew/FieldExtractorCML.{h,cpp}
+
+
+heiland@129-79-58-155:~/dev/Glazier/cc3d-8-31-10/core/pyinterface/PlayerPythonNew$ grep fieldextractorcml *.py
+class FieldExtractorCML(FieldExtractorBase):
+    __setattr__ = lambda self, name, value: _swig_setattr(self, FieldExtractorCML, name, value)
+    __getattr__ = lambda self, name: _swig_getattr(self, FieldExtractorCML, name)
+        this = _PlayerPython.new_FieldExtractorCML()
+    __swig_destroy__ = _PlayerPython.delete_FieldExtractorCML
+    def fillCellFieldData2D(self, *args): return _PlayerPython.FieldExtractorCML_fillCellFieldData2D(self, *args)
+    def fillCellFieldData2DHex(self, *args): return _PlayerPython.FieldExtractorCML_fillCellFieldData2DHex(self, *args)
+    def fillBorderData2D(self, *args): return _PlayerPython.FieldExtractorCML_fillBorderData2D(self, *args)
+    def fillBorderData2DHex(self, *args): return _PlayerPython.FieldExtractorCML_fillBorderData2DHex(self, *args)
+    def fillCentroidData2D(self, *args): return _PlayerPython.FieldExtractorCML_fillCentroidData2D(self, *args)
+    def fillConFieldData2D(self, *args): return _PlayerPython.FieldExtractorCML_fillConFieldData2D(self, *args)
+    def fillConFieldData2DHex(self, *args): return _PlayerPython.FieldExtractorCML_fillConFieldData2DHex(self, *args)
+    def fillScalarFieldData2D(self, *args): return _PlayerPython.FieldExtractorCML_fillScalarFieldData2D(self, *args)
+    def fillScalarFieldData2DHex(self, *args): return _PlayerPython.FieldExtractorCML_fillScalarFieldData2DHex(self, *args)
+    def fillScalarFieldCellLevelData2D(self, *args): return _PlayerPython.FieldExtractorCML_fillScalarFieldCellLevelData2D(self, *args)
+    def fillScalarFieldCellLevelData2DHex(self, *args): return _PlayerPython.FieldExtractorCML_fillScalarFieldCellLevelData2DHex(self, *args)
+    def fillVectorFieldData2D(self, *args): return _PlayerPython.FieldExtractorCML_fillVectorFieldData2D(self, *args)
+    def fillVectorFieldData2DHex(self, *args): return _PlayerPython.FieldExtractorCML_fillVectorFieldData2DHex(self, *args)
+    def fillVectorFieldData3D(self, *args): return _PlayerPython.FieldExtractorCML_fillVectorFieldData3D(self, *args)
+    def fillVectorFieldCellLevelData2D(self, *args): return _PlayerPython.FieldExtractorCML_fillVectorFieldCellLevelData2D(self, *args)
+    def fillVectorFieldCellLevelData2DHex(self, *args): return _PlayerPython.FieldExtractorCML_fillVectorFieldCellLevelData2DHex(self, *args)
+    def fillVectorFieldCellLevelData3D(self, *args): return _PlayerPython.FieldExtractorCML_fillVectorFieldCellLevelData3D(self, *args)
+    def fillScalarFieldData3D(self, *args): return _PlayerPython.FieldExtractorCML_fillScalarFieldData3D(self, *args)
+    def fillScalarFieldCellLevelData3D(self, *args): return _PlayerPython.FieldExtractorCML_fillScalarFieldCellLevelData3D(self, *args)
+    def fillCellFieldData3D(self, *args): return _PlayerPython.FieldExtractorCML_fillCellFieldData3D(self, *args)
+    def fillConFieldData3D(self, *args): return _PlayerPython.FieldExtractorCML_fillConFieldData3D(self, *args)
+    def setFieldDim(self, *args): return _PlayerPython.FieldExtractorCML_setFieldDim(self, *args)
+    def getFieldDim(self): return _PlayerPython.FieldExtractorCML_getFieldDim(self)
+    def setSimulationData(self, *args): return _PlayerPython.FieldExtractorCML_setSimulationData(self, *args)
+    def pointIndex(self, *args): return _PlayerPython.FieldExtractorCML_pointIndex(self, *args)
+    def indexPoint3D(self, *args): return _PlayerPython.FieldExtractorCML_indexPoint3D(self, *args)
+FieldExtractorCML_swigregister = _PlayerPython.FieldExtractorCML_swigregister
+FieldExtractorCML_swigregister(FieldExtractorCML)
+
+
+--------------
+In addition:
+~/dev/Glazier/.../player$ grep writefield */*.py
+~/dev/Glazier/.../player$ grep writefield */*/*.py
+Plugins/ViewManagerPlugins/SimpleTabView.py:#            print MODULENAME,' handleCompletedStepRegular(): cmlFieldHandler.writeFields'
+Plugins/ViewManagerPlugins/SimpleTabView.py:            CompuCellSetup.cmlFieldHandler.writeFields(self.__step)
+
+
+heiland@129-79-58-155:~/Documents/workspace2/cc3d-3.6.0$ find . -name CompuCellSetup.py
+./core/pythonSetupScripts/CompuCellSetup.py
+
+i.e.:
+...source.../core/PythonScripts/CMLFieldHandler.py
+...build.../pythonSetupScripts/CMLFieldHandler.py
+
+these methods call C++ wrapped methods:  core/pyinterface/PlayerPythonNew/FieldWriter.cpp
+(which in turn use VTK classes!!)
+
+...
+    def writeFields(self,_mcs):
+        import os.path
+        import string
+        if (_mcs % 100):  return   # insert this modulo to manually dump only so often (e.g. on Quarry or BigRed)!
+        for fieldName in self.fieldTypes.keys():
+            if self.fieldTypes[fieldName]==self.FIELD_TYPES[0]:
+                self.fieldWriter.addCellFieldForOutput()
+            elif self.fieldTypes[fieldName]==self.FIELD_TYPES[1]:
+                self.fieldWriter.addConFieldForOutput(fieldName)            
+            elif self.fieldTypes[fieldName]==self.FIELD_TYPES[2]:
+                self.fieldWriter.addScalarFieldForOutput(fieldName)
+            elif self.fieldTypes[fieldName]==self.FIELD_TYPES[3]:
+                self.fieldWriter.addScalarFieldCellLevelForOutput(fieldName)
+            elif self.fieldTypes[fieldName]==self.FIELD_TYPES[4]:
+                self.fieldWriter.addVectorFieldForOutput(fieldName)
+            elif self.fieldTypes[fieldName]==self.FIELD_TYPES[5]:
+                self.fieldWriter.addVectorFieldCellLevelForOutput(fieldName)
+
+        mcsFormattedNumber = string.zfill(str(_mcs),self.outFileNumberOfDigits) # fills string wtih 0's up to self.screenshotNumberOfDigits width
+        latticeDataFileName=os.path.join(self.outputDirName,os.path.basename(self.outputDirName)+"_"+mcsFormattedNumber+".vtk")
+        self.fieldWriter.writeFields(latticeDataFileName)
+        self.fieldWriter.clear()
+
+
+    def writeXMLDescriptionFile(self,_fileName=""):
+        """
+        This function will write XML description of the stored fields. It has to be called after
+        initializetion of theCMLFieldHandler is completed
+        """
+
+        import CompuCellSetup
+        latticeTypeStr=CompuCellSetup.ExtractLatticeType()
+        if latticeTypeStr=="":
+            latticeTypeStr="Square"
+
+        typeIdTypeNameDict=CompuCellSetup.ExtractTypeNamesAndIds()
+        print "typeIdTypeNameDict",typeIdTypeNameDict
+
+
+        from XMLUtils import ElementCC3D
+        dim=self.sim.getPotts().getCellFieldG().getDim()
+        numberOfSteps=self.sim.getNumSteps()
+        latticeDataXMLElement=ElementCC3D("CompuCell3DLatticeData",{"Version":"1.0"})
+        latticeDataXMLElement.ElementCC3D("Dimensions",{"x":str(dim.x),"y":str(dim.y),"z":str(dim.z)})
+        latticeDataXMLElement.ElementCC3D("Lattice",{"Type":latticeTypeStr})
+        latticeDataXMLElement.ElementCC3D("Output",{"Frequency":str(self.outputFrequency),"NumberOfSteps":str(numberOfSteps),"CoreFileName":self.outputFileCoreName,"Direc
+tory":self.outputDirName})
+        #outputing information about cell type names and cell ids. It is necessary during generation of the PIF files from VTK output
+        for typeId in typeIdTypeNameDict.keys():
+            latticeDataXMLElement.ElementCC3D("CellType",{"TypeName":str(typeIdTypeNameDict[typeId]),"TypeId":str(typeId)})
+
+        fieldsXMLElement=latticeDataXMLElement.ElementCC3D("Fields")
+        for fieldName in self.fieldTypes.keys():
+            fieldsXMLElement.ElementCC3D("Field",{"Name":fieldName,"Type":self.fieldTypes[fieldName]})
+        # writing XML description to the disk
+        if _fileName!="":
+            latticeDataXMLElement.CC3DXMLElement.saveXML(str(_fileName))
+        else:
+            import os.path
+            latticeDataFileName=os.path.join(self.outputDirName,os.path.basename(self.outputDirName)+".dml")
+            latticeDataXMLElement.CC3DXMLElement.saveXML(str(latticeDataFileName))
+
+
+</pre>
+<li>Back to <a href="index.html">index</a></body></html>

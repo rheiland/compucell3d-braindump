@@ -1,0 +1,254 @@
+<html><body>
+				<h1 class="firstHeading">Vtk contours 3D</h1>
+			<pre>~/dev/vtk-stuff$ ty f_7x4x4.vtk 
+# vtk DataFile Version 3.0
+3D data
+ASCII
+DATASET STRUCTURED_POINTS
+DIMENSIONS 7 4 4
+SPACING 1 1 1
+ORIGIN 0 0 0
+POINT_DATA 112
+FIELD FieldData 1
+Id 1 112 float
+0 0 0 3 3 3 3
+0 0 0 3 0 0 3
+0 0 0 3 0 0 3
+0 0 0 3 3 3 3
+
+0 0 0 3 3 3 3
+0 2 2 3 1 1 3
+0 2 2 3 1 1 3
+0 0 0 3 3 3 3
+
+0 0 0 3 3 3 3
+0 2 2 3 1 1 3
+0 2 2 3 1 1 3
+0 0 0 3 3 3 3
+
+0 0 0 3 3 3 3
+0 0 0 3 0 0 3
+0 0 0 3 0 0 3
+0 0 0 3 3 3 3
+</pre>
+<pre>~/dev/vtk-stuff$  ty f3d.py 
+import vtk
+
+# blue -&gt; red LUT
+lutBlueRed = vtk.vtkLookupTable()
+lutBlueRed.SetHueRange(0.667,0.0)
+lutBlueRed.Build()
+
+ren1 = vtk.vtkRenderer()
+renWin = vtk.vtkRenderWindow()
+renWin.AddRenderer(ren1)
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
+
+reader = vtk.vtkDataSetReader()
+reader.SetFileName('f_7x4x4.vtk')
+
+aax = vtk.vtkAssignAttribute()
+aax.SetInputConnection(reader.GetOutputPort())
+aax.Assign("Id","SCALARS","POINT_DATA")
+
+aax.Update()
+srange = aax.GetOutput().GetScalarRange()
+print 'CellId range: ',srange   # CellId range:  (0.0, 3.0)
+
+mapper = vtk.vtkDataSetMapper()
+mapper.SetInputConnection(aax.GetOutputPort())
+mapper.ScalarVisibilityOn()
+mapper.SetScalarRange(srange)
+mapper.SetLookupTable(lutBlueRed)
+
+actor = vtk.vtkActor()
+actor.SetMapper(mapper)
+actor.GetProperty().SetInterpolationToFlat()
+ren1.AddActor(actor)
+
+#----------------------
+scalarBar = vtk.vtkScalarBarActor()
+scalarBar.SetLookupTable(lutBlueRed)
+ren1.AddActor2D(scalarBar)
+
+renWin.SetSize(500,400)
+renWin.Render()
+iren.Start()
+</pre>
+<p><img src="../images/F3d_default.png" alt="Image:f3d_default.png" longdesc="/mediawiki1.7/index.php/Image:F3d_default.png" height="422" width="500"></p>
+<hr>
+<table id="toc" class="toc" summary="Contents"><tbody><tr><td><div id="toctitle"><h2>Contents</h2> <span class="toctoggle">[<a href="javascript:toggleToc()" class="internal" id="togglelink">hide</a>]</span></div>
+<ul>
+<li class="toclevel-1"><a href="#Insert_a_contour_filter_into_the_above_script:"><span class="tocnumber">1</span> <span class="toctext">Insert a contour filter into the above script:</span></a></li>
+<li class="toclevel-1"><a href="#Using_a_vtkDiscreteMarchingCubes_filter_instead_of_a_contour_filter.2C_and_add_an_outline_filter"><span class="tocnumber">2</span> <span class="toctext">Using a vtkDiscreteMarchingCubes filter instead of a contour filter, and add an outline filter</span></a></li>
+<li class="toclevel-1"><a href="#Color_the_contour_by_a_different_scalar_field"><span class="tocnumber">3</span> <span class="toctext">Color the contour by a different scalar field</span></a></li>
+<li class="toclevel-1"><a href="#What_about_coloring_a_contour_from_vtkDiscreteMarchingCubes.3F"><span class="tocnumber">4</span> <span class="toctext">What about coloring a contour from vtkDiscreteMarchingCubes?</span></a></li>
+</ul>
+</td></tr></tbody></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Vtk_contours_3D&amp;action=edit&amp;section=1" title="Edit section: Insert a contour filter into the above script:">edit</a>]</div><a name="Insert_a_contour_filter_into_the_above_script:"></a><h3>Insert a contour filter into the above script:</h3>
+<pre>cont = vtk.vtkContourFilter()
+cont.SetInputConnection(aax.GetOutputPort())
+cont.SetValue(0,2)
+
+mapper = vtk.vtkDataSetMapper()
+#mapper.SetInputConnection(aax.GetOutputPort())
+mapper.SetInputConnection(cont.GetOutputPort())
+</pre>
+<p><img src="../images/F3d_contour_2.png" alt="Image:f3d_contour_2.png" longdesc="/mediawiki1.7/index.php/Image:F3d_contour_2.png" height="422" width="500"></p>
+<hr>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Vtk_contours_3D&amp;action=edit&amp;section=2" title="Edit section: Using a vtkDiscreteMarchingCubes filter instead of a contour filter, and add an outline filter">edit</a>]</div><a name="Using_a_vtkDiscreteMarchingCubes_filter_instead_of_a_contour_filter.2C_and_add_an_outline_filter"></a><h3>Using a vtkDiscreteMarchingCubes filter instead of a contour filter, and add an outline filter</h3>
+<pre>#cont = vtk.vtkContourFilter()
+cont = vtk.vtkDiscreteMarchingCubes()
+</pre>
+<p><img src="../images/F3d_discreteMC.png" alt="Image:f3d_discreteMC.png" longdesc="/mediawiki1.7/index.php/Image:F3d_discreteMC.png" height="300" width="470"></p>
+<hr>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Vtk_contours_3D&amp;action=edit&amp;section=3" title="Edit section: Color the contour by a different scalar field">edit</a>]</div><a name="Color_the_contour_by_a_different_scalar_field"></a><h3>Color the contour by a different scalar field</h3>
+<p>We add another scalar field, Height, to our dataset:
+</p>
+<pre>~/dev/vtk-stuff$ ty f_7x4x4_height.vtk 
+# vtk DataFile Version 3.0
+3D data
+ASCII
+DATASET STRUCTURED_POINTS
+DIMENSIONS 7 4 4
+SPACING 1 1 1
+ORIGIN 0 0 0
+POINT_DATA 112
+FIELD FieldData 2
+Id 1 112 float
+0 0 0 3 3 3 3
+0 0 0 3 0 0 3
+0 0 0 3 0 0 3
+0 0 0 3 3 3 3
+
+0 0 0 3 3 3 3
+0 2 2 3 1 1 3
+0 2 2 3 1 1 3
+0 0 0 3 3 3 3
+
+0 0 0 3 3 3 3
+0 2 2 3 1 1 3
+0 2 2 3 1 1 3
+0 0 0 3 3 3 3
+
+0 0 0 3 3 3 3
+0 0 0 3 0 0 3
+0 0 0 3 0 0 3
+0 0 0 3 3 3 3
+
+Height 1 112 float
+1 1 1 1 1 1 1
+1 1 1 1 1 1 1
+1 1 1 1 1 1 1
+1 1 1 1 1 1 1
+
+2 2 2 2 2 2 2
+2 2 2 2 2 2 2
+2 2 2 2 2 2 2
+2 2 2 2 2 2 2
+
+3 3 3 3 3 3 3
+3 3 3 3 3 3 3
+3 3 3 3 3 3 3
+3 3 3 3 3 3 3
+
+4 4 4 4 4 4 4
+4 4 4 4 4 4 4
+4 4 4 4 4 4 4
+4 4 4 4 4 4 4
+</pre>
+<pre>~/dev/vtk-stuff$ ty f3d-height.py 
+import vtk
+
+# blue -&gt; red LUT
+lutBlueRed = vtk.vtkLookupTable()
+lutBlueRed.SetHueRange(0.667,0.0)
+lutBlueRed.Build()
+
+ren1 = vtk.vtkRenderer()
+renWin = vtk.vtkRenderWindow()
+renWin.AddRenderer(ren1)
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
+
+reader = vtk.vtkDataSetReader()
+reader.SetFileName('f_7x4x4_height.vtk')
+
+aax = vtk.vtkAssignAttribute()
+aax.SetInputConnection(reader.GetOutputPort())
+aax.Assign("Id","SCALARS","POINT_DATA")
+
+aax.Update()
+srange = aax.GetOutput().GetScalarRange()
+print 'CellId range: ',srange   # CellId range:  (0.0, 3.0)
+
+aah = vtk.vtkAssignAttribute()
+aah.SetInputConnection(reader.GetOutputPort())
+aah.Assign("Height","SCALARS","POINT_DATA")
+aah.Update()
+hrange = aah.GetOutput().GetScalarRange()
+print 'Height range: ',hrange   # Height range:  (1.0, 4.0)
+
+cont = vtk.vtkContourFilter()
+#cont = vtk.vtkDiscreteMarchingCubes()
+cont.SetInputConnection(aax.GetOutputPort())
+cont.SetValue(0,2)
+
+mapper = vtk.vtkPolyDataMapper()
+#mapper.SetInputConnection(aax.GetOutputPort())
+mapper.SetInputConnection(cont.GetOutputPort())
+mapper.ScalarVisibilityOn()
+mapper.SetScalarModeToUsePointFieldData()
+#mapper.ColorByArrayComponent("Height",0)
+mapper.SelectColorArray("Height")
+mapper.SetScalarRange(hrange)
+mapper.SetLookupTable(lutBlueRed)
+
+actor = vtk.vtkActor()
+actor.SetMapper(mapper)
+#actor.GetProperty().SetInterpolationToFlat()
+
+ren1.AddActor(actor)
+
+#----------------------
+outline = vtk.vtkOutlineFilter()
+outline.SetInputConnection(aax.GetOutputPort())
+mapOutline = vtk.vtkPolyDataMapper()
+mapOutline.SetInputConnection(outline.GetOutputPort())
+outlineActor = vtk.vtkActor()
+outlineActor.SetMapper(mapOutline)
+outlineActor.GetProperty().SetColor(1, 1, 1)
+ren1.AddActor(outlineActor)
+
+#----------------------
+scalarBar = vtk.vtkScalarBarActor()
+scalarBar.SetLookupTable(lutBlueRed)
+#scalarBar.GetPositionCoordinate().SetCoordinateSystemToNormalizedViewport()
+#scalarBar.GetPositionCoordinate().SetValue(0.8,0.05)
+#scalarBar.SetOrientationToVertical()
+#scalarBar.SetWidth(0.1)
+#scalarBar.SetHeight(0.9)
+#scalarBar.SetPosition(0.88,0.1)
+#scalarBar.SetLabelFormat("%-#6.3f")
+#scalarBar.SetLabelFormat("%-#3.1f")
+#scalarBar.GetLabelTextProperty().SetColor(1,1,1)
+#scalarBar.GetTitleTextProperty().SetColor(1,0,0)
+
+ren1.AddActor2D(scalarBar)
+
+renWin.SetSize(500,400)
+renWin.Render()
+iren.Start()
+</pre>
+<p><img src="../images/F3d_contour_color.png" alt="Image:f3d_contour_color.png" longdesc="/mediawiki1.7/index.php/Image:F3d_contour_color.png" height="422" width="500"></p>
+<hr>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Vtk_contours_3D&amp;action=edit&amp;section=4" title="Edit section: What about coloring a contour from vtkDiscreteMarchingCubes?">edit</a>]</div><a name="What_about_coloring_a_contour_from_vtkDiscreteMarchingCubes.3F"></a><h3>What about coloring a contour from vtkDiscreteMarchingCubes?</h3>
+<p>If we just swap these filters, we get the following (incorrect) result and, strangely, the scalarbar has a different range also:
+</p>
+<pre>#cont = vtk.vtkContourFilter()
+cont = vtk.vtkDiscreteMarchingCubes()
+</pre>
+<p><br>
+<p><img src="../images/F3d_discreteMC_color.png" alt="Image:f3d_discreteMC_color.png" longdesc="/mediawiki1.7/index.php/Image:F3d_discreteMC_color.png" height="422" width="500"></p>
+<li>Back to <a href="index.html">index</a></body></html>

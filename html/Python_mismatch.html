@@ -1,0 +1,163 @@
+<html><body>
+<h3>Multiple Python versions</h3>
+<p>This problem has bitten me more than once and Ben Z. at least once, so I thought I'd document it a bit.
+</p><p>If you have ever seen an error message like the following:
+</p>
+<pre>
+Fatal Python error: Interpreter not initialized (version mismatch?)
+</pre>
+<p>you are likely experiencing a problem with having multiple Python versions installed on your computer and you've built a library or application with one version and are trying to execute with another version.  This seems to be especially problematic with OSX.  For example, you will likely have a system version of Python:
+</p>
+<pre>
+heiland@dhcp-cs-244-214:/System/Library/Frameworks/Python.framework/Versions/2.5/bin$ ./python
+Python 2.5.1 (r251:54863, Jan 13 2009, 10:26:13) 
+[GCC 4.0.1 (Apple Inc. build 5465)] on darwin
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+</pre>
+<p>To see which paths will be searched for libraries, you can do:
+</p>
+<pre>
+&gt;&gt;&gt; import sys
+&gt;&gt;&gt; print sys.path
+</pre>
+<p>You may also have other versions of Python frameworks installed in /Library:
+</p>
+<pre>
+heiland@dhcp-cs-244-214:/Library/Frameworks/Python.framework/Versions$ ls
+2.5/     Current@
+
+heiland@dhcp-cs-244-214:/Library/Frameworks/Python.framework/Versions$ cd Current/bin
+
+heiland@dhcp-cs-244-214:/Library/Frameworks/Python.framework/Versions/Current/bin$ ./python
+Python 2.5.1 (r251:54869, Apr 18 2007, 22:08:04) 
+[GCC 4.0.1 (Apple Computer, Inc. build 5367)] on darwin
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; 
+
+</pre>
+<p>and you may have still other versions that you've installed in non-standard locations:
+</p>
+<pre>
+heiland@dhcp-cs-244-214:~$ python2.6
+Python 2.6.1 (r261:67515, Dec 17 2008, 15:56:40) 
+[GCC 4.2.1 (Apple Inc. build 5566)] on darwin
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import sys
+&gt;&gt;&gt; print sys.path
+['', '/Users/heiland/dev/Python-2.6.1/framework/Python.framework/Versions/2.6/lib/python2.6/site-packages/...
+</pre>
+<p>Here's a case-in-point, trying to import a particular module:
+</p>
+<pre>
+heiland@dhcp-cs-244-214:~$ /System/Library/Frameworks/Python.framework/Versions/2.5/bin/python
+Python 2.5.1 (r251:54863, Jan 13 2009, 10:26:13) 
+[GCC 4.0.1 (Apple Inc. build 5465)] on darwin
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import vtk
+Fatal Python error: Interpreter not initialized (version mismatch?)
+Abort trap
+
+heiland@dhcp-cs-244-214:~$ python
+Python 2.5.1 (r251:54869, Apr 18 2007, 22:08:04) 
+[GCC 4.0.1 (Apple Computer, Inc. build 5367)] on darwin
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import vtk
+Fatal Python error: Interpreter not initialized (version mismatch?)
+Abort trap
+
+heiland@dhcp-cs-244-214:~$ python2.6
+Python 2.6.1 (r261:67515, Dec 17 2008, 15:56:40) 
+[GCC 4.2.1 (Apple Inc. build 5566)] on darwin
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; import vtk
+&gt;&gt;&gt; 
+</pre>
+<p>Note that (at least on a Unix machine), you can change which version of Python is executed by making/modifying a symbolic link in /usr/local/bin/python (or /usr/bin/python or ...).
+</p><p><font color="red">
+Before I was able to successfully build libs that correctly referred to the /System Python framework (and NOT the /Library framework), I had to:
+</font>
+</p>
+<pre>
+heiland@dhcp-cs-244-214:/Library/Frameworks$ sudo rm -rf Python.framework/
+</pre>
+<p>However, be aware that /Library/Python will still be used when installing certain Python pkgs later, e.g. sip and PyQt4:
+</p>
+<pre>
+ls /Library/Python/2.5/site-packages
+README                      sip.so*                     sipconfig.pyc
+PyQt4/                      easy-install.pth            sipconfig.py                sipdistutils.py
+</pre>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="/mediawiki1.7/index.php?title=Python_mismatch&amp;action=edit&amp;section=2" title="Edit section: Rebuilding PyQt4">edit</a>]</div><a name="Rebuilding_PyQt4"></a><h3>Rebuilding PyQt4</h3>
+<p>Before rebuilding PyQt, it is necessary to rebuild Sip:
+</p>
+<pre>
+heiland@dhcp-cs-244-214:~/dev/Python/sip-4.7.9$ python configure.py
+...
+
+heiland@dhcp-cs-244-214:~/dev/Python/sip-4.7.9$ make
+...
+
+heiland@dhcp-cs-244-214:~/dev/Python/sip-4.7.9$ sudo make install
+Password:
+cp -f sip /System/Library/Frameworks/Python.framework/Versions/2.5/bin/sip
+cp -f sip.so /Library/Python/2.5/site-packages/sip.so
+cp -f sip.h /System/Library/Frameworks/Python.framework/Versions/2.5/include/python2.5/sip.h
+cp -f sipconfig.py /Library/Python/2.5/site-packages/sipconfig.py
+cp -f sipdistutils.py /Library/Python/2.5/site-packages/sipdistutils.py
+</pre>
+<p>then repeat these steps for PyQt, e.g. in:
+</p>
+<pre>
+heiland@dhcp-cs-244-214:~/dev/Python/PyQt-mac-gpl-4.4.4$ 
+python configure.py
+make
+sudo make install
+</pre>
+<p><br />
+</p>
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="/mediawiki1.7/index.php?title=Python_mismatch&amp;action=edit&amp;section=3" title="Edit section: CompuCell3D 3.4">edit</a>]</div><a name="CompuCell3D_3.4"></a><h3>CompuCell3D 3.4</h3>
+<p>To build 3.4, I run 'cmake' from the source dir and set the following vars in CMakeCache.txt (thereby making an out-of-source install dir):
+</p>
+<pre>
+CMAKE_INSTALL_PREFIX:PATH=/Users/heiland/dev/Glazier/cc3d-3.4-2-24-09
+
+PYTHON_DEBUG_LIBRARY:FILEPATH=-framework Python
+
+//Path to a file.
+PYTHON_INCLUDE_PATH:PATH=/System/Library/Frameworks/Python.framework/Headers
+
+//Python Framework
+PYTHON_LIBRARY:FILEPATH=-framework Python
+
+</pre>
+<p>When I try to run:
+</p>
+<pre>
+heiland@dhcp-cs-244-214:~/dev/Glazier/cc3d-3.4-2-24-09$ ./compucell3d.sh
+
+--&gt; errors related to the fact that Alex was developing for Linux and used the env var
+'PYTHON_MODULE_PATH' instead of 'PYTHONPATH'.  Therefore we make this change in:
+
+compucell3d.sh and player/compucell3d.py and pythonSetupScripts/CompuCellSetup.py
+
+In addition, we need to append the path to VTK in compucell.sh, e.g.:
+
+export DYLD_LIBRARY_PATH=/Users/heiland/dev/Graphics/VTK-5.3/VTK-bin/bin:$DYLD_LIBRARY_PATH
+
+export PYTHONPATH=${PREFIX_CC3D}/pythonSetupScripts:/Users/heiland/dev/Graphics/VTK-5.3/VTK-bin/Wrapping/Python:/Users/heiland/dev/Graphics/VTK-5.3/VTK-bin/bin
+
+</pre>
+<p>it displays the GUI fine, but when I try to open a .xml input file from /Demo, we see:
+</p>
+<pre>
+********************BLOB INIT***********************
+itDim=(20,20,1)
+Step 0 Energy 0 Cells 193
+2009-02-24 15:01:42.327 Python[75277:613] invalid drawable
+2009-02-24 15:01:42.329 Python[75277:613] invalid drawable
+2009-02-24 15:01:42.330 Python[75277:613] *** -[NSHIObject frame]: unrecognized 
+selector sent to instance 0x1becc6c0
+2009-02-24 15:01:42.330 Python[75277:613] HIToolbox: ignoring exception '*** -[NSHIObject frame]: 
+unrecognized selector sent to instance 0x1becc6c0' that raised inside Carbon event dispatch
+</pre>
+<li>Back to <a href="index.html">index</a></body></html>

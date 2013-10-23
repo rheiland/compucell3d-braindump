@@ -1,0 +1,189 @@
+<html><body>
+				<h1 class="firstHeading">Liver lobule vis</h1>
+			<table id="toc" class="toc" summary="Contents"><tbody><tr><td><div id="toctitle"><h2>Contents</h2> <span class="toctoggle"></span></div>
+<ul>
+<li class="toclevel-1"><a href="#Liver_lobule_vis"><span class="tocnumber">1</span> <span class="toctext">Liver lobule vis</span></a></li>
+<li class="toclevel-1"><a href="#Center_slab"><span class="tocnumber">2</span> <span class="toctext">Center slab</span></a></li>
+<li class="toclevel-1"><a href="#Glyphs:_abs_scaling.3B_wacky_colors"><span class="tocnumber">3</span> <span class="toctext">Glyphs: abs scaling; wacky colors</span></a></li>
+<li class="toclevel-1"><a href="#Glyphs:_scale_by_volume_and_abs_scaling.3B_colors_match_Prefs"><span class="tocnumber">4</span> <span class="toctext">Glyphs: scale by volume and abs scaling; colors match Prefs</span></a></li>
+<li class="toclevel-1"><a href="#Glyphs:_scale_by_radius_and_abs_scaling.3B_colors_match_Prefs"><span class="tocnumber">5</span> <span class="toctext">Glyphs: scale by radius and abs scaling; colors match Prefs</span></a></li>
+<li class="toclevel-1"><a href="#At_beginning.2C_before_Hep_cell_deleted"><span class="tocnumber">6</span> <span class="toctext">At beginning, before Hep cell deleted</span></a></li>
+<li class="toclevel-1"><a href="#Hep_glyphs.2C_clipped_and_capped"><span class="tocnumber">7</span> <span class="toctext">Hep glyphs, clipped and capped</span></a></li>
+<li class="toclevel-1"><a href="#Oriented_glyphs"><span class="tocnumber">8</span> <span class="toctext">Oriented glyphs</span></a></li>
+</ul>
+</td></tr></tbody></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>
+<h2> Liver lobule vis </h2>
+<p>Background: Jim has created initial conditions for a single, 
+hexagonal-shaped liver lobule consisting of 3 layers of sinusoids (blood
+ vessels and related vein plumbing) with hepatocyte cells in between.  
+Model dims: 341, 297, 36.
+<p><img src="../images/286px-Hep_cells3.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Hep_cells3.png" height="300" width="286">
+<img src="../images/288px-Hep_cells3_smooth_translate.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Hep_cells3_smooth_translate.png" height="300" width="288"><br>Showing 3 hep cells, with periodic wraparound issue for 2 of them, 
+i.e. caps are on the bottom.  Right: making a copy of bottom [parts of] 
+cells and translating to the top.
+<p><img src="../images/Hep_cells_translate.png" alt="Image:hep_cells_translate.png" longdesc="/mediawiki1.7/index.php/Image:Hep_cells_translate.png" height="534" width="512"><br>Translating all cells on bottom slab to top
+</p>
+<hr>
+<h2> Center slab </h2>
+<p><img src="../images/Center_hep_cells.png" alt="Image:center_hep_cells.png" longdesc="/mediawiki1.7/index.php/Image:Center_hep_cells.png" height="534" width="512"><br>Showing just center slab of hep cells (with smoothing=400)
+<p><img src="../images/383px-Center_hep_top.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Center_hep_top.png" height="399" width="383">
+<p><img src="../images/383px-Center_hep_top_radius110.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Center_hep_top_radius110.png" height="399" width="383"><br>Center slab of hep cells; radial distance threshold (right)
+<p><img src="../images/Hep_cells3_smoothing.png" alt="Image:hep_cells3_smoothing.png" longdesc="/mediawiki1.7/index.php/Image:Hep_cells3_smoothing.png" height="319" width="738"><br>Experimenting w/ smoothing filter: BoundarySmoothing and FeatureEdgeSmoothing methods
+<p><img src="../images/Hep_sinusoids_clipplanes.png" alt="Image:hep_sinusoids_clipplanes.png" longdesc="/mediawiki1.7/index.php/Image:Hep_sinusoids_clipplanes.png" height="607" width="583"><br>First attempt at combining hep cell and sinusoids - with cutaways via multiple clipping planes. Not so good due to
+uncapped cavities, either from periodic BCs or clip plane.
+<p><img src="../images/Hep_3slabs_multicolored_smooth400.png"
+alt="Image:hep_3slabs_multicolored_smooth400.png"
+longdesc="/mediawiki1.7/index.php/Image:Hep_3slabs_multicolored_smooth400.png"
+height="372" width="518"></a>
+<img src="../images/350px-Hep_3slabs_multicolored_smooth400_top.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Hep_3slabs_multicolored_smooth400_top.png" height="360" width="350"><br>Showing the rendering of the 3 different slabs of hep cells.  Bottom
+ slab (cyan and green; cyan are those cropped out
+with a plane) that wrap around due to periodic boundaries and then we 
+crop just those on the very bottom (not the ones
+wrapped around to the top) and translate them up in Z (yellow) so they 
+cap the top ones.  Center slab of cells are salmon-colored.
+<p><img src="../images/383px-Hep_3slabs_salmon_smooth400.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Hep_3slabs_salmon_smooth400.png" height="399" width="383">
+<img src="../images/383px-Hep_3slabs_salmon_smooth400_ctrOpac.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Hep_3slabs_salmon_smooth400_ctrOpac.png" height="399" width="383"><br>(Left)All salmon-colored hep cells, smoothing 400.
+(Right)With center slab of cells opacity=0.5 (not identical viewing angles).
+</p>
+<hr>
+<h2> Glyphs: abs scaling; wacky colors </h2>
+<p><img src="../images/Glyphs_ct5_8_mcs1.png" alt="Image:glyphs_ct5_8_mcs1.png" longdesc="/mediawiki1.7/index.php/Image:Glyphs_ct5_8_mcs1.png" height="583" width="741"><br>Displaying cell glyphs (but in Prefs:3D tab, only showing cell types
+ 5(sinusoid) and 8(hep); i.e. make 0,1,2,3,4,6,7,9 invisible)
+<p><img src="../images/Cc3d_prefs_celltype.png" alt="Image:cc3d_prefs_celltype.png" longdesc="/mediawiki1.7/index.php/Image:Cc3d_prefs_celltype.png" height="512" width="546"><br>The current Prefs:Cell Type panel only allows a single, absolute scale factor for all glyphs.  We would like to
+have each cell type have its own scaling factor.  Also, note the glyph colors are simply adopting a default color map,
+according to cell type scalar.  We (probably) want to use the colors listed in the table.
+<p><img src="../images/Ct8_glyph_and_cell_mcs48.png" alt="Image:ct8_glyph_and_cell_mcs48.png" longdesc="/mediawiki1.7/index.php/Image:Ct8_glyph_and_cell_mcs48.png" height="576" width="632"><br>Showing both cell glyph (wireframe) and normal "Cells" vis of celltype 8 (hep).
+</p>
+<hr>
+<h2> Glyphs: scale by volume and abs scaling; colors match Prefs </h2>
+<p><img src="../images/Mcs105_ct5_8.png" alt="Image:mcs105_ct5_8.png" longdesc="/mediawiki1.7/index.php/Image:Mcs105_ct5_8.png" height="577" width="607">
+<img src="../images/Mcs184_ct5_8.png" alt="Image:mcs184_ct5_8.png" longdesc="/mediawiki1.7/index.php/Image:Mcs184_ct5_8.png" height="408" width="401"><br>MCS 105 vs. 184; hep cells have continued to grow.
+</p>
+<hr> 
+<h2> Glyphs: scale by radius and abs scaling; colors match Prefs </h2>
+<p><img src="../images/Mcs6_scalebyradius_celltypecolors.png" alt="Image:mcs6_scalebyradius_celltypecolors.png" longdesc="/mediawiki1.7/index.php/Image:Mcs6_scalebyradius_celltypecolors.png" height="603" width="638"><br>Now using correct colors (from Prefs:Cell Type colors) and scaling 
+glyphs by radius instead of volume (using Vol^(1/3)).  Notice that at 
+the beginning of the sim, the hep cells are quite small compared to the 
+sinusoid cells, but over time they grow and become larger than the 
+sinusoid cells.
+<p><img src="../images/Mcs6_scalebyradius_celltypecolors2.png" alt="Image:mcs6_scalebyradius_celltypecolors2.png" longdesc="/mediawiki1.7/index.php/Image:Mcs6_scalebyradius_celltypecolors2.png" height="575" width="604"><br>Showing cell glyphs for all cell types except 0 and 6.
+<p><img src="../images/Mcs6_scalebyradius_celltype_prefs.png" alt="Image:mcs6_scalebyradius_celltype_prefs.png" longdesc="/mediawiki1.7/index.php/Image:Mcs6_scalebyradius_celltype_prefs.png" height="512" width="544"><br>Colormap for cell types.
+<p><img src="../images/Mcs2_cell_glyphs.png" alt="Image:mcs2_cell_glyphs.png" longdesc="/mediawiki1.7/index.php/Image:Mcs2_cell_glyphs.png" height="575" width="604">
+<img src="../images/Mcs3_cells.png" alt="Image:mcs3_cells.png" longdesc="/mediawiki1.7/index.php/Image:Mcs3_cells.png" height="575" width="604"><br>After changing the colors slightly; showing glyphs and normal cell renderings.
+</p>
+<h2> At beginning, before Hep cell deleted </h2>
+<p><img src="../images/Mcs0_pre_delete_glyphs.png" alt="Image:mcs0_pre_delete_glyphs.png" longdesc="/mediawiki1.7/index.php/Image:Mcs0_pre_delete_glyphs.png" height="575" width="604"></p>
+<h2> Hep glyphs, clipped and capped </h2>
+<p><img src="../images/Mcs1080_hep_clip_cap.png" alt="Image:mcs1080_hep_clip_cap.png" longdesc="/mediawiki1.7/index.php/Image:Mcs1080_hep_clip_cap.png" height="499" width="501"><br>Showing that we can perform clipping/capping of hep cell glyphs (2 sets); no scaling by volume.
+<p><img src="../images/Mcs1080_hep_clip_cap_sinusoids.png" alt="Image:mcs1080_hep_clip_cap_sinusoids.png" longdesc="/mediawiki1.7/index.php/Image:Mcs1080_hep_clip_cap_sinusoids.png" height="389" width="587">
+<p><img src="../images/Mcs1300_clip_hep2.png" alt="Image:mcs1300_clip_hep2.png" longdesc="/mediawiki1.7/index.php/Image:Mcs1300_clip_hep2.png" height="387" width="544">
+<p><img src="../images/Hep_glyphs_rscaled0_5_vessels.png" alt="Image:hep_glyphs_rscaled0_5_vessels.png" longdesc="/mediawiki1.7/index.php/Image:Hep_glyphs_rscaled0_5_vessels.png" height="534" width="512"><br>Doing a radial crop from center for hep cells; global scale (0.5) 
+for sphere glyphs, plus scale by ~radii; growing hep cells 
+ivory-colored; smoothed vessels; clipping planes in Z and X.
+<p><img src="../images/Hep_glyphs_superquadric.png" alt="Image:hep_glyphs_superquadric.png" longdesc="/mediawiki1.7/index.php/Image:Hep_glyphs_superquadric.png" height="442" width="437"><br>Experimenting with vtkSuperquadricSource as a glyph.  Seem to have a
+ bug with the clipping/capping of cells, plus the shape isn't much 
+different, even it they were oriented properly.
+<p><img src="../images/Buggy_glyph_clip_cap.png" alt="Image:buggy_glyph_clip_cap.png" longdesc="/mediawiki1.7/index.php/Image:Buggy_glyph_clip_cap.png" height="303" width="927"><br>Bug(?) when clipping/capping superquadric glyphs (right) instead of spheres (left).
+</p>
+<h2> Oriented glyphs </h2>
+<pre># python quadric_glyphs3_orient.py 0.6 .7
+import vtk
+import sys,string
+
+argc = len(sys.argv)
+#print 'argc=',argc
+if argc &lt; 3:
+    print 'Usage: ',sys.argv[0],' phi theta'   # e.g. 0.6 0.7
+    raise ValueError, 'Too few input args'
+
+idx=1
+phi = string.atof(sys.argv[idx])
+idx += 1
+theta = string.atof(sys.argv[idx])
+
+r_hep=1.0
+g_hep=160./255
+b_hep=122./255
+ 
+# Python example translated directly from Tcl test
+# [vtk_source]/Graphics/Testing/Tcl/progGlyphs.tcl
+ 
+res = 6
+plane = vtk.vtkPlaneSource()
+plane.SetResolution(res,res)
+colors = vtk.vtkElevationFilter()
+colors.SetInputConnection(plane.GetOutputPort())
+colors.SetLowPoint(-0.25,-0.25,-0.25)
+colors.SetHighPoint(0.25,0.25,0.25)
+planeMapper = vtk.vtkPolyDataMapper()
+planeMapper.SetInput(colors.GetPolyDataOutput())
+planeActor = vtk.vtkActor()
+planeActor.SetMapper(planeMapper)
+planeActor.GetProperty().SetRepresentationToWireframe()
+ 
+squad = vtk.vtkSuperquadricSource()
+scale = 0.5
+squad.SetScale(scale,scale,scale)
+#squad.SetCenter(xyz)
+squad.SetPhiRoundness(phi)
+squad.SetThetaRoundness(theta)
+squad.SetPhiResolution(32)
+squad.SetThetaResolution(32)
+
+sphereRadius = 0.3
+hepSpheres = vtk.vtkSphereSource()
+hepSpheres.SetRadius(sphereRadius)
+hepSpheres.SetThetaResolution(15)
+hepSpheres.SetPhiResolution(15)
+
+transform = vtk.vtkTransform()
+transform.Scale(1.3, 1.0, 1)
+hepSpheresX = vtk.vtkTransformPolyDataFilter()
+hepSpheresX.SetInputConnection(hepSpheres.GetOutputPort())
+hepSpheresX.SetTransform(transform)
+ 
+reader = vtk.vtkDataSetReader()
+reader.SetFileName('sp2x2_vecs.vtk')
+
+#glypher = vtk.vtkProgrammableGlyphFilter()
+glypher = vtk.vtkGlyph3D()
+#glypher.SetInputConnection(colors.GetOutputPort())
+glypher.SetInputConnection(reader.GetOutputPort())
+#glypher.SetSource(squad.GetOutput())
+glypher.SetSource(hepSpheresX.GetOutput())
+glypher.SetScaleModeToDataScalingOff()
+glypher.OrientOn()
+#glypher.SetGlyphMethod(Glyph)
+
+glyphMapper = vtk.vtkPolyDataMapper()
+glyphMapper.SetInputConnection(glypher.GetOutputPort())
+glyphMapper.ScalarVisibilityOff()
+
+glyphActor = vtk.vtkActor()
+glyphActor.SetMapper(glyphMapper)
+glyphActor.GetProperty().SetColor(r_hep,g_hep,b_hep)
+
+ 
+ren1 = vtk.vtkRenderer()
+renWin = vtk.vtkRenderWindow()
+renWin.SetMultiSamples(0)
+renWin.AddRenderer(ren1)
+iren = vtk.vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
+#ren1.AddActor(planeActor)
+ren1.AddActor(glyphActor)
+ren1.SetBackground(1,1,1)
+renWin.SetSize(450,450)
+renWin.Render()
+ 
+iren.Start()
+</pre>
+<p><img src="../images/600px-Oriented_glyphs.png" alt="" longdesc="/mediawiki1.7/index.php/Image:Oriented_glyphs.png" height="269" width="600"><br>Showing both SuperQuadrics and (transformed) Spheres
+</p>
+<hr>
+<p><img src="../images/Nonoriented_mix_hep.png" alt="Image:nonoriented_mix_hep.png" longdesc="/mediawiki1.7/index.php/Image:Nonoriented_mix_hep.png" height="534" width="512"><br>Non-oriented mix of hep cells visualizations.
+<p><img src="../images/Oriented_mix_hep.png" alt="Image:oriented_mix_hep.png" longdesc="/mediawiki1.7/index.php/Image:Oriented_mix_hep.png" height="534" width="512"><br>Oriented (just based on center of lobule) mix of hep cells visualizations.
+<p><img src="../images/Oriented_mix_hep_sinusoids.png" alt="Image:oriented_mix_hep_sinusoids.png" longdesc="/mediawiki1.7/index.php/Image:Oriented_mix_hep_sinusoids.png" height="534" width="512"><br>Oriented hep cell glyphs and sinusoids.
+</p>
+<hr>
+<li>Back to <a href="index.html">index</a></body></html>

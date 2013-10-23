@@ -1,0 +1,244 @@
+<html><body>
+				<h1 class="firstHeading">AMD script</h1>
+			<p>Abbas wanted to be able to specify a 3D camera view for rendering 
+using the .dml file.  So I added a "-p" arg to the cc3D cmd line.  One 
+would have previously saved a camera's params from a 3D
+graphics window using the Ctl-p (Cmd-p on OSX) which gets dumped into 
+"player.txt".
+Unfortunately, there seems to still be a problem capturing the "zoom" 
+factor. (rf. player/Plugins/ViewManagerPlugins/SimpleTabView.py: 
+processCommandLineOptions() and __dumpPlayerParams())
+</p>
+<pre>heiland@129-79-58-155:~/dev/Glazier/cc3d-3.5-jan14$ compucell3d.sh -i ~/Documents/Glazier/Abbas/2011/54-JRB-28_JRR-18_JRP-16_LRB30_LRR30_r0_xml_11_17_2010_15_14_30.dml -p player.txt
+</pre>
+<pre>heiland@Macintosh-91:~/dev/Glazier/cc3d-3.5-jan26$ ty player.txt 
+CameraPosition=  57.618023765965958  12.893181847341506  131.67053146725684 
+CameraFocalPoint=  42.747480207661482  20.562499368364175  -0.14456090171991509 
+CameraViewUp=  0.80097889769232666  0.59609785973579688  -0.05567896434011016 
+CameraClippingRange=  113.18473619133439  157.97642040272319 
+CameraDistance= 132.872758958
+ViewAngle= 30.0
+</pre>
+<p>Now, for Abbas's amd.py, we have a slightly modified input file:
+</p>
+<pre>heiland@Macintosh-91:~/Documents/Glazier/Abbas/2011$ ty celltypes.txt 
+celltype=7  rgb=(1,0,0)  smooth=50  opacity=1.0
+celltype=8  rgb=(1,1,0)  smooth=50  opacity=1.0
+celltype=5  rgb=(0,1,1)  smooth=50  opacity=1.0
+#celltype=99  rgb=(1,1,0.5)  smooth=0  opacity=1.0
+Zoom=1.5
+CameraPosition=  5289.5989438821525  1868.6044857235704  -5315.4983099185511 
+CameraFocalPoint=  20.25  20.25  17.75 
+CameraViewUp=  -0.67304223561217058  -0.16291145112384864  -0.7214388457623373 
+CameraClippingRange=  7583.0274838250771  7915.0814225265613 
+CameraDistance= 7721.78671892
+ViewAngle= 0.5
+WindowSize= 640 480
+</pre>
+<p>Note that the rendering script only renders 3D discrete cell type isosurfs:
+</p>
+<pre>#!/usr/bin/env python
+
+# amd.py 54-JRB-28_JRR-18_JRP-16_LRB30_LRR30_r0_xml_11_17_2010_15_14_30_000000.vtk celltypes.txt
+
+import sys, string
+from vtk import *
+
+argc = len(sys.argv)
+print 'argc=',argc
+if argc &lt; 3:
+        print 'Usage: ',sys.argv[0],' &lt;vtkFile&gt; &lt;paramsFile&gt;'
+        raise ValueError, 'Too few input args'
+
+idx = 1
+vtkFile = sys.argv[idx]
+idx += 1
+paramsFile = sys.argv[idx]
+idx += 1
+
+#----------------------------------------
+# Create the renderer, render window, and interactor.
+ren = vtkRenderer()
+renWin = vtkRenderWindow()
+winW = 400
+winH = 400
+renWin.SetSize(winW,winH)
+renWin.AddRenderer(ren)
+iren = vtkRenderWindowInteractor()
+iren.SetRenderWindow(renWin)
+
+#---- parse the paramsFile
+#celltype=7  rgb=(1,0,0)  smooth=0  opacity=1.0
+#celltype=8  rgb=(1,1,0)  smooth=0  opacity=1.0
+#Zoom=1.5
+#CameraPosition=  5289.5989438821525  1868.6044857235704  -5315.4983099185511 
+#...
+
+celltype = []
+ctColor = []
+smoothIters = []
+with open(paramsFile, 'r') as f:
+  while True:
+    l = f.readline()
+    if l == "": break
+    if l[0] == '#': 
+      print '---&gt; skip over: ',l
+      continue
+#    l = l.replace('=',' ').replace(',',' ')
+    while string.find(l,', ') &gt; -1: l = l.replace(', ', ',') 
+    while string.find(l,' ,') &gt; -1: l = l.replace(' ,', ',') 
+    while string.find(l,'( ') &gt; -1: l = l.replace('( ', '(') 
+    while string.find(l,' )') &gt; -1: l = l.replace(' )', ')') 
+      
+#    while string.find(l, ' ,'): l=l.replace(' ,',',') 
+    l = l.replace('=',' ')
+    v = l.split()
+    if len(v) == 0: break
+    print v
+    if string.find(v[0], 'celltype') &gt; -1:
+      celltype.append(int(v[1]))
+      ctColor.append((v[3]))
+      smoothIters.append(int(v[5]))
+#      print 'smoothIters = ',smoothIters
+    elif string.find(v[0], 'CameraPosition') &gt; -1:
+      ren.GetActiveCamera().SetPosition(float(v[1]), float(v[2]), float(v[3]))
+    elif string.find(v[0], 'CameraFocalPoint') &gt; -1:
+      ren.GetActiveCamera().SetFocalPoint(float(v[1]), float(v[2]), float(v[3]))
+    elif string.find(v[0], 'CameraViewUp') &gt; -1:
+      ren.GetActiveCamera().SetViewUp(float(v[1]), float(v[2]), float(v[3]))
+    elif string.find(v[0], 'CameraClippingRange') &gt; -1:
+      ren.GetActiveCamera().SetClippingRange(float(v[1]), float(v[2]))
+    elif string.find(v[0], 'ViewAngle') &gt; -1:
+      ren.GetActiveCamera().SetViewAngle(float(v[1]))
+    elif string.find(v[0], 'WindowSize') &gt; -1:
+      renWin.SetSize(int(v[1]), int(v[2]))
+
+print 'celltype = ',celltype
+print 'ctColor = ',ctColor
+
+
+#----------------------------------------
+reader = vtkStructuredPointsReader()
+reader.SetFileName(vtkFile)
+reader.Update()
+#print 'info = ', reader.GetInformation()
+#print 'num PtArrays = ', reader.GetNumberOfPointArrays()
+
+aa = vtk.vtkAssignAttribute()
+aa.SetInputConnection(reader.GetOutputPort())
+aa.Assign("CellType", "SCALARS", "POINT_DATA")
+#aa.Assign("CellId", "SCALARS", "POINT_DATA")
+#aa.Assign("Cells", "SCALARS", "POINT_DATA")
+aa.Update()
+
+#---------------------------------------------
+# Cell types:
+# vasc = 7
+#---------------------------------------------
+
+dmc = ['dmc'+str(x) for x in celltype]
+smooth = ['smooth'+str(x) for x in celltype]
+normals = ['normals'+str(x) for x in celltype]
+mapper = ['mapper'+str(x) for x in celltype]
+actor = ['actor'+str(x) for x in celltype]
+
+idx = 0
+for idx in range(len(celltype)):
+  dmc[idx] = vtkDiscreteMarchingCubes()
+  dmc[idx].SetInputConnection(aa.GetOutputPort())
+  dmc[idx].SetValue(0, celltype[idx])
+
+  mapper[idx] = vtkPolyDataMapper()
+  mapper[idx].ScalarVisibilityOff()   # turn off for single color isosurface
+
+  normals[idx] = vtkPolyDataNormals()
+  if smoothIters[idx] &gt; 0:
+    smooth[idx] = vtkSmoothPolyDataFilter()
+    smooth[idx].SetInput(dmc[idx].GetOutput())
+    print 'smoothing polydata with # iters = ',smoothIters[idx]
+    smooth[idx].SetNumberOfIterations(smoothIters[idx])
+    normals[idx].SetInputConnection(smooth[idx].GetOutputPort())
+    #normals[idx].FlipNormalsOn()
+    mapper[idx].SetInputConnection(normals[idx].GetOutputPort())
+  else:
+    mapper[idx].SetInputConnection(dmc[idx].GetOutputPort())
+
+
+  actor[idx] = vtkActor()
+  actor[idx].SetMapper(mapper[idx])
+  actor[idx].GetProperty().SetOpacity(1.0)
+  print 'ctColor[idx] =',ctColor[idx]
+  rgb = ctColor[idx].replace('(','').replace(')','').replace(',',' ')
+  print 'rgb=',rgb
+#  print 'rgb.split() = ',rgb.split()
+  rgb = rgb.split()
+  print 'rgb split=',rgb
+  red = float(rgb[0])/255.0
+  green = float(rgb[1])/255.0
+  blue = float(rgb[2])/255.0
+  print 'r,g,b=',red,green,blue
+#  for x in rgb: print x
+#  color = [int(x) for x in rgb]
+#  color = [float(x) for x in rgb]
+#  print 'color=',color
+#  r1,g1,b1 = 1.0, 0.0, 0.0
+  actor[idx].GetProperty().SetColor(red, green, blue)
+#  actor[idx].GetProperty().SetColor(color)
+
+  ren.AddActor(actor[idx])
+
+#---------------------------------------------
+# Create outline an outline of the sampled data.
+outline = vtkOutlineFilter()
+outline.SetInputConnection(reader.GetOutputPort())
+
+outlineMapper = vtkPolyDataMapper()
+outlineMapper.SetInputConnection(outline.GetOutputPort())
+
+outlineActor = vtkActor()
+outlineActor.SetMapper(outlineMapper)
+outlineActor.GetProperty().SetColor(0, 0, 0)
+outlineActor.GetProperty().SetColor(1, 1, 1)
+
+ren.SetBackground(0, 0, 0)
+
+ren.AddActor(outlineActor)
+
+# Zoom in a little bit.
+ren.ResetCamera()
+zoomVal = 1.2
+ren.GetActiveCamera().Zoom(zoomVal)
+
+# cam pos= (49.5, 49.5, 488.774513361804)
+#print 'cam pos=',ren.GetActiveCamera().GetPosition()
+#ren.GetActiveCamera().SetPosition([49.5, )
+#ren.GetActiveCamera().SetViewUp([49.5, )
+
+setCamera = False
+if setCamera:
+  ren.GetActiveCamera().SetPosition(215.94006926349266, -292.4357250468081, 230.77223991140951)
+  ren.GetActiveCamera().SetViewUp(-0.13254870277375616, 0.34633686019740406, 0.92869888589445293)
+  ren.GetActiveCamera().SetDistance(409.274513362)
+  ren.GetActiveCamera().SetFocalPoint(49.5, 49.5, 79.5)
+  ren.GetActiveCamera().SetEyeAngle(2.0)  
+  #ren.GetActiveCamera().SetOrientation(-56.664592359680611, -47.733269186959966, -50.932805156390216)
+#  ren.GetActiveCamera().SetRoll(-50.9328051564)       
+
+# Initialize and start the event loop.
+iren.Initialize()
+renWin.Render()
+
+w2i = vtkWindowToImageFilter()
+w2i.SetInput(renWin)
+
+imgw = vtkPNGWriter()
+imgw.SetInput(w2i.GetOutput())
+fileOut = vtkFile[:-4] + ".png"
+fileOut = "foo.png"
+print '--&gt; ',fileOut
+imgw.SetFileName(fileOut)
+imgw.Write()
+
+iren.Start()   # comment out for ipython?
+</pre>
+<li>Back to <a href="index.html">index</a></body></html>

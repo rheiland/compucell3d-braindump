@@ -1,0 +1,117 @@
+<html><body>
+				<h1 class="firstHeading">Dicty3D vis</h1>
+<p><img src="../images/Dicty_prefs_3D.png" alt="Image:dicty_prefs_3D.png" longdesc="/mediawiki1.7/index.php/Image:Dicty_prefs_3D.png" height="307" width="538"></p><p>We hide the cell type for the wall (=5), otherwise we see a wall&nbsp;:)
+</p>
+<hr>
+<p><img src="../images/Dicty_cells_mcs10.png" alt="Image:dicty_cells_mcs10.png" longdesc="/mediawiki1.7/index.php/Image:Dicty_cells_mcs10.png" height="502" width="624"></p>
+<hr>
+<p><img src="../images/Dicty_cellglyphs_mcs15.png" alt="Image:dicty_cellglyphs_mcs15.png" longdesc="/mediawiki1.7/index.php/Image:Dicty_cellglyphs_mcs15.png" height="503" width="620"></p><p>We still need to map the specified cell type colors to cell glyphs.
+</p>
+<hr>
+<p><img src="../images/Dicty_cellglyphs_mcs15.png" alt="Image:dicty_cellglyphs_mcs15.png" longdesc="/mediawiki1.7/index.php/Image:Dicty_cellglyphs_mcs15.png" height="503" width="620">When we display a 2D slice, the Cell Glyphs vis option is ignored (fix sometime).
+</p>
+<hr>
+<p>The sim is taken from one provided by Michael Rountree, experimenting with the PlayerSettings.
+</p>
+<pre>ty ~/dev/Glazier/dicty_playertest.xml 
+ &lt;CompuCell3D&gt;
+ &lt;Potts&gt;
+   &lt;Dimensions x="40" y="40" z="40"/&gt;
+   &lt;Anneal&gt;0&lt;/Anneal&gt;
+   &lt;Steps&gt;30000&lt;/Steps&gt;
+   &lt;Temperature&gt;2&lt;/Temperature&gt;
+   &lt;Offset&gt;-0.1&lt;/Offset&gt;
+   &lt;Flip2DimRatio&gt;1.0&lt;/Flip2DimRatio&gt;
+ &lt;/Potts&gt;
+
+ &lt;Plugin Name="PlayerSettings"&gt;
+    &lt;Project2D YZProj="7"/&gt;
+    &lt;InitialProjection Projection="YZ"/&gt;
+    &lt;Rotate3D XRot="27" YRot="-11"/&gt;
+ &lt;/Plugin&gt;
+
+ &lt;Plugin Name="Volume"&gt;
+   &lt;TargetVolume&gt;68&lt;/TargetVolume&gt;
+   &lt;LambdaVolume&gt;1.5&lt;/LambdaVolume&gt;
+ &lt;/Plugin&gt;
+
+ &lt;Plugin Name="CellType"&gt;
+    &lt;CellType TypeName="Medium" TypeId="0"/&gt;
+    &lt;CellType TypeName="Prestalk" TypeId="1"/&gt;
+    &lt;CellType TypeName="Prespore" TypeId="2"/&gt;
+    &lt;CellType TypeName="Autocycling" TypeId="3"/&gt;
+    &lt;CellType  TypeName="Ground" TypeId="4" Freeze=""/&gt;
+    &lt;CellType  TypeName="Wall" TypeId="5" Freeze="" /&gt;
+ &lt;/Plugin&gt;
+
+ &lt;Plugin Name="Contact"&gt;
+   &lt;Energy Type1="Autocycling" Type2="Autocycling"&gt; 0.5 &lt;/Energy&gt;
+   &lt;Energy Type1="Prestalk" Type2="Prestalk"&gt; 1.5 &lt;/Energy&gt;
+   &lt;Energy Type1="Prespore" Type2="Prespore"&gt; 2 &lt;/Energy&gt;
+   &lt;Energy Type1="Autocycling" Type2="Medium"&gt; 2 &lt;/Energy&gt;
+   &lt;Energy Type1="Prestalk" Type2="Medium"&gt; 2 &lt;/Energy&gt;
+   &lt;Energy Type1="Prespore" Type2="Medium"&gt; 2 &lt;/Energy&gt;
+   &lt;Energy Type1="Prestalk" Type2="Prespore"&gt; 2 &lt;/Energy&gt;
+   &lt;Energy Type1="Prestalk" Type2="Autocycling"&gt; 2 &lt;/Energy&gt;
+   &lt;Energy Type1="Prespore" Type2="Autocycling"&gt; 2 &lt;/Energy&gt; 
+   &lt;Energy Type1="Medium" Type2="Medium"&gt; 0 &lt;/Energy&gt;
+  
+   &lt;Energy Type1="Ground" Type2="Ground"&gt;0&lt;/Energy&gt;
+   &lt;Energy Type1="Ground" Type2="Medium"&gt;0&lt;/Energy&gt;
+   &lt;Energy Type1="Ground" Type2="Autocycling"&gt;2&lt;/Energy&gt;
+   &lt;Energy Type1="Ground" Type2="Prestalk"&gt;2&lt;/Energy&gt;
+   &lt;Energy Type1="Ground" Type2="Prespore"&gt;2&lt;/Energy&gt;
+
+   &lt;Energy Type1="Wall" Type2="Wall"&gt;0&lt;/Energy&gt;
+   &lt;Energy Type1="Wall" Type2="Medium"&gt;0&lt;/Energy&gt;
+   &lt;Energy Type1="Wall" Type2="Autocycling"&gt;20&lt;/Energy&gt;
+   &lt;Energy Type1="Wall" Type2="Prestalk"&gt;20&lt;/Energy&gt;
+   &lt;Energy Type1="Wall" Type2="Prespore"&gt;20&lt;/Energy&gt;
+   &lt;Energy Type1="Wall" Type2="Ground"&gt;20&lt;/Energy&gt; 
+
+   &lt;Depth&gt;1.5&lt;/Depth&gt;
+ &lt;/Plugin&gt;
+
+ &lt;Plugin Name="ChemotaxisDicty"&gt;
+    &lt;Lambda&gt;200&lt;/Lambda&gt;
+    &lt;ChemicalField Source="ReactionDiffusionSolverFE_SavHog"&gt;cAMP&lt;/ChemicalField&gt;
+ &lt;/Plugin&gt;
+ 
+ &lt;Plugin Name="CenterOfMass"/&gt;
+ &lt;Plugin Name="SimpleClock"/&gt;
+    
+ &lt;Steppable Type="DictyInitializer"&gt;
+   &lt;Gap&gt;1&lt;/Gap&gt;
+   &lt;Width&gt;4&lt;/Width&gt;
+   &lt;ZonePoint x="14" y="14" z="3" &gt;10&lt;/ZonePoint&gt;
+   &lt;PresporeRatio&gt;0.8&lt;/PresporeRatio&gt;
+ &lt;/Steppable&gt;
+
+ &lt;Steppable Type="ReactionDiffusionSolverFE_SavHog"&gt;
+    &lt;NumberOfFields&gt;3&lt;/NumberOfFields&gt;
+    &lt;FieldName&gt;cAMP&lt;/FieldName&gt;
+    &lt;FieldName&gt;Refractoriness&lt;/FieldName&gt;
+    &lt;DeltaX&gt;0.37&lt;/DeltaX&gt;
+    &lt;DeltaT&gt;0.01&lt;/DeltaT&gt;
+    &lt;DiffusionConstant&gt;1.0&lt;/DiffusionConstant&gt;
+    &lt;DecayConstant&gt;0.0&lt;/DecayConstant&gt;
+    &lt;MaxDiffusionZ&gt;8&lt;/MaxDiffusionZ&gt;
+    &lt;IntervalParameters c1="0.0065" c2="0.841"/&gt;
+    &lt;fFunctionParameters C1="20" C2="3" C3="15" a="0.15"/&gt;
+    &lt;epsFunctionParameters eps1="0.5" eps2="0.0589" eps3="0.5"/&gt;
+    &lt;RefractorinessParameters k="3.5" b="0.35"/&gt;
+    &lt;MinDiffusionBoxCorner x="0" y="0" z="0"/&gt;
+    &lt;MaxDiffusionBoxCorner x="40" y="40" z="40"/&gt; 
+ &lt;/Steppable&gt;
+
+ &lt;Steppable Type="DictyChemotaxisSteppable"&gt;
+    &lt;ClockReloadValue&gt;850&lt;/ClockReloadValue&gt;
+    &lt;ChemotactUntil&gt;750&lt;/ChemotactUntil&gt;
+    &lt;IgnoreFirstSteps&gt;500&lt;/IgnoreFirstSteps&gt;
+    &lt;ChetmotaxisActivationThreshold&gt;0.2&lt;/ChetmotaxisActivationThreshold&gt;
+    &lt;ChemicalField Source="ReactionDiffusionSolverFE_SavHog"&gt;cAMP&lt;/ChemicalField&gt;
+ &lt;/Steppable&gt;
+
+&lt;/CompuCell3D&gt;
+</pre>
+<li>Back to <a href="index.html">index</a></body></html>

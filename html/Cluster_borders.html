@@ -1,0 +1,60 @@
+<html><body>
+				<h1 class="firstHeading">Cluster borders</h1>
+			<p>This was a feature request by Shane Hutson (March 2011) to display
+ cluster borders, just as we display cell borders.  It has been 
+incorporated into 3.5.0 and will be put into 3.5.1.  So, there is now an
+ additional 'Visualization' menu item, 'Cluster Borders', which can be 
+checked on/off and will be stored in the preferences.
+</p><p>Here is a snapshot of the edited files for this change:
+<p><img src="../images/Edited-files-clusterborders.png" alt="Image:edited-files-clusterborders.png" longdesc="/mediawiki1.7/index.php/Image:Edited-files-clusterborders.png" height="377" width="341"></p><p>Some testing...
+</p>
+<pre>heiland@Macintosh-91:~/dev/Glazier/cc3d-3.5-3-8-11$ compucell3d.sh -i ~/dev/Glazier/woundHealing_py_03_08_2011_15_01_18/LatticeData/StepLDF.dml
+CompuCell3D - version 3.5.0
+...
+currentDirectory= /Users/heiland/dev/Glazier/cc3d-3.5-3-8-11
+self.__fileName= /Users/heiland/dev/Glazier/woundHealing_py_03_08_2011_15_01_18/LatticeData/StepLDF.dml
+created cmlFieldHandler= &lt;CMLFieldHandler.CMLFieldHandler instance at 0x121266fc8&gt;
+Load file  /Users/heiland/dev/Glazier/woundHealing_py_03_08_2011_15_01_18/LatticeData/StepLDF.dml
+...
+SIMTHREAD= &lt;Simulation.CMLResultReader.CMLResultReader object at 0x12126ae20&gt;
+playerType= CMLResultReplay
+---- SimpleTabView.py:   addVTKWindowToWorkspace =========
+
+and it proceeds to display all saved .vtk files.
+</pre>
+<p>Currently we just hardwire the coloring of the cluster borders to 
+white (in player/Graphics/MVCDrawView2D.py) - the user could edit/change
+ this:
+</p>
+<pre>    def drawClusterBorders2D(self):
+        self.clusterBorderActor.GetProperty().SetColor(1.0,1.0,1.0) 
+</pre>
+<p>Since it's possible to change the color of the cell borders in the Prefs panel, this seemed like an
+acceptable hardwire.  More flexibility will be possible in 3.5.1.
+</p>
+<pre>heiland@Macintosh-91:~/dev/Glazier/cc3d-3.5-3-8-11$ runScript.sh -i ../woundHealing.py
+...
+
+--&gt; (I guess .png's aren't dumped for runScript, but just .vtk's&nbsp;?)
+heiland@Macintosh-91:~/dev/Glazier$ ll woundHealing_py_03_08_2011_15_24_40/
+total 16808
+-rw-r--r--  1 heiland  heiland     692 Mar  8 15:24 StepLDF.dml
+-rw-r--r--  1 heiland  heiland  320129 Mar  8 15:24 Step_00000.vtk
+-rw-r--r--  1 heiland  heiland  323647 Mar  8 15:24 Step_00001.vtk
+-rw-r--r--  1 heiland  heiland  325782 Mar  8 15:24 Step_00002.vtk
+-rw-r--r--  1 heiland  heiland  326883 Mar  8 15:24 Step_00003.vtk
+...
+</pre>
+<p><br>
+<p><img src="../images/Wound-clusters.png" alt="Image:wound-clusters.png" longdesc="/mediawiki1.7/index.php/Image:Wound-clusters.png" height="551" width="603"></p>
+<pre>It took a while to debug the hex cluster borders, but I eventually figured out the hex 
+lattice was incorrectly specified in the model, woundHealing-hex.py:
+potts.ElementCC3D("Lattice",{},"Hexagonal")
+and should have been:
+potts.ElementCC3D("LatticeType",{},"Hexagonal")
+</pre>
+<p><img src="../images/Wound-clusters-scalarfield-hex.png" alt="Image:wound-clusters-scalarfield-hex.png" longdesc="/mediawiki1.7/index.php/Image:Wound-clusters-scalarfield-hex.png" height="481" width="884"></p>
+<hr>
+<p>And for the cellsort hex Demo, it seems the ClusterId = CellId:
+<p><img src="../images/Cellsort_2D_hex.png" alt="Image:cellsort_2D_hex.png" longdesc="/mediawiki1.7/index.php/Image:Cellsort_2D_hex.png" height="488" width="599"></p>
+<li>Back to <a href="index.html">index</a></body></html>
