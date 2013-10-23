@@ -1,37 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="keywords" content="Startup params,Heiland">
-<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
-		<title>Startup params - CompuCell3D Wiki</title>
-		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
-		<link rel="stylesheet" type="text/css" media="print" href="Startup_params_files/commonPrint.css">
-		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
-		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
-		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
-		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
-		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
-		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
-		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
-		<script type="text/javascript" src="Startup_params_files/wikibits.js"><!-- wikibits js --></script>
-		<script type="text/javascript" src="Startup_params_files/index.js"><!-- site js --></script>
-		<style type="text/css">/*<![CDATA[*/
-@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
-@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
-@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
-/*]]>*/</style>
-		<!-- Head Scripts -->
-			</head>
-<body class="ns-0 ltr">
-	<div id="globalWrapper">
-		<div id="column-content">
-	<div id="content">
-		<a name="top" id="top"></a>
+<html><body>
 				<h1 class="firstHeading">Startup params</h1>
-		<div id="bodyContent">
-			<h3 id="siteSub">From CompuCell3D Wiki</h3>
-			<div id="contentSub"></div>
-									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
 			<pre>
 The Qt prefs are set via the QSettings class (rf. player/Configuration/Settings.py).
 
@@ -49,9 +17,7 @@ and under the Software folder, deleted the Biocomplexity folder, which contained
 (James later had the same problem and this worked for him also)
 
 </pre>
-<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Qt-Settings1.png" class="image" title="Image:Qt-Settings1.png"><img src="Startup_params_files/Qt-Settings1.png" alt="Image:Qt-Settings1.png" longdesc="/mediawiki1.7/index.php/Image:Qt-Settings1.png" height="617" width="825"></a>
-</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Qt-Settings2.png" class="image" title="Image:Qt-Settings2.png"><img src="Startup_params_files/Qt-Settings2.png" alt="Image:Qt-Settings2.png" longdesc="/mediawiki1.7/index.php/Image:Qt-Settings2.png" height="164" width="371"></a>
-</p>
+<p><img src="images/Qt-Settings1.png" alt="Image:Qt-Settings1.png" longdesc="/mediawiki1.7/index.php/Image:Qt-Settings1.png" height="617" width="825"><p><img src="images/Qt-Settings2.png" alt="Image:Qt-Settings2.png" longdesc="/mediawiki1.7/index.php/Image:Qt-Settings2.png" height="164" width="371"></p>
 <hr>
 <p>On Windows, the settings are buried(!) in the registry, as shown in 
 the image below.  We have had instances of certain menu items being 
@@ -60,8 +26,7 @@ always checked ON (e.g. Vis-&gt;FPP Links) when you would re-start cc3d.
 (Start-&gt;Run-&gt;"regedit") and right click/delete the entire 
 'Biocomplexity' folder.
 </p><p><br>
-<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Player-settings-registry.jpg" class="image" title="Image:player-settings-registry.jpg"><img src="Startup_params_files/Player-settings-registry.jpg" alt="Image:player-settings-registry.jpg" longdesc="/mediawiki1.7/index.php/Image:Player-settings-registry.jpg" height="468" width="497"></a>
-</p>
+<p><img src="images/Player-settings-registry.jpg" alt="Image:player-settings-registry.jpg" longdesc="/mediawiki1.7/index.php/Image:Player-settings-registry.jpg" height="468" width="497"></p>
 <pre>On Linux:
 
 heiland@family-ubu:~/dev/cc3d-6-20-10/player$ grep qsett */*.py
@@ -90,87 +55,4 @@ RecentFile=/home/heiland/dev/cc3d-6-20-10/Demos/cellsort_2D/cellsort_2D.xml
 PlayerSizes="@ByteArray(\0\0\0\xff\0\0\0\0\xfd\0\0\0\x2\0\0\0\0\0\0\x1\0\0\0\x2;\xfc\x2\0\0\0\x3\xfb\0\0\0\x1e\0M\0o\0\x64\0\x65\0l\0\x45\0\x64\0i\0t\0o\0r\0\x44\0o\0\x63\0k\x1\0\0\0\x39\0\0\x1\x1a\0\0\0k\0\xff\xff\xff\xfb\0\0\0\x16\0P\0l\0u\0g\0i\0n\0s\0\x44\0o\0\x63\0k\x1\0\0\x1Y\0\0\x1\x1b\0\0\0k\0\xff\xff\xff\xfb\0\0\0\x1e\0L\0\x61\0t\0t\0i\0\x63\0\x65\0\x44\0\x61\0t\0\x61\0\x44\0o\0\x63\0k\0\0\0\x1\xba\0\0\0\xba\0\0\0k\0\xff\xff\xff\0\0\0\x3\0\0\x2~\0\0\0\x8d\xfc\x1\0\0\0\x1\xfb\0\0\0\xe\0\x43\0o\0n\0s\0o\0l\0\x65\x1\0\0\x1\x6\0\0\x2~\0\0\0{\0\xff\xff\xff\0\0\x2~\0\0\x1\xa8\0\0\0\x1\0\0\0\x4\0\0\0\x1\0\0\0\b\xfc\0\0\0\x1\0\0\0\x2\0\0\0\x4\0\0\0\x14\0S\0i\0m\0T\0o\0o\0l\0\x62\0\x61\0r\x1\0\0\0\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\x16\0\x46\0i\0l\0\x65\0T\0o\0o\0l\0\x62\0\x61\0r\x1\0\0\0\x8d\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\x16\0V\0i\0\x65\0w\0T\0o\0o\0l\0\x62\0\x61\0r\x1\0\0\0\xfa\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\x1a\0W\0i\0n\0\x64\0o\0w\0T\0o\0o\0l\0\x62\0\x61\0r\x1\0\0\x1\x96\xff\xff\xff\xff\0\0\0\0\0\0\0\0)"
 
 </pre>
-<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
-
-<!-- Saved in parser cache with key wikidb:pcache:idhash:186-0!1!0!0!!en!2 and timestamp 20120522015437 -->
-<div class="printfooter">
-Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Startup_params">http://old.compucell3d.org/mediawiki1.7/index.php/Startup_params</a>"</div>
-						<!-- end content -->
-			<div class="visualClear"></div>
-		</li></div>
-	</div>
-		</div>
-		<div id="column-one">
-	<div id="p-cactions" class="portlet">
-		<h5>Views</h5>
-		<ul>
-				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Startup_params">Article</a></li>
-				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Startup_params&amp;action=edit">Discussion</a></li>
-				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Startup_params&amp;action=edit">Edit</a></li>
-				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Startup_params&amp;action=history">History</a></li>
-		</ul>
-	</div>
-	<div class="portlet" id="p-personal">
-		<h5>Personal tools</h5>
-		<div class="pBody">
-			<ul>
-				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Startup_params">Log in / create account</a></li>
-			</ul>
-		</div>
-	</div>
-	<div title="Main Page" class="portlet" id="p-logo">
-		<a style="background-image: url(&quot;http://www.compucell3d.net/images/logo_trans.png&quot;);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
-	</div>
-	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
-		<div class="portlet" id="p-navigation">
-		<h5>Navigation</h5>
-		<div class="pBody">
-			<ul>
-				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
-				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
-				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
-				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
-				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
-				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
-				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
-			</ul>
-		</div>
-	</div>
-		<div id="p-search" class="portlet">
-		<h5><label for="searchInput">Search</label></h5>
-		<div id="searchBody" class="pBody">
-			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
-				<input id="searchInput" name="search" accesskey="f" type="text">
-				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
-				<input name="fulltext" class="searchButton" value="Search" type="submit">
-			</div></form>
-		</div>
-	</div>
-	<div class="portlet" id="p-tb">
-		<h5>Toolbox</h5>
-		<div class="pBody">
-			<ul>
-				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Startup_params">What links here</a></li>
-				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Startup_params">Related changes</a></li>
-<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
-<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
-				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Startup_params&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Startup_params&amp;oldid=27344">Permanent link</a></li>			</ul>
-		</div>
-	</div>
-		</div><!-- end of the left (by default at least) column -->
-			<div class="visualClear"></div>
-			<div id="footer">
-				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Startup_params_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
-			<ul id="f-list">
-				<li id="lastmod"> This page was last modified 18:53, 3 August 2011.</li>
-				<li id="viewcount">This page has been accessed 379 times.</li>
-				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
-				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
-				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
-			</ul>
-		</div>
-	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
-</div>
-<!-- Served by babbage in 0.292 secs. -->
-
-</body></html>
+<li>Back to <a href="index.html">index</a></body></html>

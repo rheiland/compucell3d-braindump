@@ -1,4 +1,6 @@
 compucell3d-braindump
 =====================
 
-Personal reminders, tips, hints while working on the CompuCell3D project.
+Reminders for the CompuCell3D project.
+
+To preview an .html file, prepend "http://htmlpreview.github.io/?" to the usual github url.

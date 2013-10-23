@@ -1,41 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="keywords" content="Celltypes dmc transparency,3D cells,Heiland">
-<link rel="shortcut icon" href="http://old.compucell3d.org/favicon.ico">
-		<title>Celltypes dmc transparency - CompuCell3D Wiki</title>
-		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/mediawiki1.7/skins/monobook/main.css?9"; /*]]>*/</style>
-		<link rel="stylesheet" type="text/css" media="print" href="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/commonPrint.css">
-		<!--[if lt IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE50Fixes.css";</style><![endif]-->
-		<!--[if IE 5.5000]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE55Fixes.css";</style><![endif]-->
-		<!--[if IE 6]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE60Fixes.css";</style><![endif]-->
-		<!--[if IE 7]><style type="text/css">@import "/mediawiki1.7/skins/monobook/IE70Fixes.css?1";</style><![endif]-->
-		<!--[if lt IE 7]><script type="text/javascript" src="/mediawiki1.7/skins/common/IEFixes.js"></script>
-		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
-		<script type="text/javascript">var skin = 'monobook';var stylepath = '/mediawiki1.7/skins';</script>
-		<script type="text/javascript" src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/wikibits.js"><!-- wikibits js --></script>
-		<script type="text/javascript" src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/index.js"><!-- site js --></script>
-		<style type="text/css">/*<![CDATA[*/
-@import "/mediawiki1.7/index.php?title=MediaWiki:Common.css&action=raw&ctype=text/css&smaxage=18000";
-@import "/mediawiki1.7/index.php?title=MediaWiki:Monobook.css&action=raw&ctype=text/css&smaxage=18000";
-@import "/mediawiki1.7/index.php?title=-&action=raw&gen=css&maxage=18000";
-/*]]>*/</style>
-		<!-- Head Scripts -->
-			</head>
-<body class="ns-0 ltr">
-	<div id="globalWrapper">
-		<div id="column-content">
-	<div id="content">
-		<a name="top" id="top"></a>
+<html><body>
 				<h1 class="firstHeading">Celltypes dmc transparency</h1>
-		<div id="bodyContent">
-			<h3 id="siteSub">From CompuCell3D Wiki</h3>
-			<div id="contentSub"></div>
-									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
 			<p>Another look at doing semi-transparent 3D contours, e.g. using vtkDiscreteMarchingCubes on celltype fields (rf. <a href="http://old.compucell3d.org/mediawiki1.7/index.php/3D_cells" title="3D cells">3D_cells</a>).
-</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Abbas_pic1.png" class="image" title="Image:abbas_pic1.png"><img src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/Abbas_pic1.png" alt="Image:abbas_pic1.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pic1.png" height="577" width="614"></a> <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Abbas_pic2.png" class="image" title="Image:abbas_pic2.png"><img src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/Abbas_pic2.png" alt="Image:abbas_pic2.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pic2.png" height="403" width="679"></a> 
-</p><p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Abbas_pic3.png" class="image" title="Image:abbas_pic3.png"><img src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/Abbas_pic3.png" alt="Image:abbas_pic3.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pic3.png" height="404" width="431"></a><br>
-If we do not render cell type 1,5,6 (and 0, of course).
+<p><img src="images/Abbas_pic1.png" alt="Image:abbas_pic1.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pic1.png" height="577" width="614"> 
+<img src="images/Abbas_pic2.png" alt="Image:abbas_pic2.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pic2.png" height="403" width="679"><<p><img src="images/Abbas_pic3.png" alt="Image:abbas_pic3.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pic3.png" height="404" width="431"></a>If we do not render cell type 1,5,6 (and 0, of course).
 </p>
 <pre>~/Documents/Glazier/Abbas/2012-Sep$ ty renCellTypes.py 
 # renCellTypes.py
@@ -180,8 +147,9 @@ iren.Start()  # don't invoke this if running from ipython
 4   0.57 0.56 0.18
 5   0.75 0.75 0.75
 </pre>
-<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Abbas_pov1.png" class="image" title="Image:abbas_pov1.png"><img src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/Abbas_pov1.png" alt="Image:abbas_pov1.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pov1.png" height="340" width="354"></a><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Abbas_pov2.png" class="image" title="Image:abbas_pov2.png"><img src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/Abbas_pov2.png" alt="Image:abbas_pov2.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pov2.png" height="353" width="371"></a>
-</p><p>In the resulting POVRay (.pov) file, we manually edit the "f" 
+<p><img src="images/Abbas_pov1.png" alt="Image:abbas_pov1.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pov1.png" height="340" width="354">
+<img src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/Abbas_pov2.png" alt="Image:abbas_pov2.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pov2.png" height="353" width="371"></p>
+<p>In the resulting POVRay (.pov) file, we manually edit the "f" 
 (alpha?) value in the "color rgbf" vector of the (mesh2) texture field 
 so that it has a non-zero value for semi-transparency.
 </p>
@@ -213,90 +181,6 @@ Out[3]: (454.22707114645755, 99.5, 447.2472614292127)
 In [4]: cam.GetFocalPoint()
 Out[4]: (99.5, 99.5, 24.5)
 </pre>
-<p><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Image:Abbas_pov3.png" class="image" title="Image:abbas_pov3.png"><img src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/Abbas_pov3.png" alt="Image:abbas_pov3.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pov3.png" height="436" width="599"></a>
-</p>
+<p><img src="images/Abbas_pov3.png" alt="Image:abbas_pov3.png" longdesc="/mediawiki1.7/index.php/Image:Abbas_pov3.png" height="436" width="599"></p>
 <hr>
-<li>Back to <a href="http://old.compucell3d.org/mediawiki1.7/index.php/Heiland" title="Heiland">Heiland</a>
-
-<!-- Saved in parser cache with key wikidb:pcache:idhash:476-0!1!0!0!!en!2 and timestamp 20130212211401 -->
-<div class="printfooter">
-Retrieved from "<a href="http://old.compucell3d.org/mediawiki1.7/index.php/Celltypes_dmc_transparency">http://old.compucell3d.org/mediawiki1.7/index.php/Celltypes_dmc_transparency</a>"</div>
-						<!-- end content -->
-			<div class="visualClear"></div>
-		</li></div>
-	</div>
-		</div>
-		<div id="column-one">
-	<div id="p-cactions" class="portlet">
-		<h5>Views</h5>
-		<ul>
-				 <li id="ca-nstab-main" class="selected"><a title="View the content page [control-c]" accesskey="c" href="http://old.compucell3d.org/mediawiki1.7/index.php/Celltypes_dmc_transparency">Article</a></li>
-				 <li id="ca-talk" class="new"><a title="Discussion about the content page [control-t]" accesskey="t" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Talk:Celltypes_dmc_transparency&amp;action=edit">Discussion</a></li>
-				 <li id="ca-edit"><a title="You can edit this page. Please use the preview button before saving. [control-e]" accesskey="e" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Celltypes_dmc_transparency&amp;action=edit">Edit</a></li>
-				 <li id="ca-history"><a title="Past versions of this page. [control-h]" accesskey="h" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Celltypes_dmc_transparency&amp;action=history">History</a></li>
-		</ul>
-	</div>
-	<div class="portlet" id="p-personal">
-		<h5>Personal tools</h5>
-		<div class="pBody">
-			<ul>
-				<li id="pt-login"><a title="You are encouraged to log in, it is not mandatory however. [control-o]" accesskey="o" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Userlogin&amp;returnto=Celltypes_dmc_transparency">Log in / create account</a></li>
-			</ul>
-		</div>
-	</div>
-	<div title="Main Page" class="portlet" id="p-logo">
-		<a style="background-image: url(http://www.compucell3d.net/images/logo_trans.png);" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page" title="Main Page"></a>
-	</div>
-	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
-		<div class="portlet" id="p-navigation">
-		<h5>Navigation</h5>
-		<div class="pBody">
-			<ul>
-				<li id="n-mainpage"><a title="Visit the Main Page [control-z]" accesskey="z" href="http://old.compucell3d.org/mediawiki1.7/index.php/Main_Page">Main Page</a></li>
-				<li title="About the project, what you can do, where to find things" id="n-portal"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Community_Portal">Community portal</a></li>
-				<li title="Find background information on current events" id="n-currentevents"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Current_events">Current events</a></li>
-				<li id="n-recentchanges"><a title="The list of recent changes in the wiki. [control-r]" accesskey="r" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Recentchanges">Recent changes</a></li>
-				<li id="n-randompage"><a title="Load a random page [control-x]" accesskey="x" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Random">Random page</a></li>
-				<li title="The place to find out." id="n-help"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/Help:Contents">Help</a></li>
-				<li title="Support us" id="n-sitesupport"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Site_support">Donations</a></li>
-			</ul>
-		</div>
-	</div>
-		<div id="p-search" class="portlet">
-		<h5><label for="searchInput">Search</label></h5>
-		<div id="searchBody" class="pBody">
-			<form action="/mediawiki1.7/index.php/Special:Search" id="searchform"><div>
-				<input id="searchInput" name="search" accesskey="f" type="text">
-				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
-				<input name="fulltext" class="searchButton" value="Search" type="submit">
-			</div></form>
-		</div>
-	</div>
-	<div class="portlet" id="p-tb">
-		<h5>Toolbox</h5>
-		<div class="pBody">
-			<ul>
-				<li id="t-whatlinkshere"><a title="List of all wiki pages that link here [control-j]" accesskey="j" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Whatlinkshere&amp;target=Celltypes_dmc_transparency">What links here</a></li>
-				<li id="t-recentchangeslinked"><a title="Recent changes in pages linked from this page [control-k]" accesskey="k" href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Special:Recentchangeslinked&amp;target=Celltypes_dmc_transparency">Related changes</a></li>
-<li id="t-upload"><a title="Upload images or media files [control-u]" accesskey="u" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Upload">Upload file</a></li>
-<li id="t-specialpages"><a title="List of all special pages [control-q]" accesskey="q" href="http://old.compucell3d.org/mediawiki1.7/index.php/Special:Specialpages">Special pages</a></li>
-				<li id="t-print"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Celltypes_dmc_transparency&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://old.compucell3d.org/mediawiki1.7/index.php?title=Celltypes_dmc_transparency&amp;oldid=27890">Permanent link</a></li>			</ul>
-		</div>
-	</div>
-		</div><!-- end of the left (by default at least) column -->
-			<div class="visualClear"></div>
-			<div id="footer">
-				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="Celltypes%20dmc%20transparency%20-%20CompuCell3D%20Wiki_files/poweredby_mediawiki_88x31.png" alt="MediaWiki"></a></div>
-			<ul id="f-list">
-				<li id="lastmod"> This page was last modified 19:20, 12 September 2012.</li>
-				<li id="viewcount">This page has been accessed 63 times.</li>
-				<li id="privacy"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:Privacy_policy" title="CompuCell3D Wiki:Privacy policy">Privacy policy</a></li>
-				<li id="about"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:About" title="CompuCell3D Wiki:About">About CompuCell3D Wiki</a></li>
-				<li id="disclaimer"><a href="http://old.compucell3d.org/mediawiki1.7/index.php/CompuCell3D_Wiki:General_disclaimer" title="CompuCell3D Wiki:General disclaimer">Disclaimers</a></li>
-			</ul>
-		</div>
-	<script type="text/javascript"> if (window.runOnloadHook) runOnloadHook();</script>
-</div>
-<!-- Served by babbage in 0.294 secs. -->
-
-</body></html>
+<li>Back to <a href="index.html">index</a></body></html>
